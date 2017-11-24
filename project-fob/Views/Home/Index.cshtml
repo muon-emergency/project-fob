@@ -1,0 +1,125 @@
+﻿<script type="text/javascript">
+	var defaultColor = 'white';
+
+
+	function checkPassIfSame() {
+
+		var attPass = document.getElementById('attendeePassword');
+		var hostPass = document.getElementById('hostPassword');
+
+		if (attPass.value == hostPass.value) {
+			hostPass.style.backgroundColor = 'red';
+			$('#createMeetingButton').attr('disabled', 'disabled');
+		}
+		else {
+			hostPass.style.backgroundColor = defaultColor;
+			if (hostPass.value != "") {
+				$('#createMeetingButton').removeAttr('disabled');
+			} else {
+				$('#createMeetingButton').attr('disabled', 'disabled');
+			}
+		}
+
+
+	}
+
+	function checkId() {
+		
+		var meetID = document.getElementById('meetingId');
+		if (meetID.value != "" ) { 
+			
+			$('#enterMeetingButton').removeAttr('disabled');
+			
+		} else {
+			$('#enterMeetingButton').attr('disabled', 'disabled');
+			
+		}
+	}
+	/*
+	* TODO
+	* fix this 
+	*/
+	function preButt(d) {
+		var div = document.getElementById(d);
+		
+			div.style.display = 'block';
+			document.getElementById('PreButtons').style.display = 'none';
+			if (d == 'CreateMeeting') {
+				document.getElementById('backE').style.display = 'block';
+			} else {
+				document.getElementById('backC').style.display = 'block';
+			}
+
+		
+	};
+
+	function back() {
+		var cm = document.getElementById('CreateMeeting');
+		var em = document.getElementById('EnterMeeting');
+		var backE = document.getElementById('backE');
+		var backC = document.getElementById('backC');
+		if (cm.style.display == 'block') {
+			cm.style.display = 'none';
+			em.style.display = 'block';
+			backE.style.display = 'none';
+			backC.style.display = 'block';
+
+		} else {
+			cm.style.display = 'block';
+			em.style.display = 'none';
+			backC.style.display = 'none';
+			backE.style.display = 'block';
+
+		}
+
+	};
+
+
+</script>
+<body onload="checkId()">
+	<h1>@ViewBag.title</h1>
+	@* This will be positioned on the top centre *@
+	<div id="centerPageIndex">
+		@* This will be positioned on the bottom centre with the textboxes *@<br />
+		@*create meeting*@
+		<div class="centerButton">
+			<div id="PreButtons">
+				<button onclick="preButt('CreateMeeting')">Create Meeting</button>
+				<br />
+				<br />
+				<button onclick="preButt('EnterMeeting')">Enter Meeting</button>
+			</div>
+		</div>
+		@using (Html.BeginForm("meetingPageHost", "Home", FormMethod.Post)) {
+			<div id="CreateMeeting">
+				<input id="attendeePassword" name="attendeePassword" onkeyup="checkPassIfSame()" placeholder="Room password" type="password" /><br />
+				<input id="hostPassword" name="hostPassword" onkeyup="checkPassIfSame()" placeholder="Host password (can't be empty)" type="password" /><br />
+
+				<div class="centerButton">
+					<input id="createMeetingButton" type="submit"disabled value="Create Meeting" /><br />
+				</div>
+			</div>
+		}
+		<div class="centerButton">
+			<button id="backC"onclick="back()">Switch to Create Meeting</button>
+		    <button id="backE" onclick="back()">Switch to Enter Meeting</button>
+		</div>
+
+		
+		@*Enter meeting*@
+		
+			@using (Html.BeginForm("meetingPageUser", "Home", FormMethod.Post)) {
+				<div id="EnterMeeting">
+					<input id="meetingId" name="meetingId" onkeyup="checkId()" placeholder="Meeting id" type="text" /><br />
+					<input id="meetingPassword" name="password" placeholder="Room OR Host Password (Can be empty)" type="password" /><br />
+
+
+					<div class="centerButton">
+						<input id="enterMeetingButton" type="submit" disabled value="Enter Meeting" />
+					</div>
+				</div>
+			}
+			<br />
+		
+	</div>
+</body>

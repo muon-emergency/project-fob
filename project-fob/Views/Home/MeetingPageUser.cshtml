@@ -1,0 +1,161 @@
+﻿<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script type="text/javascript">
+
+    google.charts.load("current", { packages: ["corechart"] });
+    google.charts.setOnLoadCallback(drawCharts);
+    var isItDrawing = false;
+
+    var clickedButton = {
+        'chartArea': { 'width': '90%', 'height': '90%' },
+        'legend': { 'position': 'none' },
+        "pieSliceText": 'label',
+        'tooltip': { trigger: 'none' },
+        slices: {
+            0: { color: 'pink' }
+        },
+
+        backgroundColor: 'transparent'
+
+    };
+
+    //The button chart
+    var optionsButton = {
+        'chartArea': { 'width': '100%', 'height': '100%' },
+        'legend': { 'position': 'none' },
+        "pieSliceText": 'label',
+        'tooltip': { trigger: 'none' },
+        slices: {
+            0: {
+            	color: '#C23629'
+            }
+        },
+
+        backgroundColor: 'transparent',
+        pieSliceTextStyle: { color: 'black' },
+        pieSliceBorderColor: 'black'
+
+    };
+
+
+    function drawCharts() {
+
+        var dataButton = google.visualization.arrayToDataTable([
+          ['Language', 'Speakers (in millions)'],
+          ["Click me to Request Next Topic", 100],
+        ]);
+
+        var button = new google.visualization.PieChart(document.getElementById('button'));
+        button.draw(dataButton, optionsButton);
+
+        google.visualization.events.addListener(button, 'select', clickHandler);
+
+
+        function clickHandler(e) {
+
+            button = new google.visualization.PieChart(document.getElementById('button'));
+            button.draw(dataButton, clickedButton);
+            google.visualization.events.addListener(button, 'select', clickHandler);
+
+            // controller: atendee, fob method, empty string parameter,
+
+            //Gain information with this code. Ofc. rewriting is required. Don't forget the parameter
+            
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("Fob", "Attendee")',
+                    success: function (result) {
+                        var split = result.split(',')
+                        updateChart(split[0], split[1]);
+                        //window.locationre = result.url;
+                    },
+                    error: function(){
+                        alert("Connection error");
+                    }
+                });
+
+            setTimeout(function () {
+                button = new google.visualization.PieChart(document.getElementById('button'));
+                button.draw(dataButton, optionsButton);
+                google.visualization.events.addListener(button, 'select', clickHandler);
+            }, 50);
+
+
+
+
+        }
+
+        if (!isItDrawing) {
+            runUpdate();
+            isItDrawing = true;
+        }
+        var errorCounter = 0;
+        function runUpdate() { // host controller, refresh
+            setTimeout(runUpdate, 10000); //Run update every 10 second
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("ImStillHere", "Attendee")',
+                success: function (result) {
+                    var tmp = result + "";
+                    if (tmp.length != 0) {
+                        alert(result);
+                    }
+
+                    errorCounter = 0;
+                    //window.locationre = result.url;
+                    //In the controll just put the current user number + voted user numbers so it can be modified easily.
+                },
+                error: function () {
+                    errorCounter++;
+                    if (errorCounter >= 3) {
+                        alert("Connection error. Returning to home page");
+                        errorCounter = 0;
+                        window.location = "index";
+                    }
+                    //alert("Sheep happens");
+                }
+            });
+        }
+
+
+
+    }
+
+
+    /* $(window).resize(function () {
+         if (this.resizeTO) clearTimeout(this.resizeTO);
+         this.resizeTO = setTimeout(function () {
+             $(this).trigger('resizeEnd');
+         }, 500);
+     });*/
+
+    //redraw graph when window resize is completed
+    $(window).on('resizeEnd', function () {
+        drawChart(data);
+    });
+
+    function hello() {
+        alert("hello");
+    }
+</script>
+
+<h1>@ViewBag.title</h1>
+
+<body onresize="drawCharts()">
+
+
+    <div id="centerOfPageForButton">
+
+        <div id="button" style="width: 100%; height: 100%;"></div>
+
+    </div>
+</body>
+
+
+
+<footer>
+    
+    @using (Html.BeginForm("ExitMeeting", "Attendee", FormMethod.Post))
+    {
+        <button class="footerButton" name="value" value=@ViewBag.user>Exit meeting</button>
+    }
+</footer>

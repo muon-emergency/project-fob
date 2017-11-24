@@ -1,0 +1,52 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - My ASP.NET Application</title>
+    <link href="@Url.Content("~/Content/Site.css")" rel="stylesheet" type="text/css" />
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+    
+    <script>
+
+  /*$(function() {
+    var pusher = new Pusher("006c79b1fe1700c6c10d");
+  });*/
+
+  function setCookie(id) {
+      alert("setid: " + id);
+      var d = new Date();
+      d.setTime(d.getTime() + (24*3600));
+      var expires = "expires=" + d.toUTCString();
+      document.cookie = id + "," + expires;
+  }
+
+  function getIdCookie() {
+      return document.cookie.split(',')[0];
+  }
+
+  function checkCookie() {
+      var id = getIdCookie();
+      if (id == null ||id =="") {
+          alert("Sheep happens");
+          setCookie(/* Insert the generated id here*/);
+      }
+      else {
+          alert("your id is: " + id);
+      }
+  }
+
+    </script>
+</head>
+<body>
+
+    <div class="">
+        @RenderBody()
+    </div>
+
+    @Scripts.Render("~/bundles/jquery")
+    @*Scripts.Render("~/bundles/bootstrap")*@
+    @RenderSection("scripts", required: false)
+</body>
+</html>
