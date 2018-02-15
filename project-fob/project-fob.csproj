@@ -5,6 +5,16 @@
     <UserSecretsId>aspnet-project_fob-579B7744-91F7-4F28-AEF2-1D863611021F</UserSecretsId>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Compile Remove="Models\ErrorViewModel.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Remove="Views\Home\About.cshtml" />
+    <Content Remove="Views\Home\Contact.cshtml" />
+    <Content Remove="Views\Home\Index2.cshtml" />
+  </ItemGroup>
+
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.3" />
@@ -19,7 +29,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Data\Migrations\" />
+    <Folder Include="Models\" />
+    <Folder Include="Views\Home\" />
   </ItemGroup>
 
 </Project>
