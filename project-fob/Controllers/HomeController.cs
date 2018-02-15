@@ -62,10 +62,6 @@ namespace project_fob.Controllers
             {
 
             }*/
-
-
-  
-
                 User user = new User(generateId());
                 while (db.User.Any(m => m.UserId.Equals(user.UserId)))
                 {

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using project_fob.Data;
 using project_fob.Models;
 using System;
@@ -27,7 +28,10 @@ namespace project_fob.Controllers
                 byte[] meetingIdValue;
                 bool gotvalue = false;
                 gotvalue = HttpContext.Session.TryGetValue("meetingid", out meetingIdValue);
-                Fob fob = Models.Fob.getFob(meetingIdValue.ToString(), db);
+                //Fob fob = Models.Fob.getFob(meetingIdValue.ToString(), db);
+
+                string byteArrayToString = System.Text.Encoding.ASCII.GetString(meetingIdValue);
+                Fob fob = db.Fob.Include(x => x.Meeting).ThenInclude(x => x.Stats).Include(x => x.fobbed).SingleOrDefault(f => f.Meeting.MeetingId == byteArrayToString);
                 if (fob == null) throw new ArgumentNullException();
                 // if fob.fobbed doesnt contain the current attendee
 
@@ -36,7 +40,12 @@ namespace project_fob.Controllers
                 //string session = Session["sessionid"].ToString();
                 gotvalue = HttpContext.Session.TryGetValue("sessionid", out session);
 
-                Attendee att = db.Attendee.SingleOrDefault(at => at.User.UserId.Equals(session.ToString()));
+                string byteArrayToString2 = System.Text.Encoding.ASCII.GetString(meetingIdValue);
+
+                //Attendee att = db.Attendee.SingleOrDefault(at => at.User.UserId.Equals(session.ToString()));
+
+                Attendee att = db.Attendee.SingleOrDefault(f => f.Meeting.MeetingId == byteArrayToString2);
+
                 if (att == null) throw new ArgumentNullException();
 
                 if (!fob.fobbed.Contains(att))
@@ -57,8 +66,12 @@ namespace project_fob.Controllers
                 bool gotvalue = false;
                 gotvalue = HttpContext.Session.TryGetValue("meetingid", out meetingIdValue);
                 
+                string byteArrayToString = System.Text.Encoding.ASCII.GetString(meetingIdValue);
+
                 //Fob fob = Models.Fob.getFob(Session["meetingid"].ToString(), db);
-                Fob fob = Models.Fob.getFob(Encoding.ASCII.GetString(meetingIdValue), db);
+                //Fob fob = Models.Fob.getFob(Encoding.ASCII.GetString(meetingIdValue), db);
+
+                Fob fob = db.Fob.Include(x => x.Meeting).ThenInclude(x => x.Stats).Include(x => x.fobbed).SingleOrDefault(f => f.Meeting.MeetingId == byteArrayToString);
                 if (fob == null) throw new ArgumentNullException();
 
                 if (fob.AttendeeCount > 0)
@@ -70,7 +83,8 @@ namespace project_fob.Controllers
 
                 var session = Encoding.ASCII.GetString(sessionBytes);
 
-                Attendee att = db.Attendee.SingleOrDefault(at => at.User.UserId.Equals(session));
+                //Attendee att = db.Attendee.SingleOrDefault(at => at.User.UserId.Equals(session));
+                Attendee att = db.Attendee.SingleOrDefault(f => f.Meeting.MeetingId == session);
                 if (fob.fobbed.Contains(att))
                 {
                     fob.fobbed.Remove(att);

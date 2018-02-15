@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using project_fob.Data;
 using project_fob.Models;
 using System;
@@ -31,7 +32,16 @@ namespace project_fob.Controllers
 
                 string session = meetingIdValue.ToString();
                 //string session = Session["meetingid"].ToString();
-                List<Stats> stats = db.Meeting.FirstOrDefault(m => m.MeetingId.Equals(session.ToString())).Stats;
+
+                string byteArrayToString = System.Text.Encoding.ASCII.GetString(meetingIdValue);
+
+                //List<Stats> stats = db.Meeting.FirstOrDefault(m => m.MeetingId.Equals(session.ToString())).Stats;
+                //
+                Meeting meeting = db.Meeting.Include(x => x.Stats).SingleOrDefault(m => m.MeetingId == byteArrayToString);
+
+                List<Stats> stats = meeting.Stats;
+
+                //Fob fob = db.Fob.Include(x => x.Meeting).ThenInclude(x => x.Stats).Include(x => x.fobbed).SingleOrDefault(f => f.Meeting.MeetingId == byteArrayToString);
 
                 /*List<Stats> stats= new List<Stats>();
 

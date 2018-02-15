@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using project_fob.Data;
 using project_fob.Models;
 using System;
@@ -28,9 +29,14 @@ namespace project_fob.Controllers
                 bool gotvalue = false;
                 gotvalue = HttpContext.Session.TryGetValue("meetingid", out meetingIdValue);
 
-                //Fob fob = Fob.getFob(Session["meetingid"].ToString(), db);
-                Fob fob = Fob.getFob(meetingIdValue.ToString(), db);
-                if (fob == null) throw new ArgumentNullException();
+                string byteArrayToString = System.Text.Encoding.ASCII.GetString(meetingIdValue);
+
+            //Fob fob = Fob.getFob(Session["meetingid"].ToString(), db);
+            //Fob fob = Fob.getFob(byteArrayToString, db);
+            Fob fob = db.Fob.Include(x => x.Meeting).ThenInclude(x => x.Stats).Include(x => x.fobbed).SingleOrDefault(f => f.Meeting.MeetingId == byteArrayToString);
+
+
+            if (fob == null) throw new ArgumentNullException();
                 fob.Meeting.Stats.Add(new Stats(fob.AttendeeCount, fob.FobCount, fob.TopicStartTime, DateTime.Now));
                 fob.Meeting.Active = false;
                 db.SaveChanges();
@@ -46,9 +52,23 @@ namespace project_fob.Controllers
                 byte[] session;
                 gotvalue = HttpContext.Session.TryGetValue("sessionid", out session);
                 //string session = Session["sessionid"].ToString();
+                string byteArrayToString = System.Text.Encoding.ASCII.GetString(session);
+                
+                //string host = db.Host.SingleOrDefault(h => h.User.UserId);
 
-                Host host = db.Host.SingleOrDefault(h => h.User.UserId.Equals(session.ToString()));
-                if (host == null) throw new ArgumentNullException();
+                //important
+                Host host = db.Host
+                    .Include(x => x.Meeting).ThenInclude(x => x.Host)
+                    .Include(x => x.User)
+                    .SingleOrDefault(h => h.User.UserId == byteArrayToString);
+
+
+
+
+                if (host == null)
+                {
+                    throw new ArgumentNullException();
+                }
                 host.Meeting.Host.Remove(host);
                 db.SaveChanges();
 
@@ -112,7 +132,12 @@ namespace project_fob.Controllers
                 bool gotvalue = false;
                 gotvalue = HttpContext.Session.TryGetValue("meetingid", out meetingIdValue);
 
-                Fob fob = Fob.getFob(meetingIdValue.ToString(), db);
+                string byteArrayToString = System.Text.Encoding.ASCII.GetString(meetingIdValue);
+
+                //Fob fob = Fob.getFob(meetingIdValue.ToString(), db);
+                Fob fob = db.Fob.Include(x => x.Meeting).ThenInclude(x => x.Stats).Include(x => x.fobbed).SingleOrDefault(f => f.Meeting.MeetingId == byteArrayToString);
+
+
                 //Fob fob = Fob.getFob(Session["meetingid"].ToString(), db);
 
                 if (fob == null) throw new ArgumentNullException();
