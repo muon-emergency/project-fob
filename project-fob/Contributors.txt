@@ -1,5 +1,0 @@
-﻿
-Project-fob
-Authors: Benjamin Kidd, Csaba Kiss, Christopher Ridden
-Made for: Nonlinear Dynamic
-July 2016 

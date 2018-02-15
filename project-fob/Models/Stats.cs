@@ -7,6 +7,12 @@ using System.Web;
 
 namespace project_fob.Models{
     
+    public class StatsClick
+    {
+        public int Id { get; set; }
+        public DateTime ClickTime { get; set; }
+    }
+
     public class Stats{
 
         [Key]
@@ -14,7 +20,7 @@ namespace project_fob.Models{
         public int Attendeescount { get; private set; }
         public int Fobcount { get; private set; }
         public DateTime TopicStartTime { get; private set; }
-        public List<DateTime> Clicks { get; private set; }
+        public List<StatsClick> Clicks { get; private set; }
         public DateTime TopicStopTime { get; private set; }
 
         public Stats() { }
@@ -23,7 +29,7 @@ namespace project_fob.Models{
             this.Fobcount = fobcount;
             this.TopicStartTime = topicStartTime;
             this.TopicStopTime = topicStopTime;
-            this.Clicks = clicks;
+            this.Clicks = clicks.Select(x => new StatsClick { ClickTime = x }).ToList();
 
         }
         public Stats(int attendeesCount, int fobcount, DateTime topicStartTime, DateTime topicStopTime) {

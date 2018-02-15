@@ -1,4 +1,5 @@
-﻿using System;
+﻿using project_fob.Data;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -24,7 +25,7 @@ namespace project_fob.Models {
             TopicStartTime = DateTime.Now;
 
         }
-        public static Fob getFob(string meetingid, DAL.FobContext db) {
+        public static Fob getFob(string meetingid, ApplicationDbContext db) {
             Fob fob =
             db.Fob.SingleOrDefault(
                 f => f.Meeting.MeetingId.Equals(
