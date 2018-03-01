@@ -10,11 +10,9 @@ namespace project_fob.Models
     {
         [Key]
         public int Id { get; set; }
-        [Index("IX_FirstAndSecond", 1, IsUnique = true)]
-        [Column(TypeName = "VARCHAR")]
+
         [StringLength(9)]
         public string MeetingId { get; set; }
-        [Index("IX_FirstAndSecond", 2, IsUnique = true)]
         [Required]
         public bool Active { get; set; }
         public string RoomPassword { get; set; }

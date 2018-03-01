@@ -11,8 +11,7 @@ namespace project_fob.Models {
     public class User {
         [Key]
         public int Id { get; set; }
-        [Index(IsUnique = true)]
-        [Column(TypeName = "VARCHAR")]
+
         [StringLength(9)]
         public string UserId { get; set; }
         public virtual DateTime Lastcheckin { get; set; }
