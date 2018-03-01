@@ -40,11 +40,13 @@ namespace project_fob.Controllers
                 //string session = Session["sessionid"].ToString();
                 gotvalue = HttpContext.Session.TryGetValue("sessionid", out session);
 
-                string byteArrayToString2 = System.Text.Encoding.ASCII.GetString(meetingIdValue);
+                string byteArrayToString2 = System.Text.Encoding.ASCII.GetString(session);
 
                 //Attendee att = db.Attendee.SingleOrDefault(at => at.User.UserId.Equals(session.ToString()));
 
-                Attendee att = db.Attendee.SingleOrDefault(f => f.Meeting.MeetingId == byteArrayToString2);
+
+                //Attendee att = db.Attendee.SingleOrDefault(f => f.Meeting.MeetingId == byteArrayToString2); //buggy
+                Attendee att = db.Attendee.SingleOrDefault(at => at.User.UserId.Equals((byteArrayToString2)));
 
                 if (att == null) throw new ArgumentNullException();
 
