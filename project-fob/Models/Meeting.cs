@@ -25,7 +25,8 @@ namespace project_fob.Models
 
         public Meeting() { }
 
-        public Meeting(string meetingid, Host host, string attendeePassword, string hostPassword){
+        public Meeting(string meetingid, Host host, string attendeePassword, string hostPassword)
+        {
                 Active = true;
                 MeetingId = meetingid;
                 RoomPassword = attendeePassword;
@@ -33,10 +34,6 @@ namespace project_fob.Models
                 Host = new List<Host>() { host };
                 Stats = new List<Stats>();
                 Attendee = new List<Attendee>();
-
-
-
         }   
-
     }
 }

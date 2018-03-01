@@ -24,80 +24,71 @@ namespace project_fob.Controllers
         }
         public void Fob(string value)
         {
+            var gotvalue = HttpContext.Session.TryGetValue("meetingid", out var meetingIdValue);
+
+            string byteArrayToString = System.Text.Encoding.ASCII.GetString(meetingIdValue);
+            Fob fob = db.Fob.Include(x => x.Meeting).ThenInclude(x => x.Stats).Include(x => x.fobbed).SingleOrDefault(f => f.Meeting.MeetingId == byteArrayToString);
+            if (fob == null)
             {
-                byte[] meetingIdValue;
-                bool gotvalue = false;
-                gotvalue = HttpContext.Session.TryGetValue("meetingid", out meetingIdValue);
-                //Fob fob = Models.Fob.getFob(meetingIdValue.ToString(), db);
+                throw new ArgumentNullException();
+            } 
+            // if fob.fobbed doesnt contain the current attendee
 
-                string byteArrayToString = System.Text.Encoding.ASCII.GetString(meetingIdValue);
-                Fob fob = db.Fob.Include(x => x.Meeting).ThenInclude(x => x.Stats).Include(x => x.fobbed).SingleOrDefault(f => f.Meeting.MeetingId == byteArrayToString);
-                if (fob == null) throw new ArgumentNullException();
-                // if fob.fobbed doesnt contain the current attendee
+            gotvalue = HttpContext.Session.TryGetValue("sessionid", out var session);
 
+            string byteArrayToString2 = System.Text.Encoding.ASCII.GetString(session);
+            Attendee att = db.Attendee.SingleOrDefault(at => at.User.UserId.Equals((byteArrayToString2)));
 
-                byte[] session;
-                //string session = Session["sessionid"].ToString();
-                gotvalue = HttpContext.Session.TryGetValue("sessionid", out session);
-
-                string byteArrayToString2 = System.Text.Encoding.ASCII.GetString(session);
-
-                //Attendee att = db.Attendee.SingleOrDefault(at => at.User.UserId.Equals(session.ToString()));
-
-
-                //Attendee att = db.Attendee.SingleOrDefault(f => f.Meeting.MeetingId == byteArrayToString2); //buggy
-                Attendee att = db.Attendee.SingleOrDefault(at => at.User.UserId.Equals((byteArrayToString2)));
-
-                if (att == null) throw new ArgumentNullException();
-
-                if (!fob.fobbed.Contains(att))
-                {
-                    fob.FobCount += 1;
-
-                    fob.fobbed.Add(att);
-                    db.SaveChanges();
-                }
-                //return View("~/Views/Home/MeetingPageUser.cshtml");
+            if (att == null) 
+            {
+                throw new ArgumentNullException();
             }
+
+            if (!fob.fobbed.Contains(att))
+            {
+                fob.FobCount += 1;
+
+                fob.fobbed.Add(att);
+                db.SaveChanges();
+            }
+            //return View("~/Views/Home/MeetingPageUser.cshtml");
         }
 
         public ActionResult ExitMeeting(string value)
         {
+            var gotvalue = HttpContext.Session.TryGetValue("meetingid", out var meetingIdValue);
+            
+            string byteArrayToString = System.Text.Encoding.ASCII.GetString(meetingIdValue);
+            Fob fob = db.Fob.Include(x => x.Meeting).ThenInclude(x => x.Stats)
+                            .Include(x => x.fobbed)
+                            .SingleOrDefault(f => f.Meeting.MeetingId == byteArrayToString);
+
+            if (fob == null) 
             {
-                byte[] meetingIdValue;
-                bool gotvalue = false;
-                gotvalue = HttpContext.Session.TryGetValue("meetingid", out meetingIdValue);
-                
-                string byteArrayToString = System.Text.Encoding.ASCII.GetString(meetingIdValue);
-
-                //Fob fob = Models.Fob.getFob(Session["meetingid"].ToString(), db);
-                //Fob fob = Models.Fob.getFob(Encoding.ASCII.GetString(meetingIdValue), db);
-
-                Fob fob = db.Fob.Include(x => x.Meeting).ThenInclude(x => x.Stats).Include(x => x.fobbed).SingleOrDefault(f => f.Meeting.MeetingId == byteArrayToString);
-                if (fob == null) throw new ArgumentNullException();
-
-                if (fob.AttendeeCount > 0)
-                    fob.AttendeeCount -= 1;
-
-                //string sesh = Session["sessionid"].ToString();
-                byte[] sessionBytes;
-                gotvalue = HttpContext.Session.TryGetValue("sessionid", out sessionBytes);
-
-                var session = Encoding.ASCII.GetString(sessionBytes);
-
-                //Attendee att = db.Attendee.SingleOrDefault(at => at.User.UserId.Equals(session));
-                Attendee att = db.Attendee.SingleOrDefault(f => f.Meeting.MeetingId == session);
-                if (fob.fobbed.Contains(att))
-                {
-                    fob.fobbed.Remove(att);
-
-                    if (fob.FobCount > 0) fob.FobCount -= 1;
-                }
-                db.SaveChanges();
-                return View("~/Views/Home/Index.cshtml");
+                throw new ArgumentNullException();
             }
-        }
 
+            if (fob.AttendeeCount > 0)
+            {
+                fob.AttendeeCount -= 1;
+            }
+
+            gotvalue = HttpContext.Session.TryGetValue("sessionid", out var sessionBytes);
+            var session = Encoding.ASCII.GetString(sessionBytes);
+
+            Attendee att = db.Attendee.SingleOrDefault(f => f.Meeting.MeetingId == session);
+            if (fob.fobbed.Contains(att))
+            {
+                fob.fobbed.Remove(att);
+
+                if (fob.FobCount > 0) 
+                {
+                    fob.FobCount -= 1;
+                }
+            }
+            db.SaveChanges();
+            return View("~/Views/Home/Index.cshtml");
+        }
 
         public string ImStillHere()
         {
@@ -105,6 +96,5 @@ namespace project_fob.Controllers
              * the attendee's last check in.*/
             return "";
         }
-
     }
 }

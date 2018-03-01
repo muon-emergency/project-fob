@@ -25,79 +25,66 @@ namespace project_fob.Controllers
         }
         public ActionResult Finish(string message)
         {
-                byte[] meetingIdValue;
-                bool gotvalue = false;
-                gotvalue = HttpContext.Session.TryGetValue("meetingid", out meetingIdValue);
+            var gotvalue = HttpContext.Session.TryGetValue("meetingid", out var meetingIdValue);
+            string byteArrayToString = System.Text.Encoding.ASCII.GetString(meetingIdValue);
+            Fob fob = db.Fob.Include(x => x.Meeting).ThenInclude(x => x.Stats)
+                            .Include(x => x.fobbed)
+                            .SingleOrDefault(f => f.Meeting.MeetingId == byteArrayToString);
 
-                string byteArrayToString = System.Text.Encoding.ASCII.GetString(meetingIdValue);
+            if (fob == null)
+            {
+                throw new ArgumentNullException();
+            }
 
-            //Fob fob = Fob.getFob(Session["meetingid"].ToString(), db);
-            //Fob fob = Fob.getFob(byteArrayToString, db);
-            Fob fob = db.Fob.Include(x => x.Meeting).ThenInclude(x => x.Stats).Include(x => x.fobbed).SingleOrDefault(f => f.Meeting.MeetingId == byteArrayToString);
+            fob.Meeting.Stats.Add(new Stats(fob.AttendeeCount, fob.FobCount, fob.TopicStartTime, DateTime.Now));
+            fob.Meeting.Active = false;
+            db.SaveChanges();
 
+            //needs to go to the statspage and display the correct stats???
 
-            if (fob == null) throw new ArgumentNullException();
-                fob.Meeting.Stats.Add(new Stats(fob.AttendeeCount, fob.FobCount, fob.TopicStartTime, DateTime.Now));
-                fob.Meeting.Active = false;
-                db.SaveChanges();
-
-                //needs to go to the statspage and display the correct stats???
-
-                return View("~/Views/Home/StatScreen.cshtml");
+            return View("~/Views/Home/StatScreen.cshtml");
         }
         public ActionResult Leave(string message)
         {
+            var gotvalue = HttpContext.Session.TryGetValue("sessionid", out var session);
+            string byteArrayToString = System.Text.Encoding.ASCII.GetString(session);
+
+            //important
+            Host host = db.Host
+                .Include(x => x.Meeting).ThenInclude(x => x.Host)
+                .Include(x => x.User)
+                .SingleOrDefault(h => h.User.UserId == byteArrayToString);
+
+            if (host == null)
             {
-                bool gotvalue;
-                byte[] session;
-                gotvalue = HttpContext.Session.TryGetValue("sessionid", out session);
-                //string session = Session["sessionid"].ToString();
-                string byteArrayToString = System.Text.Encoding.ASCII.GetString(session);
-                
-                //string host = db.Host.SingleOrDefault(h => h.User.UserId);
-
-                //important
-                Host host = db.Host
-                    .Include(x => x.Meeting).ThenInclude(x => x.Host)
-                    .Include(x => x.User)
-                    .SingleOrDefault(h => h.User.UserId == byteArrayToString);
-
-
-
-
-                if (host == null)
-                {
-                    throw new ArgumentNullException();
-                }
-                host.Meeting.Host.Remove(host);
-                db.SaveChanges();
-
-                // do leave stuff here
-
-                return View("~/Views/Home/Index.cshtml");
+                throw new ArgumentNullException();
             }
+            host.Meeting.Host.Remove(host);
+            db.SaveChanges();
+
+            // do leave stuff here
+
+            return View("~/Views/Home/Index.cshtml");
         }
+
         public string Refresh(string message)
         {
+            //update
+            if (message != null && message.Length != 0)
             {
-                //update
-                if (message != null && message.Length != 0)
-                {
-                    @ViewBag.title = message;
-                }
-
-                byte[] meetingIdValue;
-                bool gotvalue = false;
-                gotvalue = HttpContext.Session.TryGetValue("meetingid", out meetingIdValue);
-                //Fob fob = Fob.getFob(Session["meetingid"].ToString(), db);
-                Fob fob = Fob.getFob(Encoding.ASCII.GetString(meetingIdValue), db);
-
-                if (fob == null) throw new ArgumentNullException();
-
-                //First number are the total users, the second number is the voted users.
-                return fob.AttendeeCount + "," + fob.FobCount;
-
+                @ViewBag.title = message;
             }
+
+            var gotvalue = HttpContext.Session.TryGetValue("meetingid", out var meetingIdValue);
+            Fob fob = Fob.getFob(Encoding.ASCII.GetString(meetingIdValue), db);
+
+            if (fob == null) 
+            {
+                throw new ArgumentNullException();
+            }
+
+            //First number are the total users, the second number is the voted users.
+            return fob.AttendeeCount + "," + fob.FobCount;
         }
 
         /*public ActionResult returnGeneratedQrCode()
@@ -124,31 +111,26 @@ namespace project_fob.Controllers
         */
         public void Reset(string message)
         {
-
             //We need to add the already existing information to the stats model. NAO!!!
+            var gotvalue = HttpContext.Session.TryGetValue("meetingid", out var meetingIdValue);
 
+            string byteArrayToString = System.Text.Encoding.ASCII.GetString(meetingIdValue);
+
+            //Fob fob = Fob.getFob(meetingIdValue.ToString(), db);
+            Fob fob = db.Fob.Include(x => x.Meeting).ThenInclude(x => x.Stats)
+                            .Include(x => x.fobbed)
+                            .SingleOrDefault(f => f.Meeting.MeetingId == byteArrayToString);
+
+            if (fob == null) 
             {
-                byte[] meetingIdValue;
-                bool gotvalue = false;
-                gotvalue = HttpContext.Session.TryGetValue("meetingid", out meetingIdValue);
-
-                string byteArrayToString = System.Text.Encoding.ASCII.GetString(meetingIdValue);
-
-                //Fob fob = Fob.getFob(meetingIdValue.ToString(), db);
-                Fob fob = db.Fob.Include(x => x.Meeting).ThenInclude(x => x.Stats).Include(x => x.fobbed).SingleOrDefault(f => f.Meeting.MeetingId == byteArrayToString);
-
-
-                //Fob fob = Fob.getFob(Session["meetingid"].ToString(), db);
-
-                if (fob == null) throw new ArgumentNullException();
-
-
-                fob.Meeting.Stats.Add(new Stats(fob.AttendeeCount, fob.FobCount, fob.TopicStartTime, DateTime.Now));
-
-                fob.FobCount = 0;
-                fob.fobbed.Clear();
-                db.SaveChanges();
+                throw new ArgumentNullException();
             }
+
+            fob.Meeting.Stats.Add(new Stats(fob.AttendeeCount, fob.FobCount, fob.TopicStartTime, DateTime.Now));
+
+            fob.FobCount = 0;
+            fob.fobbed.Clear();
+            db.SaveChanges();
         }
     }
 }
