@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using project_fob.Models;
 using System.Text;
 using project_fob.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace project_fob.Controllers
 {
@@ -150,6 +151,17 @@ namespace project_fob.Controllers
                         //Session["meetingid"] = meet.MeetingId;
                         db.User.Add(user);
                         Attendee att = new Attendee(user, meet);
+                        //db.Attendee.Add(att);
+
+                        //Not working solution atm, but the direction is correct.
+                        /*Attendee foundAttendee = db.Attendee.Include(x => x.Meeting).Include(x => x.User).SingleOrDefault(f => f.Meeting.MeetingId == meet.MeetingId && f.Meeting.Attendee.Equals(user.UserId));
+                        
+                        //if attendee is not in then we add him.
+                        if (foundAttendee == null)
+                        {
+                            db.Attendee.Add(att);
+                        }*/
+
                         db.Attendee.Add(att);
 
 
