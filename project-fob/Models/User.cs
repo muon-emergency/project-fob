@@ -25,5 +25,15 @@ namespace project_fob.Models
             UserId = id;
             Lastcheckin = DateTime.Now;
         }
+        public override bool Equals(object obj)
+        {
+            User param = (User)obj;
+            if (UserId.Equals(param.UserId))
+            {
+                return true;
+            }
+            return false;
+            //return base.Equals(obj);
+        }
     }
 }

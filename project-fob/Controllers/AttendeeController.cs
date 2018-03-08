@@ -44,6 +44,9 @@ namespace project_fob.Controllers
                 throw new ArgumentNullException();
             }
 
+
+            //Need a rework as if someone is fobbing it it'll not get if the person is already fobbed because of the different primary key for different session.
+            //A workaround would be to replace attendee with user as we don't need the attendee anymore as the meeting (or fob) contains the meeting id anyways.
             if (!fob.fobbed.Contains(att))
             {
                 fob.FobCount += 1;
