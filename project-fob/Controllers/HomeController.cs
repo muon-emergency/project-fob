@@ -106,8 +106,7 @@ namespace project_fob.Controllers
                     //host
                     if (password.Equals(meet.HostPassword.ToString()))
                     {
-                        if (meet.Active)
-                        {
+                        
                             User user = new User(generateId());
                             while (db.User.Any(m => m.UserId.Equals(user.UserId)))
                             {
@@ -117,9 +116,11 @@ namespace project_fob.Controllers
 
                             HttpContext.Session.Set("sessionid", Encoding.ASCII.GetBytes(user.UserId));
                             HttpContext.Session.Set("meetingid", Encoding.ASCII.GetBytes(meet.MeetingId));
-                            //Session["sessionid"] = user.UserId;
-                            //Session["meetingid"] = meet.MeetingId;
+                        //Session["sessionid"] = user.UserId;
+                        //Session["meetingid"] = meet.MeetingId;
 
+                        if (meet.Active)
+                        {
                             Host host = new Host(user, meet);
                             db.Host.Add(host);
 
