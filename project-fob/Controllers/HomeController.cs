@@ -39,9 +39,6 @@ namespace project_fob.Controllers
 				}
 				*/
 
-
-
-
         //Create Meeting
         public ActionResult meetingPageHost(string attendeePassword, string hostPassword)
         { //The password will require different way to send it because atm it is visible
@@ -59,42 +56,36 @@ namespace project_fob.Controllers
                 return View("index");
             }
 
-            /*using (Data.ApplicationDbContext db1= new Data.ApplicationDbContext())
+            User user = new User(generateId());
+            while (db.User.Any(m => m.UserId.Equals(user.UserId)))
             {
+                user.UserId = generateId();
+            }
+            db.User.Add(user);
 
-            }*/
-                User user = new User(generateId());
-                while (db.User.Any(m => m.UserId.Equals(user.UserId)))
-                {
-                    user.UserId = generateId();
-                }
-                db.User.Add(user);
+            HttpContext.Session.Set("sessionid", Encoding.ASCII.GetBytes(user.UserId));
+            //Session["sessionid"] = user.UserId;
 
-                HttpContext.Session.Set("sessionid", Encoding.ASCII.GetBytes(user.UserId));
-                //Session["sessionid"] = user.UserId;
+            Host host = new Host(user);
+            db.Host.Add(host);
 
-                Host host = new Host(user);
-                db.Host.Add(host);
+            Meeting meet = new Meeting(generateId(), host, attendeePassword, hostPassword);
+            while (db.Meeting.Any(m => m.MeetingId.Equals(meet.MeetingId.ToString()) && m.Active))
+            {
+                meet.MeetingId = generateId();
+            }
 
-                Meeting meet = new Meeting(generateId(), host, attendeePassword, hostPassword);
-                while (db.Meeting.Any(m => m.MeetingId.Equals(meet.MeetingId.ToString()) && m.Active))
-                {
-                    meet.MeetingId = generateId();
-                }
+            db.Meeting.Add(meet);
+            HttpContext.Session.Set("meetingid", Encoding.ASCII.GetBytes(meet.MeetingId));
+            //Session["meetingid"] = meet.MeetingId;
 
-                db.Meeting.Add(meet);
-                HttpContext.Session.Set("meetingid", Encoding.ASCII.GetBytes(meet.MeetingId));
-                //Session["meetingid"] = meet.MeetingId;
+            db.Fob.Add(new Fob(meet));
+            db.SaveChanges();
 
+            @ViewBag.title = "Meeting Id: " + meet.MeetingId;
+            //TODO generae QR code for the meeting and display it on its own page (add something to host to get this if lost)
 
-                db.Fob.Add(new Fob(meet));
-                db.SaveChanges();
-
-                @ViewBag.title = "Meeting Id: " + meet.MeetingId;
-                //TODO generae QR code for the meeting and display it on its own page (add something to host to get this if lost)
-
-                return View();
-            
+            return View();            
         }
 
 
@@ -121,8 +112,6 @@ namespace project_fob.Controllers
                         }
                         db.User.Add(user);
 
-
-
                         HttpContext.Session.Set("sessionid", Encoding.ASCII.GetBytes(user.UserId));
                         HttpContext.Session.Set("meetingid", Encoding.ASCII.GetBytes(meet.MeetingId));
                         //Session["sessionid"] = user.UserId;
@@ -133,9 +122,8 @@ namespace project_fob.Controllers
 
                         db.SaveChanges();
                         return View("MeetingPageHost");
-
                     }
-                    else if (password.ToString().Equals(meet.RoomPassword.ToString()))
+                    else if (password == meet.RoomPassword)
                     {
                         //join as attendee
                         User user = new User(generateId());
@@ -163,12 +151,13 @@ namespace project_fob.Controllers
                         }*/
 
                         db.Attendee.Add(att);
-
-
                         meet.Attendee.Add(att);
 
                         Fob fob = db.Fob.SingleOrDefault(f => f.Meeting == db.Meeting.FirstOrDefault(m => m.MeetingId.Equals(meetingId) && m.Active));
-                        if (fob == null) throw new ArgumentNullException();
+                        if (fob == null) 
+                        {
+                            throw new ArgumentNullException();
+                        }
 
                         fob.AttendeeCount += 1;
 
@@ -183,8 +172,6 @@ namespace project_fob.Controllers
                         ViewBag.title = "Meeting Password Incorrect. Please Try Again";
                         return View("Index");
                     }
-
-
                 }
                 ViewBag.title = "Meeting Does Not Exist. Please Try Again";
 
@@ -213,7 +200,6 @@ namespace project_fob.Controllers
                 }*/
             return null;
         }
-
 
         public static string generateId()
         {

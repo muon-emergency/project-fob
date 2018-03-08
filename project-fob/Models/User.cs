@@ -7,8 +7,10 @@ using System.Linq;
 using System.Web;
 
 
-namespace project_fob.Models {
-    public class User {
+namespace project_fob.Models 
+{
+    public class User 
+    {
         [Key]
         public int Id { get; set; }
 
@@ -18,7 +20,8 @@ namespace project_fob.Models {
 
         public User() { }
 
-        public User(string id){
+        public User(string id)
+        {
             UserId = id;
             Lastcheckin = DateTime.Now;
         }

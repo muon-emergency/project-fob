@@ -1,7 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
 
-namespace project_fob.Models {
+namespace project_fob.Models 
+{
     public class Host
     {
         [Key]
@@ -12,14 +13,15 @@ namespace project_fob.Models {
 
         public Host() { }
         
-        public Host(User user){
+        public Host(User user)
+        {
             User = user;
         }
 
-        public Host(User user, Meeting meeting){
+        public Host(User user, Meeting meeting)
+        {
             User = user;
             Meeting = meeting;
         }
-
     }
 }
