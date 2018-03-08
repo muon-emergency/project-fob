@@ -24,7 +24,7 @@ namespace project_fob.Controllers
         public IActionResult Index()
         {
             @ViewBag.title = "Project-fob:";
-
+            
             return View();
         }
 
@@ -56,12 +56,18 @@ namespace project_fob.Controllers
                 return View("index");
             }
 
-            User user = new User(generateId());
-            while (db.User.Any(m => m.UserId.Equals(user.UserId)))
+            string userid = RetrieveUserId();
+            User user = new User(userid);
+
+            if (userid == null)
             {
-                user.UserId = generateId();
+                user = new User(generateId());
+                while (db.User.Any(m => m.UserId.Equals(user.UserId)))
+                {
+                    user.UserId = generateId();
+                }
+                db.User.Add(user);
             }
-            db.User.Add(user);
 
             HttpContext.Session.Set("sessionid", Encoding.ASCII.GetBytes(user.UserId));
             //Session["sessionid"] = user.UserId;
@@ -106,16 +112,24 @@ namespace project_fob.Controllers
                     //host
                     if (password.Equals(meet.HostPassword.ToString()))
                     {
-                        
-                            User user = new User(generateId());
+
+                        string userid = RetrieveUserId();
+                        User user = new User(userid);
+                        if (userid == null)
+                        {
+                            user = new User(generateId());
                             while (db.User.Any(m => m.UserId.Equals(user.UserId)))
                             {
                                 user.UserId = generateId();
                             }
                             db.User.Add(user);
-
-                            HttpContext.Session.Set("sessionid", Encoding.ASCII.GetBytes(user.UserId));
-                            HttpContext.Session.Set("meetingid", Encoding.ASCII.GetBytes(meet.MeetingId));
+                        }
+                        else
+                        {
+                            user = new User(userid);
+                        }
+                        HttpContext.Session.Set("sessionid", Encoding.ASCII.GetBytes(user.UserId));
+                        HttpContext.Session.Set("meetingid", Encoding.ASCII.GetBytes(meet.MeetingId));
                         //Session["sessionid"] = user.UserId;
                         //Session["meetingid"] = meet.MeetingId;
 
@@ -135,32 +149,42 @@ namespace project_fob.Controllers
                     else if (password == meet.RoomPassword && meet.Active)
                     {
                         //join as attendee
-                        User user = new User(generateId());
-                        while (db.User.Any(m => m.UserId.Equals(user.UserId)))
+                        string userid = RetrieveUserId();
+                        User user = new User(userid);
+                        if (userid == null)
                         {
-                            user.UserId = generateId();
+                            user = new User(generateId());
+                            while (db.User.Any(m => m.UserId.Equals(user.UserId)))
+                            {
+                                user.UserId = generateId();
+                            }
+
+
+                            HttpContext.Session.Set("sessionid", Encoding.ASCII.GetBytes(user.UserId));
+                            HttpContext.Session.Set("meetingid", Encoding.ASCII.GetBytes(meet.MeetingId));
+
+                            //Session["sessionid"] = user.UserId;
+                            //Session["meetingid"] = meet.MeetingId;
+                            db.User.Add(user);
                         }
-
-                        HttpContext.Session.Set("sessionid", Encoding.ASCII.GetBytes(user.UserId));
-                        HttpContext.Session.Set("meetingid", Encoding.ASCII.GetBytes(meet.MeetingId));
-
-                        //Session["sessionid"] = user.UserId;
-                        //Session["meetingid"] = meet.MeetingId;
-                        db.User.Add(user);
                         Attendee att = new Attendee(user, meet);
                         //db.Attendee.Add(att);
 
+
                         //Not working solution atm, but the direction is correct.
-                        /*Attendee foundAttendee = db.Attendee.Include(x => x.Meeting).Include(x => x.User).SingleOrDefault(f => f.Meeting.MeetingId == meet.MeetingId && f.Meeting.Attendee.Equals(user.UserId));
-                        
+                        //Attendee foundAttendee = db.Attendee.Include(x => x.Meeting).Include(x => x.User).SingleOrDefault(f => f.Meeting.MeetingId == meet.MeetingId && f.Meeting.Attendee.Equals(att));
+                        Attendee foundAttendee = db.Attendee.Include(x => x.Meeting).Include(x => x.User).SingleOrDefault(f => f.Meeting.MeetingId.Equals(meet.MeetingId) && f.User.UserId.Equals(user.UserId) );
+
+
                         //if attendee is not in then we add him.
                         if (foundAttendee == null)
                         {
                             db.Attendee.Add(att);
-                        }*/
+                            meet.Attendee.Add(att);
+                        }
 
-                        db.Attendee.Add(att);
-                        meet.Attendee.Add(att);
+                        //db.Attendee.Add(att);
+                        //meet.Attendee.Add(att);
 
                         Fob fob = db.Fob.SingleOrDefault(f => f.Meeting == db.Meeting.FirstOrDefault(m => m.MeetingId.Equals(meetingId) && m.Active));
                         if (fob == null)
@@ -207,6 +231,22 @@ namespace project_fob.Controllers
                         return File(byteArray, "image/jpeg");
                     }
                 }*/
+            return null;
+        }
+
+        public string RetrieveUserId()
+        {
+            var gotvalue = HttpContext.Session.TryGetValue("sessionid", out var session);
+            if (gotvalue)
+            {
+                string byteArrayToString = System.Text.Encoding.ASCII.GetString(session);
+                return byteArrayToString;
+            }
+            /*if (session == null || session.Length == 0)
+            {
+                return null;
+            }*/
+            //return byteArrayToString;
             return null;
         }
 
