@@ -27,11 +27,11 @@ namespace project_fob.Controllers
             var gotvalue = HttpContext.Session.TryGetValue("meetingid", out var meetingIdValue);
 
             string byteArrayToString = System.Text.Encoding.ASCII.GetString(meetingIdValue);
-            Fob fob = db.Fob.Include(x => x.Meeting).ThenInclude(x => x.Stats).Include(x => x.fobbed).ThenInclude(x=> x.User).SingleOrDefault(f => f.Meeting.MeetingId == byteArrayToString);
+            Fob fob = db.Fob.Include(x => x.Meeting).ThenInclude(x => x.Stats).Include(x => x.fobbed).ThenInclude(x => x.User).SingleOrDefault(f => f.Meeting.MeetingId == byteArrayToString);
             if (fob == null)
             {
                 throw new ArgumentNullException();
-            } 
+            }
             // if fob.fobbed doesnt contain the current attendee
 
             gotvalue = HttpContext.Session.TryGetValue("sessionid", out var session);
@@ -39,7 +39,7 @@ namespace project_fob.Controllers
             string byteArrayToString2 = System.Text.Encoding.ASCII.GetString(session);
             Attendee att = db.Attendee.Include(at => at.User).Include(at => at.Meeting).SingleOrDefault(at => at.User.UserId.Equals(byteArrayToString2) && at.Meeting.MeetingId.Equals(byteArrayToString));
 
-            if (att == null) 
+            if (att == null)
             {
                 throw new ArgumentNullException();
             }
@@ -70,13 +70,14 @@ namespace project_fob.Controllers
         public ActionResult ExitMeeting(string value)
         {
             var gotvalue = HttpContext.Session.TryGetValue("meetingid", out var meetingIdValue);
-            
-            string byteArrayToString = System.Text.Encoding.ASCII.GetString(meetingIdValue);
-            Fob fob = db.Fob.Include(x => x.Meeting).ThenInclude(x => x.Stats)
-                            .Include(x => x.fobbed)
-                            .SingleOrDefault(f => f.Meeting.MeetingId == byteArrayToString);
 
-            if (fob == null) 
+            string byteArrayToString = System.Text.Encoding.ASCII.GetString(meetingIdValue);
+
+            Fob fob = db.Fob.Include(x => x.Meeting).ThenInclude(x => x.Stats)
+                            .Include(x => x.fobbed).ThenInclude(x => x.User).
+                            SingleOrDefault(f => f.Meeting.MeetingId == byteArrayToString);
+
+            if (fob == null)
             {
                 throw new ArgumentNullException();
             }
@@ -94,7 +95,7 @@ namespace project_fob.Controllers
             {
                 fob.fobbed.Remove(att);
 
-                if (fob.FobCount > 0) 
+                if (fob.FobCount > 0)
                 {
                     fob.FobCount -= 1;
                 }
