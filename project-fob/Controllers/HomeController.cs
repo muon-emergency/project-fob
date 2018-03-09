@@ -24,7 +24,7 @@ namespace project_fob.Controllers
         public IActionResult Index()
         {
             @ViewBag.title = "Project-fob:";
-            
+
             return View();
         }
 
@@ -56,10 +56,10 @@ namespace project_fob.Controllers
                 return View("index");
             }
 
-            string userid = RetrieveUserId();
-            User user = new User(userid);
+            User user = RetrieveUser();
 
-            if (userid == null)
+            //User user = new User(userid);
+            if (user == null)
             {
                 user = new User(generateId());
                 while (db.User.Any(m => m.UserId.Equals(user.UserId)))
@@ -113,9 +113,11 @@ namespace project_fob.Controllers
                     if (password.Equals(meet.HostPassword.ToString()))
                     {
 
-                        string userid = RetrieveUserId();
-                        User user = new User(userid);
-                        if (userid == null)
+                        //string userid = RetrieveUserId();
+                        User user = RetrieveUser();
+
+                        //User user = new User(userid);
+                        if (user == null)
                         {
                             user = new User(generateId());
                             while (db.User.Any(m => m.UserId.Equals(user.UserId)))
@@ -123,10 +125,6 @@ namespace project_fob.Controllers
                                 user.UserId = generateId();
                             }
                             db.User.Add(user);
-                        }
-                        else
-                        {
-                            user = new User(userid);
                         }
                         HttpContext.Session.Set("sessionid", Encoding.ASCII.GetBytes(user.UserId));
                         HttpContext.Session.Set("meetingid", Encoding.ASCII.GetBytes(meet.MeetingId));
@@ -149,10 +147,11 @@ namespace project_fob.Controllers
                     else if (password == meet.RoomPassword && meet.Active)
                     {
                         //join as attendee
-                        string userid = RetrieveUserId();
-                        User user = new User(userid);
-                        if (userid == null)
+                        bool existingUser = true;
+                        User user = RetrieveUser();
+                        if (user == null)
                         {
+                            existingUser = false;
                             user = new User(generateId());
                             while (db.User.Any(m => m.UserId.Equals(user.UserId)))
                             {
@@ -173,7 +172,7 @@ namespace project_fob.Controllers
 
                         //Not working solution atm, but the direction is correct.
                         //Attendee foundAttendee = db.Attendee.Include(x => x.Meeting).Include(x => x.User).SingleOrDefault(f => f.Meeting.MeetingId == meet.MeetingId && f.Meeting.Attendee.Equals(att));
-                        Attendee foundAttendee = db.Attendee.Include(x => x.Meeting).Include(x => x.User).SingleOrDefault(f => f.Meeting.MeetingId.Equals(meet.MeetingId) && f.User.UserId.Equals(user.UserId) );
+                        Attendee foundAttendee = db.Attendee.Include(x => x.Meeting).Include(x => x.User).SingleOrDefault(f => f.Meeting.MeetingId.Equals(meet.MeetingId) && f.User.UserId.Equals(user.UserId));
 
 
                         //if attendee is not in then we add him.
@@ -181,18 +180,20 @@ namespace project_fob.Controllers
                         {
                             db.Attendee.Add(att);
                             meet.Attendee.Add(att);
+                            //test here
+                            Fob fob = db.Fob.SingleOrDefault(f => f.Meeting == db.Meeting.FirstOrDefault(m => m.MeetingId.Equals(meetingId) && m.Active));
+                            if (fob == null)
+                            {
+                                throw new ArgumentNullException();
+                            }
+
+                            fob.AttendeeCount += 1;
                         }
 
                         //db.Attendee.Add(att);
                         //meet.Attendee.Add(att);
 
-                        Fob fob = db.Fob.SingleOrDefault(f => f.Meeting == db.Meeting.FirstOrDefault(m => m.MeetingId.Equals(meetingId) && m.Active));
-                        if (fob == null)
-                        {
-                            throw new ArgumentNullException();
-                        }
-
-                        fob.AttendeeCount += 1;
+                        
 
                         ViewBag.title = "Id:" + meetingId;
 
@@ -247,6 +248,16 @@ namespace project_fob.Controllers
                 return null;
             }*/
             //return byteArrayToString;
+            return null;
+        }
+
+        public User RetrieveUser()
+        {
+            string userid = RetrieveUserId();
+            if (userid != null)
+            {
+                return db.User.SingleOrDefault(f => f.UserId.Equals(userid));
+            }
             return null;
         }
 

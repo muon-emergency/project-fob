@@ -12,6 +12,12 @@ namespace project_fob.Controllers
 {
     public class HostController : Controller
     {
+        public static void Foo()
+        {
+            System.Console.WriteLine("Foo");
+        }
+
+
         private readonly ApplicationDbContext db;
 
         public HostController(ApplicationDbContext db)
@@ -28,7 +34,8 @@ namespace project_fob.Controllers
             var gotvalue = HttpContext.Session.TryGetValue("meetingid", out var meetingIdValue);
             string byteArrayToString = System.Text.Encoding.ASCII.GetString(meetingIdValue);
             Fob fob = db.Fob.Include(x => x.Meeting).ThenInclude(x => x.Stats)
-                            .Include(x => x.fobbed)
+                            .Include(x => x.fobbed).ThenInclude(x=>x.User)
+                            .Include(x=> x.fobbed).ThenInclude(x=>x.Meeting)
                             .SingleOrDefault(f => f.Meeting.MeetingId == byteArrayToString);
 
             if (fob == null)
@@ -78,7 +85,7 @@ namespace project_fob.Controllers
             var gotvalue = HttpContext.Session.TryGetValue("meetingid", out var meetingIdValue);
             Fob fob = Fob.getFob(Encoding.ASCII.GetString(meetingIdValue), db);
 
-            if (fob == null) 
+            if (fob == null)
             {
                 throw new ArgumentNullException();
             }
@@ -118,10 +125,11 @@ namespace project_fob.Controllers
 
             //Fob fob = Fob.getFob(meetingIdValue.ToString(), db);
             Fob fob = db.Fob.Include(x => x.Meeting).ThenInclude(x => x.Stats)
+                            .Include(x => x.Meeting).ThenInclude(x => x.Attendee).ThenInclude(x => x.User)
                             .Include(x => x.fobbed)
                             .SingleOrDefault(f => f.Meeting.MeetingId == byteArrayToString);
 
-            if (fob == null) 
+            if (fob == null)
             {
                 throw new ArgumentNullException();
             }

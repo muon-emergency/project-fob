@@ -8,8 +8,8 @@ namespace project_fob.Models
     {
         [Key]
         public int Id { get; set; }
-        public virtual Meeting Meeting { get; set; }
-        public virtual User User { get; set; }
+        public Meeting Meeting { get; set; }
+        public  User User { get; set; }
 
         public Attendee() 
         {
@@ -17,14 +17,27 @@ namespace project_fob.Models
 
         public Attendee(User user, Meeting meeting)
         {
+            if (user == null)
+            {
+
+            }
             Meeting = meeting;
             User = user;
         }
 
         public override bool Equals(object obj)
         {
-            Attendee parameter = (Attendee)obj;
-            if (parameter.User.UserId == User.UserId)
+            if(obj is Attendee paramater)
+            {
+                return Equals(paramater);
+            }
+            
+            return false;
+        }
+
+        public bool Equals(Attendee parameter)
+        {
+            if (User.Equals(parameter.User))
             {
                 if (parameter.Meeting.MeetingId == Meeting.MeetingId)
                 {

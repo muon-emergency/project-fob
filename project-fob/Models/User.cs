@@ -27,13 +27,29 @@ namespace project_fob.Models
         }
         public override bool Equals(object obj)
         {
-            User param = (User)obj;
-            if (UserId.Equals(param.UserId))
+            if (obj is User paramater)
             {
-                return true;
+                return Equals(paramater);
             }
             return false;
             //return base.Equals(obj);
+        }
+
+        private bool Equals(User parameter)
+        {
+            if (parameter.UserId.Equals(UserId))
+            {
+                    return true;
+            }
+            return false;
+        }
+
+        public override int GetHashCode()
+        {
+            var hashCode = -1403531409;
+            hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(UserId);
+            hashCode = hashCode * -1521134295 + Lastcheckin.GetHashCode();
+            return hashCode;
         }
     }
 }

@@ -27,7 +27,7 @@ namespace project_fob.Controllers
             var gotvalue = HttpContext.Session.TryGetValue("meetingid", out var meetingIdValue);
 
             string byteArrayToString = System.Text.Encoding.ASCII.GetString(meetingIdValue);
-            Fob fob = db.Fob.Include(x => x.Meeting).ThenInclude(x => x.Stats).Include(x => x.fobbed).SingleOrDefault(f => f.Meeting.MeetingId == byteArrayToString);
+            Fob fob = db.Fob.Include(x => x.Meeting).ThenInclude(x => x.Stats).Include(x => x.fobbed).ThenInclude(x=> x.User).SingleOrDefault(f => f.Meeting.MeetingId == byteArrayToString);
             if (fob == null)
             {
                 throw new ArgumentNullException();
@@ -37,7 +37,7 @@ namespace project_fob.Controllers
             gotvalue = HttpContext.Session.TryGetValue("sessionid", out var session);
 
             string byteArrayToString2 = System.Text.Encoding.ASCII.GetString(session);
-            Attendee att = db.Attendee.SingleOrDefault(at => at.User.UserId.Equals((byteArrayToString2)));
+            Attendee att = db.Attendee.Include(at => at.User).Include(at => at.Meeting).SingleOrDefault(at => at.User.UserId.Equals(byteArrayToString2) && at.Meeting.MeetingId.Equals(byteArrayToString));
 
             if (att == null) 
             {
@@ -47,7 +47,17 @@ namespace project_fob.Controllers
 
             //Need a rework as if someone is fobbing it it'll not get if the person is already fobbed because of the different primary key for different session.
             //A workaround would be to replace attendee with user as we don't need the attendee anymore as the meeting (or fob) contains the meeting id anyways.
-            if (!fob.fobbed.Contains(att))
+            bool foundfobber = false;
+
+            for (int i = 0; i < fob.fobbed.Count; i++)
+            {
+                if (fob.fobbed[i].Equals(att))
+                {
+                    foundfobber = true;
+                    i = fob.fobbed.Count;
+                }
+            }
+            if (!foundfobber)
             {
                 fob.FobCount += 1;
 

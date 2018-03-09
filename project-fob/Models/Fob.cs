@@ -14,8 +14,8 @@ namespace project_fob.Models
         public int AttendeeCount { get; set; }
         public int FobCount { get; set; }
         public DateTime TopicStartTime { get; set; }
-        public virtual Meeting Meeting { get; set; }
-        public virtual List<Attendee> fobbed { get; set; }
+        public Meeting Meeting { get; set; } 
+        public List<Attendee> fobbed { get; set; } = new List<Attendee>();
 
 
         public Fob() { }
