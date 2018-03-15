@@ -27,29 +27,26 @@ namespace project_fob.Controllers
             var gotvalue = HttpContext.Session.TryGetValue("meetingid", out var meetingIdValue);
 
             string byteArrayToString = System.Text.Encoding.ASCII.GetString(meetingIdValue);
-            Fob fob = db.Fob.Include(x => x.Meeting).ThenInclude(x => x.Stats).Include(x => x.fobbed).ThenInclude(x => x.User).SingleOrDefault(f => f.Meeting.MeetingId == byteArrayToString);
+
+            Fob fob = db.Fob.Include(x => x.Meeting).ThenInclude(x => x.Stats).Include(x => x.fobbed).ThenInclude(x => x.User).Single(f => f.Meeting.MeetingId == byteArrayToString);
+            /*Fob fob = db.Fob.Include(x => x.Meeting).ThenInclude(x => x.Stats).Include(x => x.fobbed).ThenInclude(x => x.User).SingleOrDefault(f => f.Meeting.MeetingId == byteArrayToString);
             if (fob == null)
             {
                 throw new ArgumentNullException();
-            }
+            }*/
             // if fob.fobbed doesnt contain the current attendee
 
             gotvalue = HttpContext.Session.TryGetValue("sessionid", out var session);
 
             string byteArrayToString2 = System.Text.Encoding.ASCII.GetString(session);
-            Attendee att = db.Attendee.Include(at => at.User).Include(at => at.Meeting).SingleOrDefault(at => at.User.UserId.Equals(byteArrayToString2) && at.Meeting.MeetingId.Equals(byteArrayToString));
-
-            if (att == null)
-            {
-                throw new ArgumentNullException();
-            }
+            Attendee att = db.Attendee.Include(at => at.User).Include(at => at.Meeting).Single(at => at.User.UserId.Equals(byteArrayToString2) && at.Meeting.MeetingId.Equals(byteArrayToString));
 
 
             //Need a rework as if someone is fobbing it it'll not get if the person is already fobbed because of the different primary key for different session.
             //A workaround would be to replace attendee with user as we don't need the attendee anymore as the meeting (or fob) contains the meeting id anyways.
-            bool foundfobber = false;
+            //bool foundfobber = false;
 
-            for (int i = 0; i < fob.fobbed.Count; i++)
+            /*for (int i = 0; i < fob.fobbed.Count; i++)
             {
                 if (fob.fobbed[i].Equals(att))
                 {
@@ -57,6 +54,9 @@ namespace project_fob.Controllers
                     i = fob.fobbed.Count;
                 }
             }
+            */
+
+            bool foundfobber = fob.fobbed.Any(x => x.Equals(att));
             if (!foundfobber)
             {
                 fob.FobCount += 1;
@@ -75,12 +75,7 @@ namespace project_fob.Controllers
 
             Fob fob = db.Fob.Include(x => x.Meeting).ThenInclude(x => x.Stats)
                             .Include(x => x.fobbed).ThenInclude(x => x.User).
-                            SingleOrDefault(f => f.Meeting.MeetingId == byteArrayToString);
-
-            if (fob == null)
-            {
-                throw new ArgumentNullException();
-            }
+                            Single(f => f.Meeting.MeetingId == byteArrayToString);
 
             if (fob.AttendeeCount > 0)
             {

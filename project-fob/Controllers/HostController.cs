@@ -12,12 +12,6 @@ namespace project_fob.Controllers
 {
     public class HostController : Controller
     {
-        public static void Foo()
-        {
-            System.Console.WriteLine("Foo");
-        }
-
-
         private readonly ApplicationDbContext db;
 
         public HostController(ApplicationDbContext db)
@@ -36,7 +30,7 @@ namespace project_fob.Controllers
             Fob fob = db.Fob.Include(x => x.Meeting).ThenInclude(x => x.Stats)
                             .Include(x => x.fobbed).ThenInclude(x=>x.User)
                             .Include(x=> x.fobbed).ThenInclude(x=>x.Meeting)
-                            .SingleOrDefault(f => f.Meeting.MeetingId == byteArrayToString);
+                            .Single(f => f.Meeting.MeetingId == byteArrayToString);
 
             if (fob == null)
             {

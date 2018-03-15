@@ -17,10 +17,6 @@ namespace project_fob.Models
 
         public Attendee(User user, Meeting meeting)
         {
-            if (user == null)
-            {
-
-            }
             Meeting = meeting;
             User = user;
         }

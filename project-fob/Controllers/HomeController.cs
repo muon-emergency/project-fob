@@ -104,7 +104,6 @@ namespace project_fob.Controllers
                 {
                     password = "";
                 }
-                //Meeting meet = db.Meeting.SingleOrDefault(m => m.MeetingId == meetingId && m.Active);
                 Meeting meet = db.Meeting.SingleOrDefault(m => m.MeetingId == meetingId);
 
                 if (meet != null && meetingId.Equals(meet.MeetingId))
@@ -162,12 +161,9 @@ namespace project_fob.Controllers
                             HttpContext.Session.Set("sessionid", Encoding.ASCII.GetBytes(user.UserId));
                             HttpContext.Session.Set("meetingid", Encoding.ASCII.GetBytes(meet.MeetingId));
 
-                            //Session["sessionid"] = user.UserId;
-                            //Session["meetingid"] = meet.MeetingId;
                             db.User.Add(user);
                         }
                         Attendee att = new Attendee(user, meet);
-                        //db.Attendee.Add(att);
 
 
                         //Not working solution atm, but the direction is correct.
@@ -181,19 +177,10 @@ namespace project_fob.Controllers
                             db.Attendee.Add(att);
                             meet.Attendee.Add(att);
                             //test here
-                            Fob fob = db.Fob.SingleOrDefault(f => f.Meeting == db.Meeting.FirstOrDefault(m => m.MeetingId.Equals(meetingId) && m.Active));
-                            if (fob == null)
-                            {
-                                throw new ArgumentNullException();
-                            }
-
+                            Fob fob = db.Fob.Single(f => f.Meeting == db.Meeting.FirstOrDefault(m => m.MeetingId.Equals(meetingId) && m.Active));
                             fob.AttendeeCount += 1;
                         }
 
-                        //db.Attendee.Add(att);
-                        //meet.Attendee.Add(att);
-
-                        
 
                         ViewBag.title = "Id:" + meetingId;
 

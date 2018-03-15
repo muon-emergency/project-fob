@@ -32,7 +32,6 @@ namespace project_fob.Models
                 return Equals(paramater);
             }
             return false;
-            //return base.Equals(obj);
         }
 
         private bool Equals(User parameter)
@@ -48,7 +47,6 @@ namespace project_fob.Models
         {
             var hashCode = -1403531409;
             hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(UserId);
-            hashCode = hashCode * -1521134295 + Lastcheckin.GetHashCode();
             return hashCode;
         }
     }
