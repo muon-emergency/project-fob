@@ -29,16 +29,16 @@ namespace project_fob.Controllers
             string byteArrayToString = System.Text.Encoding.ASCII.GetString(meetingIdValue);
 
             Fob fob = db.Fob.Include(x => x.Meeting).ThenInclude(x => x.Stats).Include(x => x.fobbed).ThenInclude(x => x.User).Single(f => f.Meeting.MeetingId == byteArrayToString);
-            
+
             gotvalue = HttpContext.Session.TryGetValue("sessionid", out var session);
 
             string byteArrayToString2 = System.Text.Encoding.ASCII.GetString(session);
             Attendee att = db.Attendee.Include(at => at.User).Include(at => at.Meeting).Single(at => at.User.UserId.Equals(byteArrayToString2) && at.Meeting.MeetingId.Equals(byteArrayToString));
-            
+
             bool foundfobber = fob.fobbed.Any(x => x.Equals(att));
             if (!foundfobber)
             {
-                fob.FobCount += 1;
+                //fob.FobCount += 1;
 
                 fob.fobbed.Add(att);
                 db.SaveChanges();
@@ -56,10 +56,11 @@ namespace project_fob.Controllers
                             .Include(x => x.fobbed).ThenInclude(x => x.User).
                             Single(f => f.Meeting.MeetingId == byteArrayToString);
 
-            if (fob.AttendeeCount > 0)
+            /*if (fob.AttendeeCount > 0)
             {
                 fob.AttendeeCount -= 1;
             }
+            */
 
             gotvalue = HttpContext.Session.TryGetValue("sessionid", out var sessionBytes);
             var session = Encoding.ASCII.GetString(sessionBytes);
@@ -69,14 +70,14 @@ namespace project_fob.Controllers
             //The attendee might return a null value, This is highly unlikely afaik if the server is restarted new sessions and ID-s are handed out (Confirmation might required)
 
             Attendee att = db.Attendee.SingleOrDefault(f => f.Meeting.MeetingId == session);
-            if (fob.fobbed.Contains(att))
+            if (att != null && fob.fobbed.Contains(att))
             {
                 fob.fobbed.Remove(att);
 
-                if (fob.FobCount > 0)
+                /*if (fob.FobCount > 0)
                 {
                     fob.FobCount -= 1;
-                }
+                }*/
             }
             db.SaveChanges();
             return View("~/Views/Home/Index.cshtml");

@@ -31,11 +31,7 @@ namespace project_fob.Controllers
                             .Include(x => x.fobbed).ThenInclude(x=>x.User)
                             .Include(x=> x.fobbed).ThenInclude(x=>x.Meeting)
                             .Single(f => f.Meeting.MeetingId == byteArrayToString);
-
-            if (fob == null)
-            {
-                throw new ArgumentNullException();
-            }
+            
 
             fob.Meeting.Stats.Add(new Stats(fob.AttendeeCount, fob.FobCount, fob.TopicStartTime, DateTime.Now));
             fob.Meeting.Active = false;
@@ -120,7 +116,7 @@ namespace project_fob.Controllers
 
             fob.Meeting.Stats.Add(new Stats(fob.AttendeeCount, fob.FobCount, fob.TopicStartTime, DateTime.Now));
 
-            fob.FobCount = 0;
+            //fob.FobCount = 0;
             fob.fobbed.Clear();
             db.SaveChanges();
         }

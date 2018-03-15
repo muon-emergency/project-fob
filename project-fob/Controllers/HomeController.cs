@@ -170,7 +170,7 @@ namespace project_fob.Controllers
                             meet.Attendee.Add(att);
                             //test here
                             Fob fob = db.Fob.Single(f => f.Meeting == db.Meeting.FirstOrDefault(m => m.MeetingId.Equals(meetingId) && m.Active));
-                            fob.AttendeeCount += 1;
+                            //fob.AttendeeCount += 1;
                         }
 
 
