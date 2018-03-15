@@ -54,12 +54,8 @@ namespace project_fob.Controllers
             Host host = db.Host
                 .Include(x => x.Meeting).ThenInclude(x => x.Host)
                 .Include(x => x.User)
-                .SingleOrDefault(h => h.User.UserId == byteArrayToString);
+                .Single(h => h.User.UserId == byteArrayToString);
 
-            if (host == null)
-            {
-                throw new ArgumentNullException();
-            }
             host.Meeting.Host.Remove(host);
             db.SaveChanges();
 

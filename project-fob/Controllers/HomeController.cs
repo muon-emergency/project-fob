@@ -222,11 +222,6 @@ namespace project_fob.Controllers
                 string byteArrayToString = System.Text.Encoding.ASCII.GetString(session);
                 return byteArrayToString;
             }
-            /*if (session == null || session.Length == 0)
-            {
-                return null;
-            }*/
-            //return byteArrayToString;
             return null;
         }
 

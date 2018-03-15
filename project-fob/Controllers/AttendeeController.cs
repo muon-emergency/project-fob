@@ -64,6 +64,10 @@ namespace project_fob.Controllers
             gotvalue = HttpContext.Session.TryGetValue("sessionid", out var sessionBytes);
             var session = Encoding.ASCII.GetString(sessionBytes);
 
+
+            //#Revision might required
+            //The attendee might return a null value, This is highly unlikely afaik if the server is restarted new sessions and ID-s are handed out (Confirmation might required)
+
             Attendee att = db.Attendee.SingleOrDefault(f => f.Meeting.MeetingId == session);
             if (fob.fobbed.Contains(att))
             {
@@ -80,6 +84,11 @@ namespace project_fob.Controllers
 
         public string ImStillHere()
         {
+            var gotvalue = HttpContext.Session.TryGetValue("sessionid", out var sessionBytes);
+            if (gotvalue)
+            {
+                var session = Encoding.ASCII.GetString(sessionBytes);
+            }
             /*here we find the attendee in the database and update
              * the attendee's last check in.*/
             return "";
