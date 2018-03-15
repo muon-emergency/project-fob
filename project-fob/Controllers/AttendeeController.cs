@@ -84,6 +84,7 @@ namespace project_fob.Controllers
 
         public string ImStillHere()
         {
+            //This can be used to check if the user is still in the meeting
             var gotvalue = HttpContext.Session.TryGetValue("sessionid", out var sessionBytes);
             if (gotvalue)
             {
