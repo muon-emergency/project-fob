@@ -120,12 +120,7 @@ namespace project_fob.Controllers
             Fob fob = db.Fob.Include(x => x.Meeting).ThenInclude(x => x.Stats)
                             .Include(x => x.Meeting).ThenInclude(x => x.Attendee).ThenInclude(x => x.User)
                             .Include(x => x.fobbed)
-                            .SingleOrDefault(f => f.Meeting.MeetingId == byteArrayToString);
-
-            if (fob == null)
-            {
-                throw new ArgumentNullException();
-            }
+                            .Single(f => f.Meeting.MeetingId == byteArrayToString);
 
             fob.Meeting.Stats.Add(new Stats(fob.AttendeeCount, fob.FobCount, fob.TopicStartTime, DateTime.Now));
 
