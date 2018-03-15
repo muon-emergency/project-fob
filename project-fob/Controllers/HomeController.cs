@@ -32,16 +32,11 @@ namespace project_fob.Controllers
         {
             return View();
         }
-        /*
-				public ActionResult StatScreen()
-				{
-					return View();
-				}
-				*/
 
         //Create Meeting
         public ActionResult meetingPageHost(string attendeePassword, string hostPassword)
-        { //The password will require different way to send it because atm it is visible
+        { 
+            //The password will require different way to send it because atm it is visible
 
             attendeePassword = attendeePassword ?? "";
 
@@ -57,8 +52,7 @@ namespace project_fob.Controllers
             }
 
             User user = RetrieveUser();
-
-            //User user = new User(userid);
+            
             if (user == null)
             {
                 user = new User(generateId());
@@ -70,13 +64,14 @@ namespace project_fob.Controllers
             }
 
             HttpContext.Session.Set("sessionid", Encoding.ASCII.GetBytes(user.UserId));
-            //Session["sessionid"] = user.UserId;
 
             Host host = new Host(user);
             db.Host.Add(host);
 
             Meeting meet = new Meeting(generateId(), host, attendeePassword, hostPassword);
+
             //This might cause some incidents in case we generate 2 rooms with the same ID
+
             while (db.Meeting.Any(m => m.MeetingId.Equals(meet.MeetingId.ToString()) && m.Active))
             {
                 meet.MeetingId = generateId();
@@ -111,11 +106,9 @@ namespace project_fob.Controllers
                     //host
                     if (password.Equals(meet.HostPassword.ToString()))
                     {
-
-                        //string userid = RetrieveUserId();
+                        
                         User user = RetrieveUser();
-
-                        //User user = new User(userid);
+                        
                         if (user == null)
                         {
                             user = new User(generateId());
@@ -127,8 +120,6 @@ namespace project_fob.Controllers
                         }
                         HttpContext.Session.Set("sessionid", Encoding.ASCII.GetBytes(user.UserId));
                         HttpContext.Session.Set("meetingid", Encoding.ASCII.GetBytes(meet.MeetingId));
-                        //Session["sessionid"] = user.UserId;
-                        //Session["meetingid"] = meet.MeetingId;
 
                         if (meet.Active)
                         {
@@ -147,6 +138,7 @@ namespace project_fob.Controllers
                     {
                         //join as attendee
                         bool existingUser = true;
+
                         User user = RetrieveUser();
                         if (user == null)
                         {

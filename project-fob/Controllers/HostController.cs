@@ -116,8 +116,7 @@ namespace project_fob.Controllers
             var gotvalue = HttpContext.Session.TryGetValue("meetingid", out var meetingIdValue);
 
             string byteArrayToString = System.Text.Encoding.ASCII.GetString(meetingIdValue);
-
-            //Fob fob = Fob.getFob(meetingIdValue.ToString(), db);
+            
             Fob fob = db.Fob.Include(x => x.Meeting).ThenInclude(x => x.Stats)
                             .Include(x => x.Meeting).ThenInclude(x => x.Attendee).ThenInclude(x => x.User)
                             .Include(x => x.fobbed)
