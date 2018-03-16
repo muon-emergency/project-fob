@@ -33,9 +33,9 @@ namespace project_fob.Controllers
                 string session = meetingIdValue.ToString();
                 //string session = Session["meetingid"].ToString();
 
-                string byteArrayToString = System.Text.Encoding.ASCII.GetString(meetingIdValue);
+                string MeetingIdString = System.Text.Encoding.ASCII.GetString(meetingIdValue);
                 
-                Meeting meeting = db.Meeting.Include(x => x.Stats).Single(m => m.MeetingId == byteArrayToString);
+                Meeting meeting = db.Meeting.Include(x => x.Stats).Single(m => m.MeetingId == MeetingIdString);
 
                 List<Stats> stats = meeting.Stats;
 

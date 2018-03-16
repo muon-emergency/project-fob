@@ -26,14 +26,14 @@ namespace project_fob.Controllers
         {
             var gotvalue = HttpContext.Session.TryGetValue("meetingid", out var meetingIdValue);
 
-            string byteArrayToString = System.Text.Encoding.ASCII.GetString(meetingIdValue);
+            string MeetingString = System.Text.Encoding.ASCII.GetString(meetingIdValue);
 
-            Fob fob = db.Fob.Include(x => x.Meeting).ThenInclude(x => x.Stats).Include(x => x.Fobbed).ThenInclude(x => x.User).Single(f => f.Meeting.MeetingId == byteArrayToString);
+            Fob fob = db.Fob.Include(x => x.Meeting).ThenInclude(x => x.Stats).Include(x => x.Fobbed).ThenInclude(x => x.User).Single(f => f.Meeting.MeetingId == MeetingString);
 
             gotvalue = HttpContext.Session.TryGetValue("sessionid", out var session);
 
-            string byteArrayToString2 = System.Text.Encoding.ASCII.GetString(session);
-            Attendee att = db.Attendee.Include(at => at.User).Include(at => at.Meeting).Single(at => at.User.UserId.Equals(byteArrayToString2) && at.Meeting.MeetingId.Equals(byteArrayToString));
+            string UserIdString = System.Text.Encoding.ASCII.GetString(session);
+            Attendee att = db.Attendee.Include(at => at.User).Include(at => at.Meeting).Single(at => at.User.UserId.Equals(UserIdString) && at.Meeting.MeetingId.Equals(MeetingString));
 
             fob.AddFob(att);
             db.SaveChanges();

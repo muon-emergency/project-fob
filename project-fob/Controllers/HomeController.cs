@@ -209,8 +209,8 @@ namespace project_fob.Controllers
             var gotvalue = HttpContext.Session.TryGetValue("sessionid", out var session);
             if (gotvalue)
             {
-                string byteArrayToString = System.Text.Encoding.ASCII.GetString(session);
-                return byteArrayToString;
+
+                return System.Text.Encoding.ASCII.GetString(session); ;
             }
             return null;
         }
