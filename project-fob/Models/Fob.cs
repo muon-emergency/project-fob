@@ -64,9 +64,9 @@ namespace project_fob.Models
             fobbed.Clear();
         }
 
-        public int GetAttendeeCount()
+        /*public int GetAttendeeCount()
         {
             return Meeting.GetAttendeeCount();
-        }
+        }*/
     }
 }

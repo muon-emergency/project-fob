@@ -99,6 +99,7 @@ namespace project_fob.Controllers
                 {
                     password = "";
                 }
+                meetingId = meetingId.ToUpper();
                 Meeting meet = db.Meeting.SingleOrDefault(m => m.MeetingId == meetingId);
 
                 if (meet != null && meetingId.Equals(meet.MeetingId))

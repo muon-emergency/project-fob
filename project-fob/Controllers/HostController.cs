@@ -27,14 +27,18 @@ namespace project_fob.Controllers
         {
             var gotvalue = HttpContext.Session.TryGetValue("meetingid", out var meetingIdValue);
             string byteArrayToString = System.Text.Encoding.ASCII.GetString(meetingIdValue);
-            Fob fob = db.Fob.Include(x => x.Meeting).ThenInclude(x => x.Stats)
+            /*Fob fob = db.Fob.Include(x => x.Meeting).ThenInclude(x => x.Stats)
                             .Include(x => x.fobbed).ThenInclude(x=>x.User)
                             .Include(x=> x.fobbed).ThenInclude(x=>x.Meeting).ThenInclude(x=>x.Attendee)
-                            .Include(x=> x.fobbed)
+                            .Single(f => f.Meeting.MeetingId == byteArrayToString);
+                            */
+
+            Fob fob = db.Fob.Include(x => x.Meeting).ThenInclude(x => x.Stats)
+                            .Include(x => x.Meeting).ThenInclude(x => x.Attendee).ThenInclude(x => x.User)
+                            .Include(x => x.fobbed)
                             .Single(f => f.Meeting.MeetingId == byteArrayToString);
 
-
-            fob.Meeting.Stats.Add(new Stats(fob.GetAttendeeCount(), fob.FobCount, fob.TopicStartTime, DateTime.Now));
+            fob.Meeting.Stats.Add(new Stats(fob.Meeting.GetAttendeeCount(), fob.FobCount, fob.TopicStartTime, DateTime.Now));
             fob.Meeting.Active = false;
             db.SaveChanges();
 
@@ -78,7 +82,7 @@ namespace project_fob.Controllers
             }
 
             //First number are the total users, the second number is the voted users.
-            return fob.GetAttendeeCount() + "," + fob.FobCount;
+            return fob.Meeting.GetAttendeeCount() + "," + fob.FobCount;
         }
 
         /*public ActionResult returnGeneratedQrCode()
@@ -115,7 +119,7 @@ namespace project_fob.Controllers
                             .Include(x => x.fobbed)
                             .Single(f => f.Meeting.MeetingId == byteArrayToString);
 
-            fob.Meeting.Stats.Add(new Stats(fob.GetAttendeeCount(), fob.FobCount, fob.TopicStartTime, DateTime.Now));
+            fob.Meeting.Stats.Add(new Stats(fob.Meeting.GetAttendeeCount(), fob.FobCount, fob.TopicStartTime, DateTime.Now));
 
             //fob.FobCount = 0;
             //fob.fobbed.Clear();
