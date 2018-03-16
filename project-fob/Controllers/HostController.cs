@@ -30,7 +30,7 @@ namespace project_fob.Controllers
             
             Fob fob = db.Fob.Include(x => x.Meeting).ThenInclude(x => x.Stats)
                             .Include(x => x.Meeting).ThenInclude(x => x.Attendee).ThenInclude(x => x.User)
-                            .Include(x => x.fobbed)
+                            .Include(x => x.Fobbed)
                             .Single(f => f.Meeting.MeetingId == byteArrayToString);
 
             fob.Meeting.Stats.Add(new Stats(fob.Meeting.GetAttendeeCount(), fob.FobCount, fob.TopicStartTime, DateTime.Now));
@@ -111,7 +111,7 @@ namespace project_fob.Controllers
             
             Fob fob = db.Fob.Include(x => x.Meeting).ThenInclude(x => x.Stats)
                             .Include(x => x.Meeting).ThenInclude(x => x.Attendee).ThenInclude(x => x.User)
-                            .Include(x => x.fobbed)
+                            .Include(x => x.Fobbed)
                             .Single(f => f.Meeting.MeetingId == byteArrayToString);
 
             fob.Meeting.Stats.Add(new Stats(fob.Meeting.GetAttendeeCount(), fob.FobCount, fob.TopicStartTime, DateTime.Now));

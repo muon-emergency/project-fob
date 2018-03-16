@@ -28,14 +28,14 @@ namespace project_fob.Controllers
 
             string byteArrayToString = System.Text.Encoding.ASCII.GetString(meetingIdValue);
 
-            Fob fob = db.Fob.Include(x => x.Meeting).ThenInclude(x => x.Stats).Include(x => x.fobbed).ThenInclude(x => x.User).Single(f => f.Meeting.MeetingId == byteArrayToString);
+            Fob fob = db.Fob.Include(x => x.Meeting).ThenInclude(x => x.Stats).Include(x => x.Fobbed).ThenInclude(x => x.User).Single(f => f.Meeting.MeetingId == byteArrayToString);
 
             gotvalue = HttpContext.Session.TryGetValue("sessionid", out var session);
 
             string byteArrayToString2 = System.Text.Encoding.ASCII.GetString(session);
             Attendee att = db.Attendee.Include(at => at.User).Include(at => at.Meeting).Single(at => at.User.UserId.Equals(byteArrayToString2) && at.Meeting.MeetingId.Equals(byteArrayToString));
-            
-            fob.Fobbed(att);
+
+            fob.AddFob(att);
             db.SaveChanges();
 
             //return View("~/Views/Home/MeetingPageUser.cshtml");

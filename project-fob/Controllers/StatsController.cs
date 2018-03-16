@@ -22,7 +22,7 @@ namespace project_fob.Controllers
         {
             return View();
         }
-        public string getStats()
+        public string GetStats()
         {
             { //- for in the same topic, : for different topic, ; for completely different statistic
 

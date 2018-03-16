@@ -34,8 +34,8 @@ namespace project_fob.Controllers
         }
 
         //Create Meeting
-        public ActionResult meetingPageHost(string attendeePassword, string hostPassword)
-        { 
+        public ActionResult MeetingPageHost(string attendeePassword, string hostPassword)
+        {
             //The password will require different way to send it because atm it is visible
 
             attendeePassword = attendeePassword ?? "";
@@ -52,13 +52,13 @@ namespace project_fob.Controllers
             }
 
             User user = RetrieveUser();
-            
+
             if (user == null)
             {
-                user = new User(generateId());
+                user = new User(GenerateId());
                 while (db.User.Any(m => m.UserId.Equals(user.UserId)))
                 {
-                    user.UserId = generateId();
+                    user.UserId = GenerateId();
                 }
                 db.User.Add(user);
             }
@@ -92,7 +92,7 @@ namespace project_fob.Controllers
 
 
         //Join Meeting                                          //will this string be empty or null ?
-        public ActionResult meetingPageUser(string meetingId, string password)
+        public ActionResult MeetingPageUser(string meetingId, string password)
         { //The password will require different way to send it because atm it is visible
             {
                 if (password == null)
@@ -107,15 +107,15 @@ namespace project_fob.Controllers
                     //host
                     if (password.Equals(meet.HostPassword.ToString()))
                     {
-                        
+
                         User user = RetrieveUser();
-                        
+
                         if (user == null)
                         {
-                            user = new User(generateId());
+                            user = new User(GenerateId());
                             while (db.User.Any(m => m.UserId.Equals(user.UserId)))
                             {
-                                user.UserId = generateId();
+                                user.UserId = GenerateId();
                             }
                             db.User.Add(user);
                         }
@@ -144,10 +144,10 @@ namespace project_fob.Controllers
                         if (user == null)
                         {
                             existingUser = false;
-                            user = new User(generateId());
+                            user = new User(GenerateId());
                             while (db.User.Any(m => m.UserId.Equals(user.UserId)))
                             {
-                                user.UserId = generateId();
+                                user.UserId = GenerateId();
                             }
 
 
@@ -158,26 +158,16 @@ namespace project_fob.Controllers
                         }
                         Attendee att = new Attendee(user, meet);
 
-
-                        //Not working solution atm, but the direction is correct.
-                        //Attendee foundAttendee = db.Attendee.Include(x => x.Meeting).Include(x => x.User).SingleOrDefault(f => f.Meeting.MeetingId == meet.MeetingId && f.Meeting.Attendee.Equals(att));
                         Attendee foundAttendee = db.Attendee.Include(x => x.Meeting).Include(x => x.User).SingleOrDefault(f => f.Meeting.MeetingId.Equals(meet.MeetingId) && f.User.UserId.Equals(user.UserId));
-
 
                         //if attendee is not in then we add him.
                         if (foundAttendee == null)
                         {
                             db.Attendee.Add(att);
-                            //meet.Attendee.Add(att);
                             meet.AddAttendee(att);
-                            //test here
                             Fob fob = db.Fob.Single(f => f.Meeting == db.Meeting.FirstOrDefault(m => m.MeetingId.Equals(meetingId) && m.Active));
-                            //fob.AttendeeCount += 1;
                         }
-
-
                         ViewBag.title = "Id:" + meetingId;
-
                         db.SaveChanges();
                         return View();
                     }
@@ -195,7 +185,7 @@ namespace project_fob.Controllers
         }
 
         //open new tab?
-        public ActionResult returnGeneratedQrCode()
+        public ActionResult ReturnGeneratedQrCode()
         {
             /*using (DAL.FobContext db = new DAL.FobContext())
             {
@@ -237,9 +227,9 @@ namespace project_fob.Controllers
             return null;
         }
 
-        public static string generateId()
+        public static string GenerateId()
         {
-            return generateIdByLength(9);
+            return GenerateIdByLength(9);
         }
 
         public static string GenerateMeetingId()
@@ -255,7 +245,7 @@ namespace project_fob.Controllers
         }
 
         //change to use ascii ?
-        public static string generateIdByLength(int length)
+        public static string GenerateIdByLength(int length)
         {
             Random random = new Random();
             const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";

@@ -27,12 +27,12 @@ namespace project_fob.Models
             }
             set { }
         }
-        public int FobCount { get { return fobbed.Count; } set { } }
+        public int FobCount { get { return Fobbed.Count; } set { } }
 
 
         public DateTime TopicStartTime { get; set; }
         public Meeting Meeting { get; set; }
-        public List<Attendee> fobbed { get; set; } = new List<Attendee>();
+        public List<Attendee> Fobbed { get; set; } = new List<Attendee>();
 
 
         public Fob() { }
@@ -40,7 +40,7 @@ namespace project_fob.Models
         {
             // maybe check if a meeting already has a fob ? also need to check that is active
             Meeting = meeting;
-            fobbed = new List<Attendee>();
+            Fobbed = new List<Attendee>();
             //AttendeeCount = 0;
             //FobCount = 0;
             TopicStartTime = DateTime.Now;
@@ -51,17 +51,17 @@ namespace project_fob.Models
             return db.Fob.Include(x=> x.Meeting).ThenInclude(x=>x.Attendee).ThenInclude(x=>x.User).SingleOrDefault(f => f.Meeting.MeetingId == meetingid);
         }
 
-        public void Fobbed(Attendee attendee)
+        public void AddFob(Attendee attendee)
         {
-            if (!fobbed.Contains(attendee))
+            if (!Fobbed.Contains(attendee))
             {
-                fobbed.Add(attendee);
+                Fobbed.Add(attendee);
             }
         }
 
         public void RestartFobbed()
         {
-            fobbed.Clear();
+            Fobbed.Clear();
         }
 
         /*public int GetAttendeeCount()
