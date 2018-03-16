@@ -21,7 +21,7 @@ namespace project_fob.Models
         //TODO List of stats
         public List<Stats> Stats { get; set; }
         public List<Host> Host { get; set;}
-        public List<Attendee> Attendee { get; set; }
+        public virtual List<Attendee> Attendee { get; set; }
 
         public Meeting() { }
 

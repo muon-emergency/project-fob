@@ -68,13 +68,13 @@ namespace project_fob.Controllers
             Host host = new Host(user);
             db.Host.Add(host);
 
-            Meeting meet = new Meeting(generateId(), host, attendeePassword, hostPassword);
+            Meeting meet = new Meeting(GenerateMeetingId(), host, attendeePassword, hostPassword);
 
             //This might cause some incidents in case we generate 2 rooms with the same ID
 
             while (db.Meeting.Any(m => m.MeetingId.Equals(meet.MeetingId.ToString()) && m.Active))
             {
-                meet.MeetingId = generateId();
+                meet.MeetingId = GenerateMeetingId();
             }
 
             db.Meeting.Add(meet);
@@ -240,6 +240,19 @@ namespace project_fob.Controllers
         {
             return generateIdByLength(9);
         }
+
+        public static string GenerateMeetingId()
+        {
+            return GenerateUnambiguousMeetingIdByLength(6);
+        }
+
+        public static string GenerateUnambiguousMeetingIdByLength(int length)
+        {
+            Random random = new Random();
+            const string chars = "367CDFGHJKMNPRTWX";
+            return new string(Enumerable.Repeat(chars, length).Select(s => s[random.Next(s.Length)]).ToArray());
+        }
+
         //change to use ascii ?
         public static string generateIdByLength(int length)
         {

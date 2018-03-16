@@ -29,7 +29,8 @@ namespace project_fob.Controllers
             string byteArrayToString = System.Text.Encoding.ASCII.GetString(meetingIdValue);
             Fob fob = db.Fob.Include(x => x.Meeting).ThenInclude(x => x.Stats)
                             .Include(x => x.fobbed).ThenInclude(x=>x.User)
-                            .Include(x=> x.fobbed).ThenInclude(x=>x.Meeting)
+                            .Include(x=> x.fobbed).ThenInclude(x=>x.Meeting).ThenInclude(x=>x.Attendee)
+                            .Include(x=> x.fobbed)
                             .Single(f => f.Meeting.MeetingId == byteArrayToString);
 
 
