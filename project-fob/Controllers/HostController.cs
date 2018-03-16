@@ -115,6 +115,7 @@ namespace project_fob.Controllers
                             .Single(f => f.Meeting.MeetingId == byteArrayToString);
 
             fob.Meeting.Stats.Add(new Stats(fob.Meeting.GetAttendeeCount(), fob.FobCount, fob.TopicStartTime, DateTime.Now));
+            fob.RestartFobbed();
 
             //fob.FobCount = 0;
             //fob.fobbed.Clear();
