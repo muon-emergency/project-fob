@@ -167,7 +167,8 @@ namespace project_fob.Controllers
                         if (foundAttendee == null)
                         {
                             db.Attendee.Add(att);
-                            meet.Attendee.Add(att);
+                            //meet.Attendee.Add(att);
+                            meet.AddAttendee(att);
                             //test here
                             Fob fob = db.Fob.Single(f => f.Meeting == db.Meeting.FirstOrDefault(m => m.MeetingId.Equals(meetingId) && m.Active));
                             //fob.AttendeeCount += 1;

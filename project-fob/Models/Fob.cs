@@ -20,8 +20,8 @@ namespace project_fob.Models
             get
             {
                 if (Meeting != null)
-                { return Meeting.Attendee.Count; }
-                else { return 0; }
+                { return -1; }
+                else { return -11; }
             }
             set { }
         }
@@ -47,6 +47,24 @@ namespace project_fob.Models
         public static Fob getFob(string meetingid, ApplicationDbContext db)
         {
             return db.Fob.Include(x=> x.Meeting).ThenInclude(x=>x.Attendee).ThenInclude(x=>x.User).SingleOrDefault(f => f.Meeting.MeetingId == meetingid);
+        }
+
+        public void Fobbed(Attendee attendee)
+        {
+            if (!fobbed.Contains(attendee))
+            {
+                fobbed.Add(attendee);
+            }
+        }
+
+        public void RestartFobbed()
+        {
+            fobbed.Clear();
+        }
+
+        public int GetAttendeeCount()
+        {
+            return Meeting.GetAttendeeCount();
         }
     }
 }
