@@ -15,7 +15,9 @@ namespace project_fob.Models
 
         //Technically this 2 value can be a simple int value which can be set in case something happens. However I have to change it now so I can find some of the bugs
         //which affect the counters. The set attribute is actually doing nothing (theoritically does not change the result)
-         public int AttendeeCount
+
+            //This variable and code is mainly here because of past values are bein loaded into the project.
+        public int AttendeeCount
         {
             get
             {
