@@ -34,13 +34,12 @@ namespace project_fob.Controllers
                 //string session = Session["meetingid"].ToString();
 
                 string byteArrayToString = System.Text.Encoding.ASCII.GetString(meetingIdValue);
-
-                //List<Stats> stats = db.Meeting.FirstOrDefault(m => m.MeetingId.Equals(session.ToString())).Stats;
-                //
-                Meeting meeting = db.Meeting.Include(x => x.Stats).SingleOrDefault(m => m.MeetingId == byteArrayToString);
+                
+                Meeting meeting = db.Meeting.Include(x => x.Stats).Single(m => m.MeetingId == byteArrayToString);
 
                 List<Stats> stats = meeting.Stats;
 
+                //This might be revisited in the future and that's the reason I'll keep it here.
                 //Fob fob = db.Fob.Include(x => x.Meeting).ThenInclude(x => x.Stats).Include(x => x.fobbed).SingleOrDefault(f => f.Meeting.MeetingId == byteArrayToString);
 
                 /*List<Stats> stats= new List<Stats>();
@@ -61,9 +60,7 @@ namespace project_fob.Controllers
                     tmp += stats[i].Attendeescount + "-" + stats[i].Fobcount + ":";
                 }
                 tmp += ";" + totalAtt / (double)stats.Count + "-" + totalFob / (double)stats.Count;
-
-
-
+                
                 //TODO use these stats (they should be in order as a list is deterministic)
 
                 return tmp;

@@ -16,11 +16,11 @@ namespace project_fob.Models
     {
         [Key]
         public int Id { get; set; }
-        public int Attendeescount { get; }
-        public int Fobcount { get; }
-        public DateTime TopicStartTime { get; }
-        public List<StatsClick> Clicks { get; }
-        public DateTime TopicStopTime { get; }
+        public int Attendeescount { get; set; }
+        public int Fobcount { get; set; }
+        public DateTime TopicStartTime { get; set; }
+        public List<StatsClick> Clicks { get; set; }
+        public DateTime TopicStopTime { get; set; }
 
         public Stats() { }
         public Stats(int attendeesCount,int fobcount, DateTime topicStartTime, DateTime topicStopTime, List<DateTime> clicks) 

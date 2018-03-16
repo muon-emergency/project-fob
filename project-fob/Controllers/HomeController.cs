@@ -32,16 +32,11 @@ namespace project_fob.Controllers
         {
             return View();
         }
-        /*
-				public ActionResult StatScreen()
-				{
-					return View();
-				}
-				*/
 
         //Create Meeting
         public ActionResult meetingPageHost(string attendeePassword, string hostPassword)
-        { //The password will require different way to send it because atm it is visible
+        { 
+            //The password will require different way to send it because atm it is visible
 
             attendeePassword = attendeePassword ?? "";
 
@@ -56,20 +51,27 @@ namespace project_fob.Controllers
                 return View("index");
             }
 
-            User user = new User(generateId());
-            while (db.User.Any(m => m.UserId.Equals(user.UserId)))
+            User user = RetrieveUser();
+            
+            if (user == null)
             {
-                user.UserId = generateId();
+                user = new User(generateId());
+                while (db.User.Any(m => m.UserId.Equals(user.UserId)))
+                {
+                    user.UserId = generateId();
+                }
+                db.User.Add(user);
             }
-            db.User.Add(user);
 
             HttpContext.Session.Set("sessionid", Encoding.ASCII.GetBytes(user.UserId));
-            //Session["sessionid"] = user.UserId;
 
             Host host = new Host(user);
             db.Host.Add(host);
 
             Meeting meet = new Meeting(generateId(), host, attendeePassword, hostPassword);
+
+            //This might cause some incidents in case we generate 2 rooms with the same ID
+
             while (db.Meeting.Any(m => m.MeetingId.Equals(meet.MeetingId.ToString()) && m.Active))
             {
                 meet.MeetingId = generateId();
@@ -85,7 +87,7 @@ namespace project_fob.Controllers
             @ViewBag.title = "Meeting Id: " + meet.MeetingId;
             //TODO generae QR code for the meeting and display it on its own page (add something to host to get this if lost)
 
-            return View();            
+            return View();
         }
 
 
@@ -97,69 +99,80 @@ namespace project_fob.Controllers
                 {
                     password = "";
                 }
-                Meeting meet = db.Meeting.SingleOrDefault(m => m.MeetingId == meetingId && m.Active);
+                Meeting meet = db.Meeting.SingleOrDefault(m => m.MeetingId == meetingId);
 
                 if (meet != null && meetingId.Equals(meet.MeetingId))
                 {
                     //host
                     if (password.Equals(meet.HostPassword.ToString()))
                     {
-
-                        User user = new User(generateId());
-                        while (db.User.Any(m => m.UserId.Equals(user.UserId)))
+                        
+                        User user = RetrieveUser();
+                        
+                        if (user == null)
                         {
-                            user.UserId = generateId();
+                            user = new User(generateId());
+                            while (db.User.Any(m => m.UserId.Equals(user.UserId)))
+                            {
+                                user.UserId = generateId();
+                            }
+                            db.User.Add(user);
                         }
-                        db.User.Add(user);
-
                         HttpContext.Session.Set("sessionid", Encoding.ASCII.GetBytes(user.UserId));
                         HttpContext.Session.Set("meetingid", Encoding.ASCII.GetBytes(meet.MeetingId));
-                        //Session["sessionid"] = user.UserId;
-                        //Session["meetingid"] = meet.MeetingId;
 
-                        Host host = new Host(user, meet);
-                        db.Host.Add(host);
+                        if (meet.Active)
+                        {
+                            Host host = new Host(user, meet);
+                            db.Host.Add(host);
 
-                        db.SaveChanges();
-                        return View("MeetingPageHost");
+                            db.SaveChanges();
+                            return View("MeetingPageHost");
+                        }
+                        else
+                        {
+                            return View("~/Views/Home/StatScreen.cshtml");
+                        }
                     }
-                    else if (password == meet.RoomPassword)
+                    else if (password == meet.RoomPassword && meet.Active)
                     {
                         //join as attendee
-                        User user = new User(generateId());
-                        while (db.User.Any(m => m.UserId.Equals(user.UserId)))
+                        bool existingUser = true;
+
+                        User user = RetrieveUser();
+                        if (user == null)
                         {
-                            user.UserId = generateId();
+                            existingUser = false;
+                            user = new User(generateId());
+                            while (db.User.Any(m => m.UserId.Equals(user.UserId)))
+                            {
+                                user.UserId = generateId();
+                            }
+
+
+                            HttpContext.Session.Set("sessionid", Encoding.ASCII.GetBytes(user.UserId));
+                            HttpContext.Session.Set("meetingid", Encoding.ASCII.GetBytes(meet.MeetingId));
+
+                            db.User.Add(user);
                         }
-
-                        HttpContext.Session.Set("sessionid", Encoding.ASCII.GetBytes(user.UserId));
-                        HttpContext.Session.Set("meetingid", Encoding.ASCII.GetBytes(meet.MeetingId));
-
-                        //Session["sessionid"] = user.UserId;
-                        //Session["meetingid"] = meet.MeetingId;
-                        db.User.Add(user);
                         Attendee att = new Attendee(user, meet);
-                        //db.Attendee.Add(att);
+
 
                         //Not working solution atm, but the direction is correct.
-                        /*Attendee foundAttendee = db.Attendee.Include(x => x.Meeting).Include(x => x.User).SingleOrDefault(f => f.Meeting.MeetingId == meet.MeetingId && f.Meeting.Attendee.Equals(user.UserId));
-                        
+                        //Attendee foundAttendee = db.Attendee.Include(x => x.Meeting).Include(x => x.User).SingleOrDefault(f => f.Meeting.MeetingId == meet.MeetingId && f.Meeting.Attendee.Equals(att));
+                        Attendee foundAttendee = db.Attendee.Include(x => x.Meeting).Include(x => x.User).SingleOrDefault(f => f.Meeting.MeetingId.Equals(meet.MeetingId) && f.User.UserId.Equals(user.UserId));
+
+
                         //if attendee is not in then we add him.
                         if (foundAttendee == null)
                         {
                             db.Attendee.Add(att);
-                        }*/
-
-                        db.Attendee.Add(att);
-                        meet.Attendee.Add(att);
-
-                        Fob fob = db.Fob.SingleOrDefault(f => f.Meeting == db.Meeting.FirstOrDefault(m => m.MeetingId.Equals(meetingId) && m.Active));
-                        if (fob == null) 
-                        {
-                            throw new ArgumentNullException();
+                            meet.Attendee.Add(att);
+                            //test here
+                            Fob fob = db.Fob.Single(f => f.Meeting == db.Meeting.FirstOrDefault(m => m.MeetingId.Equals(meetingId) && m.Active));
+                            fob.AttendeeCount += 1;
                         }
 
-                        fob.AttendeeCount += 1;
 
                         ViewBag.title = "Id:" + meetingId;
 
@@ -198,6 +211,27 @@ namespace project_fob.Controllers
                         return File(byteArray, "image/jpeg");
                     }
                 }*/
+            return null;
+        }
+
+        public string RetrieveUserId()
+        {
+            var gotvalue = HttpContext.Session.TryGetValue("sessionid", out var session);
+            if (gotvalue)
+            {
+                string byteArrayToString = System.Text.Encoding.ASCII.GetString(session);
+                return byteArrayToString;
+            }
+            return null;
+        }
+
+        public User RetrieveUser()
+        {
+            string userid = RetrieveUserId();
+            if (userid != null)
+            {
+                return db.User.SingleOrDefault(f => f.UserId.Equals(userid));
+            }
             return null;
         }
 

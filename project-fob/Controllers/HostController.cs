@@ -28,8 +28,9 @@ namespace project_fob.Controllers
             var gotvalue = HttpContext.Session.TryGetValue("meetingid", out var meetingIdValue);
             string byteArrayToString = System.Text.Encoding.ASCII.GetString(meetingIdValue);
             Fob fob = db.Fob.Include(x => x.Meeting).ThenInclude(x => x.Stats)
-                            .Include(x => x.fobbed)
-                            .SingleOrDefault(f => f.Meeting.MeetingId == byteArrayToString);
+                            .Include(x => x.fobbed).ThenInclude(x=>x.User)
+                            .Include(x=> x.fobbed).ThenInclude(x=>x.Meeting)
+                            .Single(f => f.Meeting.MeetingId == byteArrayToString);
 
             if (fob == null)
             {
@@ -53,12 +54,8 @@ namespace project_fob.Controllers
             Host host = db.Host
                 .Include(x => x.Meeting).ThenInclude(x => x.Host)
                 .Include(x => x.User)
-                .SingleOrDefault(h => h.User.UserId == byteArrayToString);
+                .Single(h => h.User.UserId == byteArrayToString);
 
-            if (host == null)
-            {
-                throw new ArgumentNullException();
-            }
             host.Meeting.Host.Remove(host);
             db.SaveChanges();
 
@@ -78,7 +75,7 @@ namespace project_fob.Controllers
             var gotvalue = HttpContext.Session.TryGetValue("meetingid", out var meetingIdValue);
             Fob fob = Fob.getFob(Encoding.ASCII.GetString(meetingIdValue), db);
 
-            if (fob == null) 
+            if (fob == null)
             {
                 throw new ArgumentNullException();
             }
@@ -115,16 +112,11 @@ namespace project_fob.Controllers
             var gotvalue = HttpContext.Session.TryGetValue("meetingid", out var meetingIdValue);
 
             string byteArrayToString = System.Text.Encoding.ASCII.GetString(meetingIdValue);
-
-            //Fob fob = Fob.getFob(meetingIdValue.ToString(), db);
+            
             Fob fob = db.Fob.Include(x => x.Meeting).ThenInclude(x => x.Stats)
+                            .Include(x => x.Meeting).ThenInclude(x => x.Attendee).ThenInclude(x => x.User)
                             .Include(x => x.fobbed)
-                            .SingleOrDefault(f => f.Meeting.MeetingId == byteArrayToString);
-
-            if (fob == null) 
-            {
-                throw new ArgumentNullException();
-            }
+                            .Single(f => f.Meeting.MeetingId == byteArrayToString);
 
             fob.Meeting.Stats.Add(new Stats(fob.AttendeeCount, fob.FobCount, fob.TopicStartTime, DateTime.Now));
 
