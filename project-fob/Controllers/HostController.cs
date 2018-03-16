@@ -116,9 +116,7 @@ namespace project_fob.Controllers
 
             fob.Meeting.Stats.Add(new Stats(fob.Meeting.GetAttendeeCount(), fob.FobCount, fob.TopicStartTime, DateTime.Now));
             fob.RestartFobbed();
-
-            //fob.FobCount = 0;
-            //fob.fobbed.Clear();
+            
             db.SaveChanges();
         }
     }

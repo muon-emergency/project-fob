@@ -138,12 +138,10 @@ namespace project_fob.Controllers
                     else if (password == meet.RoomPassword && meet.Active)
                     {
                         //join as attendee
-                        bool existingUser = true;
 
                         User user = RetrieveUser();
                         if (user == null)
                         {
-                            existingUser = false;
                             user = new User(GenerateId());
                             while (db.User.Any(m => m.UserId.Equals(user.UserId)))
                             {

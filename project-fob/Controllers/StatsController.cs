@@ -39,16 +39,6 @@ namespace project_fob.Controllers
 
                 List<Stats> stats = meeting.Stats;
 
-                //This might be revisited in the future and that's the reason I'll keep it here.
-                //Fob fob = db.Fob.Include(x => x.Meeting).ThenInclude(x => x.Stats).Include(x => x.fobbed).SingleOrDefault(f => f.Meeting.MeetingId == byteArrayToString);
-
-                /*List<Stats> stats= new List<Stats>();
-
-                stats.Add(new Stats(5, 2, DateTime.Now, DateTime.Now));
-                stats.Add(new Stats(15, 8, DateTime.Now, DateTime.Now));
-                stats.Add(new Stats(32, 5, DateTime.Now, DateTime.Now));*/
-
-
                 String tmp = "";
 
                 int totalAtt = 0;
