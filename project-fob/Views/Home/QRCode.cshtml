@@ -1,36 +1,25 @@
 ﻿<head>
     <title>QRCode</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no" />
     <script type="text/javascript" src="~/js/qrcode.js"></script>
 </head>
-<body onload=getInfo()>
-    <div id="qrCode" style="width:200px; height:100px;"></div>
-
+<body>
+    <input id="text" type="hidden" value=@ViewBag.url style="width:80%" /><br />
+    <div id="qrcode" style="width:500px; height:500px; margin-top:15px;"></div>
     <script type="text/javascript">
         var qrcode = new QRCode(document.getElementById("qrcode"), {
-            width: 300,
-            height: 300
+            width: 500,
+            height: 500
         });
 
-        function getInfo() {
-            //var elText = //call method here;
-
-             $.ajax({
-				type: "POST",
-				url: '@Url.Action("GetLinkQrCode", "Host")',
-                 success: function (result) {
-                     
-                     var tmp = result + "";
-                     alert(tmp);
-                     //qrcode.makeCode(tmp);
-                     qrcode.makeCode("http://naver.com");
-				},
-				error: function () {
-					alert("Connection error");
-				}
-			});
-
+        function makeCode() {
+            var elText = document.getElementById("text");
+            
+            qrcode.makeCode(elText.value);
         }
 
-    getInfo();
+        makeCode();
+        
+
     </script>
 </body>

@@ -233,23 +233,31 @@
 
 
 <footer>
-	<div id="outer">
-       
+    <div id="outer">
+
 
         <div class="inner">
-            @using (Html.BeginForm("QrCode", "Host", FormMethod.Post)) {
-                <button class="footerButton" id="buttonQRGen" name="message" value="Meeting left">QR Code</button>}
+            <a href="@Url.Action("QrCode","Host")" target="_blank">
+                <button class="footerButton" id="buttonQRGen" name="message" value="Meeting left">QR Code</button>
+            </a>
         </div>
 
-		<div class="inner">
-			@using (Html.BeginForm("leave", "Host", FormMethod.Post)) {
-				<button class="footerButton" id="buttonLeave" name="message" value="Meeting left">Leave</button>
-			}
-		</div>
-		<div class="inner">
-			@using (Html.BeginForm("finish", "Host", FormMethod.Post)) {
-				<button class="footerButton" id="buttonExit" name="message" value="Finished meeting">Finish</button>
-			}
-		</div>
-	</div>
+        <div>
+            <asp:Button ID="Button1" runat="server" Text="Button" onclick="Button1_Click"
+                        OnClientClick="document.forms[0].target = '_blank';" />
+        </div>
+
+        <div class="inner">
+            @using (Html.BeginForm("leave", "Host", FormMethod.Post))
+        {
+            <button class="footerButton" id="buttonLeave" name="message" value="Meeting left">Leave</button>
+    }
+        </div>
+        <div class="inner">
+            @using (Html.BeginForm("finish", "Host", FormMethod.Post))
+        {
+            <button class="footerButton" id="buttonExit" name="message" value="Finished meeting">Finish</button>
+    }
+        </div>
+    </div>
 </footer>

@@ -27,8 +27,28 @@ namespace project_fob.Controllers
 
         public ActionResult QrCode()
         {
+            var gotvalue = HttpContext.Session.TryGetValue("meetingid", out var meetingIdValue);
+            string MeetingIdString = System.Text.Encoding.ASCII.GetString(meetingIdValue);
 
+
+            string baseUrl = /*Request.Url.Scheme*/ Request.GetDisplayUrl(); // + "://" + Request.Url.Authority + Request.ApplicationPath.TrimEnd('/') + "/";
+            Meeting meet = db.Meeting.Single(x => x.MeetingId.Equals(MeetingIdString));
+
+            @ViewBag.url = baseUrl + "/Home/meetingPageUser?meetingId=" + MeetingIdString + "&password=" + meet.RoomPassword;
             return View("~/Views/Home/QRCode.cshtml");
+        }
+
+        protected void Button1_Click(object sender, EventArgs e)
+        {
+            var gotvalue = HttpContext.Session.TryGetValue("meetingid", out var meetingIdValue);
+            string MeetingIdString = System.Text.Encoding.ASCII.GetString(meetingIdValue);
+
+
+            string baseUrl = /*Request.Url.Scheme*/ Request.GetDisplayUrl(); // + "://" + Request.Url.Authority + Request.ApplicationPath.TrimEnd('/') + "/";
+            Meeting meet = db.Meeting.Single(x => x.MeetingId.Equals(MeetingIdString));
+
+            @ViewBag.url = baseUrl + "/Home/meetingPageUser?meetingId=" + MeetingIdString + "&password=" + meet.RoomPassword;
+            Response.Redirect("~/Views/Home/QRCode.cshtml");
         }
 
         public ActionResult Finish(string message)
@@ -133,9 +153,15 @@ namespace project_fob.Controllers
             var gotvalue = HttpContext.Session.TryGetValue("meetingid", out var meetingIdValue);
             string MeetingIdString = System.Text.Encoding.ASCII.GetString(meetingIdValue);
 
+
             string baseUrl = /*Request.Url.Scheme*/ Request.GetDisplayUrl(); // + "://" + Request.Url.Authority + Request.ApplicationPath.TrimEnd('/') + "/";
             Meeting meet = db.Meeting.Single(x => x.MeetingId.Equals(MeetingIdString));
+
+            @ViewBag.url = baseUrl + "/ Home / meetingPageUser ? meetingId = " + MeetingIdString + " & password = " + meet.RoomPassword;
+
             return  baseUrl+"/ Home / meetingPageUser ? meetingId = " + MeetingIdString + " & password = " + meet.RoomPassword;
+
+
         }
     }
 }
