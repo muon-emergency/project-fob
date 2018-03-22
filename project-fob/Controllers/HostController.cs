@@ -133,21 +133,5 @@ namespace project_fob.Controllers
             
             db.SaveChanges();
         }
-
-        public string GetLinkQrCode()
-        {
-            var gotvalue = HttpContext.Session.TryGetValue("meetingid", out var meetingIdValue);
-            string MeetingIdString = System.Text.Encoding.ASCII.GetString(meetingIdValue);
-
-
-            string baseUrl = Request.GetDisplayUrl();
-            Meeting meet = db.Meeting.Single(x => x.MeetingId.Equals(MeetingIdString));
-
-            @ViewBag.url = baseUrl + "/ Home / meetingPageUser ? meetingId = " + MeetingIdString + " & password = " + meet.RoomPassword;
-
-            return  baseUrl+"/ Home / meetingPageUser ? meetingId = " + MeetingIdString + " & password = " + meet.RoomPassword;
-
-
-        }
     }
 }
