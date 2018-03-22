@@ -32,9 +32,17 @@ namespace project_fob.Controllers
 
 
             string baseUrl = /*Request.Url.Scheme*/ Request.GetDisplayUrl(); // + "://" + Request.Url.Authority + Request.ApplicationPath.TrimEnd('/') + "/";
+            int count = baseUrl.Count(f => f == '/');
+            string[] split = baseUrl.Split('/');
+            StringBuilder sb = new StringBuilder();
+
+            for (int i = 0; i < split.Length-2; i++)
+            {
+                sb.Append(split[i]);
+            }
             Meeting meet = db.Meeting.Single(x => x.MeetingId.Equals(MeetingIdString));
 
-            @ViewBag.url = baseUrl + "/Home/meetingPageUser?meetingId=" + MeetingIdString + "&password=" + meet.RoomPassword;
+            @ViewBag.url = sb.ToString() + "/Home/meetingPageUser?meetingId=" + MeetingIdString + "&password=" + meet.RoomPassword;
             return View("~/Views/Home/QRCode.cshtml");
         }
 
