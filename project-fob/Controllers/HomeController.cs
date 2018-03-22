@@ -85,6 +85,7 @@ namespace project_fob.Controllers
             db.SaveChanges();
 
             @ViewBag.title = "Meeting Id: " + meet.MeetingId;
+            ViewBag.meetingid = meet.MeetingId;
             //TODO generae QR code for the meeting and display it on its own page (add something to host to get this if lost)
 
             return View();

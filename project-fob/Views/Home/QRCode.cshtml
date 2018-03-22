@@ -1,0 +1,36 @@
+﻿<head>
+    <title>QRCode</title>
+    <script type="text/javascript" src="~/js/qrcode.js"></script>
+</head>
+<body onload=getInfo()>
+    <div id="qrCode" style="width:200px; height:100px;"></div>
+
+    <script type="text/javascript">
+        var qrcode = new QRCode(document.getElementById("qrcode"), {
+            width: 300,
+            height: 300
+        });
+
+        function getInfo() {
+            //var elText = //call method here;
+
+             $.ajax({
+				type: "POST",
+				url: '@Url.Action("GetLinkQrCode", "Host")',
+                 success: function (result) {
+                     
+                     var tmp = result + "";
+                     alert(tmp);
+                     //qrcode.makeCode(tmp);
+                     qrcode.makeCode("http://naver.com");
+				},
+				error: function () {
+					alert("Connection error");
+				}
+			});
+
+        }
+
+    getInfo();
+    </script>
+</body>

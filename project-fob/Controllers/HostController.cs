@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http.Extensions;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using project_fob.Data;
 using project_fob.Models;
@@ -23,6 +24,13 @@ namespace project_fob.Controllers
         {
             return View();
         }
+
+        public ActionResult QrCode()
+        {
+
+            return View("~/Views/Home/QRCode.cshtml");
+        }
+
         public ActionResult Finish(string message)
         {
             var gotvalue = HttpContext.Session.TryGetValue("meetingid", out var meetingIdValue);
@@ -118,6 +126,16 @@ namespace project_fob.Controllers
             fob.RestartFobbed();
             
             db.SaveChanges();
+        }
+
+        public string GetLinkQrCode()
+        {
+            var gotvalue = HttpContext.Session.TryGetValue("meetingid", out var meetingIdValue);
+            string MeetingIdString = System.Text.Encoding.ASCII.GetString(meetingIdValue);
+
+            string baseUrl = /*Request.Url.Scheme*/ Request.GetDisplayUrl(); // + "://" + Request.Url.Authority + Request.ApplicationPath.TrimEnd('/') + "/";
+            Meeting meet = db.Meeting.Single(x => x.MeetingId.Equals(MeetingIdString));
+            return  baseUrl+"/ Home / meetingPageUser ? meetingId = " + MeetingIdString + " & password = " + meet.RoomPassword;
         }
     }
 }

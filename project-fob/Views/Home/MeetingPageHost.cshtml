@@ -237,7 +237,7 @@
        
 
         <div class="inner">
-            @using (Html.BeginForm("returnGeneratedQrCode", "Home", FormMethod.Post, new { target = "_blank" })) {
+            @using (Html.BeginForm("QrCode", "Host", FormMethod.Post)) {
                 <button class="footerButton" id="buttonQRGen" name="message" value="Meeting left">QR Code</button>}
         </div>
 

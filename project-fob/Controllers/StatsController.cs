@@ -23,39 +23,36 @@ namespace project_fob.Controllers
             return View();
         }
         public string GetStats()
-        {
-            { //- for in the same topic, : for different topic, ; for completely different statistic
+        { //- for in the same topic, : for different topic, ; for completely different statistic
 
-                byte[] meetingIdValue;
-                bool gotvalue = false;
-                gotvalue = HttpContext.Session.TryGetValue("meetingid", out meetingIdValue);
+            bool gotvalue = false;
+            gotvalue = HttpContext.Session.TryGetValue("meetingid", out var meetingIdValue);
 
-                string session = meetingIdValue.ToString();
-                //string session = Session["meetingid"].ToString();
+            string session = meetingIdValue.ToString();
+            //string session = Session["meetingid"].ToString();
 
-                string MeetingIdString = System.Text.Encoding.ASCII.GetString(meetingIdValue);
-                
-                Meeting meeting = db.Meeting.Include(x => x.Stats).Single(m => m.MeetingId == MeetingIdString);
+            string MeetingIdString = System.Text.Encoding.ASCII.GetString(meetingIdValue);
 
-                List<Stats> stats = meeting.Stats;
+            Meeting meeting = db.Meeting.Include(x => x.Stats).Single(m => m.MeetingId == MeetingIdString);
 
-                String tmp = "";
+            List<Stats> stats = meeting.Stats;
 
-                int totalAtt = 0;
-                int totalFob = 0;
-                for (int i = 0; i < stats.Count; i++)
-                {
-                    totalAtt += stats[i].Attendeescount;
-                    totalFob += stats[i].Fobcount;
-                    tmp += stats[i].Attendeescount + "-" + stats[i].Fobcount + ":";
-                }
-                tmp += ";" + totalAtt / (double)stats.Count + "-" + totalFob / (double)stats.Count;
-                
-                //TODO use these stats (they should be in order as a list is deterministic)
+            String tmp = "";
 
-                return tmp;
-
+            int totalAtt = 0;
+            int totalFob = 0;
+            for (int i = 0; i < stats.Count; i++)
+            {
+                totalAtt += stats[i].Attendeescount;
+                totalFob += stats[i].Fobcount;
+                tmp += stats[i].Attendeescount + "-" + stats[i].Fobcount + ":";
             }
+            tmp += ";" + totalAtt / (double)stats.Count + "-" + totalFob / (double)stats.Count;
+
+            //TODO use these stats (they should be in order as a list is deterministic)
+
+            return tmp;
+
         }
     }
 }
