@@ -182,28 +182,7 @@ namespace project_fob.Controllers
                 return View("Index");
             }
         }
-
-        //open new tab?
-        public ActionResult ReturnGeneratedQrCode()
-        {
-            /*using (DAL.FobContext db = new DAL.FobContext())
-            {
-                string meetingId = Session["meetingId"].ToString();
-                string userId = Session["sessionId"].ToString();
-                if (meetingId != null && userId != null)
-                {
-                    Host host = db.Host.FirstOrDefault(h => h.User.UserId.Equals(userId));
-                    Meeting meet = db.Meeting.FirstOrDefault(m => m.MeetingId.Equals(meetingId) && m.Active);
-                    if (meet.Host.Contains(host))
-                    {
-                        Bitmap qrCode = generateQrCode(meetingId, meet.RoomPassword.ToString());
-
-                        byte[] byteArray = ImageToByte(qrCode);
-                        return File(byteArray, "image/jpeg");
-                    }
-                }*/
-            return null;
-        }
+        
 
         public string RetrieveUserId()
         {
@@ -250,41 +229,6 @@ namespace project_fob.Controllers
             const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
             return new string(Enumerable.Repeat(chars, length).Select(s => s[random.Next(s.Length)]).ToArray());
         }
-
-        /*public static byte[] ImageToByte(Image img)
-        {
-            ImageConverter converter = new ImageConverter();
-            return (byte[])converter.ConvertTo(img, typeof(byte[]));
-        }
-        //http://localhost:56403/Home/meetingPageUser?meetingId=G1YC4BAHI&password=hi
-        public Bitmap generateQrCode(string meetingId, string password)
-        {
-            QRCodeGenerator qrGenerator = new QRCodeGenerator();
-            string baseUrl = Request.Url.Scheme + "://" + Request.Url.Authority + Request.ApplicationPath.TrimEnd('/') + "/";
-            QRCodeData qrCodeData = qrGenerator.CreateQrCode(baseUrl + "/Home/meetingPageUser?meetingId=" + meetingId + "&password=" + password, QRCodeGenerator.ECCLevel.Q);
-            QRCode qrCode = new QRCode(qrCodeData);
-            return qrCode.GetGraphic(20);
-        }*/
-
-
-
-        /*public IActionResult About()
-        {
-            ViewData["Message"] = "Your application description page.";
-
-            return View();
-        }
-
-        public IActionResult Contact()
-        {
-            ViewData["Message"] = "Your contact page.";
-
-            return View();
-        }
-
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-        }*/
+        
     }
 }

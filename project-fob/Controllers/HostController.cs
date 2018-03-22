@@ -107,29 +107,7 @@ namespace project_fob.Controllers
             //First number are the total users, the second number is the voted users.
             return fob.Meeting.GetAttendeeCount() + "," + fob.FobCount;
         }
-
-        /*public ActionResult returnGeneratedQrCode()
-        {
-            Bitmap qrCode = generateQrCode();
-
-            byte[] byteArray = ImageToByte(qrCode);
-            return File(byteArray, "image/jpeg");
-        }
-
-        public static byte[] ImageToByte(Image img)
-        {
-            ImageConverter converter = new ImageConverter();
-            return (byte[])converter.ConvertTo(img, typeof(byte[]));
-        }
-
-        public Bitmap generateQrCode()
-        {
-            QRCodeGenerator qrGenerator = new QRCodeGenerator();
-            QRCodeData qrCodeData = qrGenerator.CreateQrCode("hello", QRCodeGenerator.ECCLevel.Q);
-            QRCode qrCode = new QRCode(qrCodeData);
-            return qrCode.GetGraphic(20);
-        }
-        */
+        
         public void Reset(string message)
         {
             //We need to add the already existing information to the stats model. NAO!!!
@@ -154,7 +132,7 @@ namespace project_fob.Controllers
             string MeetingIdString = System.Text.Encoding.ASCII.GetString(meetingIdValue);
 
 
-            string baseUrl = /*Request.Url.Scheme*/ Request.GetDisplayUrl(); // + "://" + Request.Url.Authority + Request.ApplicationPath.TrimEnd('/') + "/";
+            string baseUrl = Request.GetDisplayUrl();
             Meeting meet = db.Meeting.Single(x => x.MeetingId.Equals(MeetingIdString));
 
             @ViewBag.url = baseUrl + "/ Home / meetingPageUser ? meetingId = " + MeetingIdString + " & password = " + meet.RoomPassword;
