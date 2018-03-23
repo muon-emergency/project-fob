@@ -18,10 +18,12 @@ namespace project_fob.Controllers
         {
             this.db = db;
         }
+
         public ActionResult Index()
         {
             return View();
         }
+
         public void Fob(string value)
         {
             var gotValue = HttpContext.Session.TryGetValue("meetingid", out var meetingIdValue);
