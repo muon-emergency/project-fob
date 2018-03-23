@@ -72,7 +72,7 @@ namespace project_fob.Controllers
 
             //This might cause some incidents in case we generate 2 rooms with the same ID
 
-            while (db.Meeting.Any(m => m.MeetingId.Equals(meet.MeetingId.ToString()) && m.Active))
+            while (db.Meeting.Any(m => m.MeetingId.Equals(meet.MeetingId.ToString())))
             {
                 meet.MeetingId = GenerateMeetingId();
             }
