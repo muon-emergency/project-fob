@@ -8,8 +8,8 @@ namespace project_fob.Models
         [Key]
         public int Id { get; set; }
 
-        public virtual User User { get; set; } 
-        public virtual Meeting Meeting { get; set; }
+        public User User { get; set; } 
+        public Meeting Meeting { get; set; }
 
         public Host() { }
         

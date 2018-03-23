@@ -26,18 +26,14 @@ namespace project_fob.Controllers
         public ActionResult Finish(string message)
         {
             var gotvalue = HttpContext.Session.TryGetValue("meetingid", out var meetingIdValue);
-            string byteArrayToString = System.Text.Encoding.ASCII.GetString(meetingIdValue);
+            string MeetingIdString = System.Text.Encoding.ASCII.GetString(meetingIdValue);
+            
             Fob fob = db.Fob.Include(x => x.Meeting).ThenInclude(x => x.Stats)
-                            .Include(x => x.fobbed).ThenInclude(x=>x.User)
-                            .Include(x=> x.fobbed).ThenInclude(x=>x.Meeting)
-                            .Single(f => f.Meeting.MeetingId == byteArrayToString);
+                            .Include(x => x.Meeting).ThenInclude(x => x.Attendee).ThenInclude(x => x.User)
+                            .Include(x => x.Fobbed)
+                            .Single(f => f.Meeting.MeetingId == MeetingIdString);
 
-            if (fob == null)
-            {
-                throw new ArgumentNullException();
-            }
-
-            fob.Meeting.Stats.Add(new Stats(fob.AttendeeCount, fob.FobCount, fob.TopicStartTime, DateTime.Now));
+            fob.Meeting.Stats.Add(new Stats(fob.Meeting.GetAttendeeCount(), fob.FobCount, fob.TopicStartTime, DateTime.Now));
             fob.Meeting.Active = false;
             db.SaveChanges();
 
@@ -48,13 +44,13 @@ namespace project_fob.Controllers
         public ActionResult Leave(string message)
         {
             var gotvalue = HttpContext.Session.TryGetValue("sessionid", out var session);
-            string byteArrayToString = System.Text.Encoding.ASCII.GetString(session);
+            string UserIdString = System.Text.Encoding.ASCII.GetString(session);
 
             //important
             Host host = db.Host
                 .Include(x => x.Meeting).ThenInclude(x => x.Host)
                 .Include(x => x.User)
-                .Single(h => h.User.UserId == byteArrayToString);
+                .Single(h => h.User.UserId == UserIdString);
 
             host.Meeting.Host.Remove(host);
             db.SaveChanges();
@@ -81,7 +77,7 @@ namespace project_fob.Controllers
             }
 
             //First number are the total users, the second number is the voted users.
-            return fob.AttendeeCount + "," + fob.FobCount;
+            return fob.Meeting.GetAttendeeCount() + "," + fob.FobCount;
         }
 
         /*public ActionResult returnGeneratedQrCode()
@@ -111,17 +107,16 @@ namespace project_fob.Controllers
             //We need to add the already existing information to the stats model. NAO!!!
             var gotvalue = HttpContext.Session.TryGetValue("meetingid", out var meetingIdValue);
 
-            string byteArrayToString = System.Text.Encoding.ASCII.GetString(meetingIdValue);
+            string MeetingIdString = System.Text.Encoding.ASCII.GetString(meetingIdValue);
             
             Fob fob = db.Fob.Include(x => x.Meeting).ThenInclude(x => x.Stats)
                             .Include(x => x.Meeting).ThenInclude(x => x.Attendee).ThenInclude(x => x.User)
-                            .Include(x => x.fobbed)
-                            .Single(f => f.Meeting.MeetingId == byteArrayToString);
+                            .Include(x => x.Fobbed)
+                            .Single(f => f.Meeting.MeetingId == MeetingIdString);
 
-            fob.Meeting.Stats.Add(new Stats(fob.AttendeeCount, fob.FobCount, fob.TopicStartTime, DateTime.Now));
-
-            fob.FobCount = 0;
-            fob.fobbed.Clear();
+            fob.Meeting.Stats.Add(new Stats(fob.Meeting.GetAttendeeCount(), fob.FobCount, fob.TopicStartTime, DateTime.Now));
+            fob.RestartFobbed();
+            
             db.SaveChanges();
         }
     }

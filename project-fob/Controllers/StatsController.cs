@@ -22,7 +22,7 @@ namespace project_fob.Controllers
         {
             return View();
         }
-        public string getStats()
+        public string GetStats()
         {
             { //- for in the same topic, : for different topic, ; for completely different statistic
 
@@ -33,21 +33,11 @@ namespace project_fob.Controllers
                 string session = meetingIdValue.ToString();
                 //string session = Session["meetingid"].ToString();
 
-                string byteArrayToString = System.Text.Encoding.ASCII.GetString(meetingIdValue);
+                string MeetingIdString = System.Text.Encoding.ASCII.GetString(meetingIdValue);
                 
-                Meeting meeting = db.Meeting.Include(x => x.Stats).Single(m => m.MeetingId == byteArrayToString);
+                Meeting meeting = db.Meeting.Include(x => x.Stats).Single(m => m.MeetingId == MeetingIdString);
 
                 List<Stats> stats = meeting.Stats;
-
-                //This might be revisited in the future and that's the reason I'll keep it here.
-                //Fob fob = db.Fob.Include(x => x.Meeting).ThenInclude(x => x.Stats).Include(x => x.fobbed).SingleOrDefault(f => f.Meeting.MeetingId == byteArrayToString);
-
-                /*List<Stats> stats= new List<Stats>();
-
-                stats.Add(new Stats(5, 2, DateTime.Now, DateTime.Now));
-                stats.Add(new Stats(15, 8, DateTime.Now, DateTime.Now));
-                stats.Add(new Stats(32, 5, DateTime.Now, DateTime.Now));*/
-
 
                 String tmp = "";
 

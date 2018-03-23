@@ -19,9 +19,9 @@ namespace project_fob.Models
         public string HostPassword { get; set; }
         
         //TODO List of stats
-        public virtual List<Stats> Stats { get; set; }
-        public virtual List<Host> Host { get; set;}
-        public virtual List<Attendee> Attendee { get; set; }
+        public List<Stats> Stats { get; set; }
+        public List<Host> Host { get; set;}
+        public List<Attendee> Attendee { get; set; }
 
         public Meeting() { }
 
@@ -35,5 +35,15 @@ namespace project_fob.Models
                 Stats = new List<Stats>();
                 Attendee = new List<Attendee>();
         }   
+
+        public void AddAttendee(Attendee attendee)
+        {
+            Attendee.Add(attendee);
+        }
+
+        public int GetAttendeeCount()
+        {
+            return Attendee.Count;
+        }
     }
 }
