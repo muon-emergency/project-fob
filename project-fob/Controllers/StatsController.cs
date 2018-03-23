@@ -5,6 +5,7 @@ using project_fob.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace project_fob.Controllers
@@ -35,7 +36,7 @@ namespace project_fob.Controllers
             Meeting meeting = db.Meeting.Include(x => x.Stats).Single(m => m.MeetingId == meetingIdString);
 
             List<Stats> stats = meeting.Stats;
-            String tmp = "";
+            StringBuilder sb = new StringBuilder();
 
             int totalAtt = 0;
             int totalFob = 0;
@@ -43,13 +44,13 @@ namespace project_fob.Controllers
             {
                 totalAtt += stats[i].Attendeescount;
                 totalFob += stats[i].Fobcount;
-                tmp += stats[i].Attendeescount + "-" + stats[i].Fobcount + ":";
+                sb.Append(stats[i].Attendeescount + "-" + stats[i].Fobcount + ":");
             }
-            tmp += ";" + totalAtt / (double)stats.Count + "-" + totalFob / (double)stats.Count;
+            sb.Append(";" + totalAtt / (double)stats.Count + "-" + totalFob / (double)stats.Count);
 
             //TODO use these stats (they should be in order as a list is deterministic)
 
-            return tmp;
+            return sb.ToString();
 
         }
     }
