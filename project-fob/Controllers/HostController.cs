@@ -27,47 +27,32 @@ namespace project_fob.Controllers
 
         public ActionResult QrCode()
         {
-            var gotvalue = HttpContext.Session.TryGetValue("meetingid", out var meetingIdValue);
-            string MeetingIdString = System.Text.Encoding.ASCII.GetString(meetingIdValue);
+            var gotValue = HttpContext.Session.TryGetValue("meetingid", out var meetingIdValue);
+            string meetingIdString = System.Text.Encoding.ASCII.GetString(meetingIdValue);
 
-
-            string baseUrl = /*Request.Url.Scheme*/ Request.GetDisplayUrl(); // + "://" + Request.Url.Authority + Request.ApplicationPath.TrimEnd('/') + "/";
-            int count = baseUrl.Count(f => f == '/');
+            string baseUrl = Request.GetDisplayUrl();
             string[] split = baseUrl.Split('/');
             StringBuilder sb = new StringBuilder();
 
-            for (int i = 0; i < split.Length-2; i++)
+            for (int i = 0; i < split.Length - 2; i++)
             {
                 sb.Append(split[i]);
             }
-            Meeting meet = db.Meeting.Single(x => x.MeetingId.Equals(MeetingIdString));
+            Meeting meet = db.Meeting.Single(x => x.MeetingId.Equals(meetingIdString));
 
-            @ViewBag.url = sb.ToString() + "/Home/meetingPageUser?meetingId=" + MeetingIdString + "&password=" + meet.RoomPassword;
+            @ViewBag.url = sb.ToString() + "/Home/meetingPageUser?meetingId=" + meetingIdString + "&password=" + meet.RoomPassword;
             return View("~/Views/Home/QRCode.cshtml");
-        }
-
-        protected void Button1_Click(object sender, EventArgs e)
-        {
-            var gotvalue = HttpContext.Session.TryGetValue("meetingid", out var meetingIdValue);
-            string MeetingIdString = System.Text.Encoding.ASCII.GetString(meetingIdValue);
-
-
-            string baseUrl = /*Request.Url.Scheme*/ Request.GetDisplayUrl(); // + "://" + Request.Url.Authority + Request.ApplicationPath.TrimEnd('/') + "/";
-            Meeting meet = db.Meeting.Single(x => x.MeetingId.Equals(MeetingIdString));
-
-            @ViewBag.url = baseUrl + "/Home/meetingPageUser?meetingId=" + MeetingIdString + "&password=" + meet.RoomPassword;
-            Response.Redirect("~/Views/Home/QRCode.cshtml");
         }
 
         public ActionResult Finish(string message)
         {
-            var gotvalue = HttpContext.Session.TryGetValue("meetingid", out var meetingIdValue);
-            string MeetingIdString = System.Text.Encoding.ASCII.GetString(meetingIdValue);
-            
+            var gotValue = HttpContext.Session.TryGetValue("meetingid", out var meetingIdValue);
+            string meetingIdString = System.Text.Encoding.ASCII.GetString(meetingIdValue);
+
             Fob fob = db.Fob.Include(x => x.Meeting).ThenInclude(x => x.Stats)
                             .Include(x => x.Meeting).ThenInclude(x => x.Attendee).ThenInclude(x => x.User)
                             .Include(x => x.Fobbed)
-                            .Single(f => f.Meeting.MeetingId == MeetingIdString);
+                            .Single(f => f.Meeting.MeetingId == meetingIdString);
 
             fob.Meeting.Stats.Add(new Stats(fob.Meeting.GetAttendeeCount(), fob.FobCount, fob.TopicStartTime, DateTime.Now));
             fob.Meeting.Active = false;
@@ -79,14 +64,14 @@ namespace project_fob.Controllers
         }
         public ActionResult Leave(string message)
         {
-            var gotvalue = HttpContext.Session.TryGetValue("sessionid", out var session);
-            string UserIdString = System.Text.Encoding.ASCII.GetString(session);
+            var gotValue = HttpContext.Session.TryGetValue("sessionid", out var session);
+            string userIdString = System.Text.Encoding.ASCII.GetString(session);
 
             //important
             Host host = db.Host
                 .Include(x => x.Meeting).ThenInclude(x => x.Host)
                 .Include(x => x.User)
-                .Single(h => h.User.UserId == UserIdString);
+                .Single(h => h.User.UserId == userIdString);
 
             host.Meeting.Host.Remove(host);
             db.SaveChanges();
@@ -104,7 +89,7 @@ namespace project_fob.Controllers
                 @ViewBag.title = message;
             }
 
-            var gotvalue = HttpContext.Session.TryGetValue("meetingid", out var meetingIdValue);
+            var gotValue = HttpContext.Session.TryGetValue("meetingid", out var meetingIdValue);
             Fob fob = Fob.getFob(Encoding.ASCII.GetString(meetingIdValue), db);
 
             if (fob == null)
@@ -115,22 +100,22 @@ namespace project_fob.Controllers
             //First number are the total users, the second number is the voted users.
             return fob.Meeting.GetAttendeeCount() + "," + fob.FobCount;
         }
-        
+
         public void Reset(string message)
         {
             //We need to add the already existing information to the stats model. NAO!!!
-            var gotvalue = HttpContext.Session.TryGetValue("meetingid", out var meetingIdValue);
+            var gotValue = HttpContext.Session.TryGetValue("meetingid", out var meetingIdValue);
 
-            string MeetingIdString = System.Text.Encoding.ASCII.GetString(meetingIdValue);
-            
+            string meetingIdString = System.Text.Encoding.ASCII.GetString(meetingIdValue);
+
             Fob fob = db.Fob.Include(x => x.Meeting).ThenInclude(x => x.Stats)
                             .Include(x => x.Meeting).ThenInclude(x => x.Attendee).ThenInclude(x => x.User)
                             .Include(x => x.Fobbed)
-                            .Single(f => f.Meeting.MeetingId == MeetingIdString);
+                            .Single(f => f.Meeting.MeetingId == meetingIdString);
 
             fob.Meeting.Stats.Add(new Stats(fob.Meeting.GetAttendeeCount(), fob.FobCount, fob.TopicStartTime, DateTime.Now));
             fob.RestartFobbed();
-            
+
             db.SaveChanges();
         }
     }

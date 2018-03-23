@@ -2,16 +2,16 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-namespace project_fob.Models 
+namespace project_fob.Models
 {
-    public class Attendee 
+    public class Attendee
     {
         [Key]
         public int Id { get; set; }
         public Meeting Meeting { get; set; }
-        public  User User { get; set; }
+        public User User { get; set; }
 
-        public Attendee() 
+        public Attendee()
         {
         }
 
@@ -23,11 +23,11 @@ namespace project_fob.Models
 
         public override bool Equals(object obj)
         {
-            if(obj is Attendee paramater)
+            if (obj is Attendee paramater)
             {
                 return Equals(paramater);
             }
-            
+
             return false;
         }
 

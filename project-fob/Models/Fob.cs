@@ -12,8 +12,13 @@ namespace project_fob.Models
     {
         [Key]
         public int Id { get; set; }
-        
+
+        public DateTime TopicStartTime { get; set; }
+        public Meeting Meeting { get; set; }
+        public List<Attendee> Fobbed { get; set; } = new List<Attendee>();
+
         //This variable and code is mainly here because of past values are bein loaded into the project.
+        //They must be removed in the future
         public int AttendeeCount
         {
             get
@@ -27,25 +32,17 @@ namespace project_fob.Models
         public int FobCount { get { return Fobbed.Count; } set { } }
 
 
-        public DateTime TopicStartTime { get; set; }
-        public Meeting Meeting { get; set; }
-        public List<Attendee> Fobbed { get; set; } = new List<Attendee>();
-
-
         public Fob() { }
         public Fob(Meeting meeting)
         {
-            // maybe check if a meeting already has a fob ? also need to check that is active
             Meeting = meeting;
             Fobbed = new List<Attendee>();
-            //AttendeeCount = 0;
-            //FobCount = 0;
             TopicStartTime = DateTime.Now;
         }
 
         public static Fob getFob(string meetingid, ApplicationDbContext db)
         {
-            return db.Fob.Include(x=> x.Meeting).ThenInclude(x=>x.Attendee).ThenInclude(x=>x.User).SingleOrDefault(f => f.Meeting.MeetingId == meetingid);
+            return db.Fob.Include(x => x.Meeting).ThenInclude(x => x.Attendee).ThenInclude(x => x.User).SingleOrDefault(f => f.Meeting.MeetingId == meetingid);
         }
 
         public void AddFob(Attendee attendee)
@@ -60,10 +57,5 @@ namespace project_fob.Models
         {
             Fobbed.Clear();
         }
-
-        /*public int GetAttendeeCount()
-        {
-            return Meeting.GetAttendeeCount();
-        }*/
     }
 }

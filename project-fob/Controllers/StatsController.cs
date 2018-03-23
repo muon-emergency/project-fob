@@ -17,26 +17,24 @@ namespace project_fob.Controllers
         {
             this.db = db;
         }
-        // GET: Stats
+
         public ActionResult Index()
         {
             return View();
         }
+
         public string GetStats()
         { //- for in the same topic, : for different topic, ; for completely different statistic
 
-            bool gotvalue = false;
-            gotvalue = HttpContext.Session.TryGetValue("meetingid", out var meetingIdValue);
+            bool gotValue = false;
+            gotValue = HttpContext.Session.TryGetValue("meetingid", out var meetingIdValue);
 
             string session = meetingIdValue.ToString();
-            //string session = Session["meetingid"].ToString();
+            string meetingIdString = System.Text.Encoding.ASCII.GetString(meetingIdValue);
 
-            string MeetingIdString = System.Text.Encoding.ASCII.GetString(meetingIdValue);
-
-            Meeting meeting = db.Meeting.Include(x => x.Stats).Single(m => m.MeetingId == MeetingIdString);
+            Meeting meeting = db.Meeting.Include(x => x.Stats).Single(m => m.MeetingId == meetingIdString);
 
             List<Stats> stats = meeting.Stats;
-
             String tmp = "";
 
             int totalAtt = 0;
