@@ -69,9 +69,7 @@ namespace project_fob.Controllers
             db.Host.Add(host);
 
             Meeting meet = new Meeting(GenerateMeetingId(), host, attendeePassword, hostPassword);
-
-            //This might cause some incidents in case we generate 2 rooms with the same ID
-
+            
             while (db.Meeting.Any(m => m.MeetingId.Equals(meet.MeetingId.ToString())))
             {
                 meet.MeetingId = GenerateMeetingId();
