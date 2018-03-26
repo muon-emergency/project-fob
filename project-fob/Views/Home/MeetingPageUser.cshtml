@@ -56,9 +56,7 @@
             button.draw(dataButton, clickedButton);
             google.visualization.events.addListener(button, 'select', clickHandler);
 
-            // controller: atendee, fob method, empty string parameter,
-
-            //Gain information with this code. Ofc. rewriting is required. Don't forget the parameter
+            //Fobbing
             
                 $.ajax({
                     type: "POST",
@@ -78,10 +76,7 @@
                 button.draw(dataButton, optionsButton);
                 google.visualization.events.addListener(button, 'select', clickHandler);
             }, 50);
-
-
-
-
+            
         }
 
         if (!isItDrawing) {
@@ -89,7 +84,7 @@
             isItDrawing = true;
         }
         var errorCounter = 0;
-        function runUpdate() { // host controller, refresh
+        function runUpdate() {
             setTimeout(runUpdate, 10000); //Run update every 10 second
             $.ajax({
                 type: "POST",
@@ -99,10 +94,8 @@
                     if (tmp.length != 0) {
                         alert(result);
                     }
-
                     errorCounter = 0;
-                    //window.locationre = result.url;
-                    //In the controll just put the current user number + voted user numbers so it can be modified easily.
+
                 },
                 error: function () {
                     errorCounter++;
@@ -115,27 +108,13 @@
                 }
             });
         }
-
-
-
     }
-
-
-    /* $(window).resize(function () {
-         if (this.resizeTO) clearTimeout(this.resizeTO);
-         this.resizeTO = setTimeout(function () {
-             $(this).trigger('resizeEnd');
-         }, 500);
-     });*/
 
     //redraw graph when window resize is completed
     $(window).on('resizeEnd', function () {
         drawChart(data);
     });
 
-    function hello() {
-        alert("hello");
-    }
 </script>
 
 <h1>@ViewBag.title</h1>
