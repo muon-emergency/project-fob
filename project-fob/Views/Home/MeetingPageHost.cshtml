@@ -102,10 +102,7 @@
 				button.draw(dataButton, optionsButton);
 				google.visualization.events.addListener(button, 'select', clickHandler);
 			}, 50);
-
-
-
-
+            
 		}
 
 		function buttonBackToNormal() {
@@ -156,17 +153,9 @@
 		   ['thebackgroundchart', parseInt(total - leavers)]
 			]);
 
-
 			var chart = new google.visualization.PieChart(document.getElementById('piechart'));
 			chart.draw(data, options);
-
 		}
-
-	}
-    
-
-	function hello() {
-		alert("hello");
 	}
 </script>
 
@@ -175,7 +164,7 @@
 <body onresize="drawCharts()">
 
 	<div id="centerOfPageForButton">
-		<div id="piechart" style="width: 100%; height: 100%;"></div> <!-- why is this here -->
+		<div id="piechart" style="width: 100%; height: 100%;"></div>
 	</div>
 	@using (Html.BeginForm("meetingPageUser", "Home", FormMethod.Post)) {
 		<div id="centerOfPageForButton">
