@@ -149,11 +149,11 @@
 		}
 
 		/*When it updates, for some reason it resizes the size of the pie chart in the background*/
-		function updateChart(total, leavers) {// what is all this stuff? speakers in millions what???
+		function updateChart(total, leavers) {
 			data = new google.visualization.arrayToDataTable([
-		   ['Language', 'Speakers (in millions)'],
-		   ['Leave', parseInt(leavers)],
-		   ['Remain', parseInt(total - leavers)]
+		   ['nothing', 'special here'],
+		   ['thisjust', parseInt(leavers)],
+		   ['thebackgroundchart', parseInt(total - leavers)]
 			]);
 
 
