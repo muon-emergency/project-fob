@@ -38,15 +38,15 @@ namespace project_fob.Controllers
             List<Stats> stats = meeting.Stats;
             StringBuilder sb = new StringBuilder();
 
-            int totalAtt = 0;
+            //int totalAtt = 0;
             int totalFob = 0;
             for (int i = 0; i < stats.Count; i++)
             {
-                totalAtt += stats[i].Attendeescount;
+                //totalAtt += stats[i].Attendeescount;
                 totalFob += stats[i].Fobcount;
-                sb.Append(stats[i].Attendeescount + "-" + stats[i].Fobcount + ":");
+                sb.Append(stats[i].Fobcount + ":");
             }
-            sb.Append(";" + totalAtt / (double)stats.Count + "-" + totalFob / (double)stats.Count);
+            sb.Append(";" + totalFob / (double)stats.Count);
 
             //TODO use these stats (they should be in order as a list is deterministic)
 
