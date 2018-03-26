@@ -4,7 +4,6 @@
     <script type="text/javascript" src="~/js/qrcode.js"></script>
 </head>
 <body>
-    <input id="text" type="hidden" value=@ViewBag.url style="width:80%" /><br />
     <div id="qrcode" style="width:500px; height:500px; margin-top:15px;"></div>
     <script type="text/javascript">
         var qrcode = new QRCode(document.getElementById("qrcode"), {
@@ -12,14 +11,6 @@
             height: 500
         });
 
-        function makeCode() {
-            var elText = document.getElementById("text");
-            
-            qrcode.makeCode(elText.value);
-        }
-
-        makeCode();
-        
-
+        qrcode.makeCode("@ViewBag.url");
     </script>
 </body>
