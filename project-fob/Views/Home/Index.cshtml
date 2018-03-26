@@ -24,9 +24,6 @@
 	}
 
     function checkId() {
-
-        checkCookie();
-		
 		var meetID = document.getElementById('meetingId');
 		if (meetID.value != "" ) { 
 			
@@ -34,15 +31,9 @@
 			
 		} else {
 			$('#enterMeetingButton').attr('disabled', 'disabled');
-			
         }
+    }
 
-        
-	}
-	/*
-	* TODO
-	* fix this 
-	*/
 	function closedMenues(d) {
 		var div = document.getElementById(d);
 		
@@ -52,9 +43,7 @@
 				document.getElementById('backE').style.display = 'block';
 			} else {
 				document.getElementById('backC').style.display = 'block';
-			}
-
-		
+        }
 	};
 
 	function switchBetweenMenu() {
@@ -75,36 +64,8 @@
 			backE.style.display = 'block';
 
 		}
-
     };
-
-    function setCookie(id) {
-        alert("setid: " + id);
-        var d = new Date();
-        d.setTime(d.getTime() + (24 * 3600));
-        var expires = "expires=" + d.toUTCString();
-        document.cookie = id + "," + expires;
-    }
-
-    function getIdCookie() {
-        return document.cookie.split(',')[0];
-    }
-
-    function checkCookie() {
-        @*
-            This is commented out as it does not work at the moment
-        var id = getIdCookie();
-        if (id == null || id == "") {
-            alert("Sheep happens");
-            setCookie(hello);
-        }
-        else {
-            alert("your id is: " + id);
-        }
-            *@
-    }
-
-
+    
 </script>
 <body onload="checkId()">
 	<h1>@ViewBag.title</h1>

@@ -27,10 +27,7 @@
                     },
                     bar: { groupWidth: "90%" },
                     backgroundColor: '#ffffff',
-
-
                 };
-
 
                 //First topic
 
@@ -39,7 +36,6 @@
                 var split2 = split[0].split(':');
                 for (var i = 0; i < split2.length - 1; i++) {
                     Data_topicClicks.push([(i + 1) + "", parseInt(split2[i]), parseInt(split2[i])]);
-                    alert(split2[i]);
                 }
                 topicClicksData = new google.visualization.arrayToDataTable(Data_topicClicks);
 
