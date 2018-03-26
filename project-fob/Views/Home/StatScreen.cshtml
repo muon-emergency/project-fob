@@ -38,10 +38,8 @@
                 var split = result.split(';') // ; is topic
                 var split2 = split[0].split(':');
                 for (var i = 0; i < split2.length - 1; i++) {
-                    
                     Data_topicClicks.push([(i + 1) + "", parseInt(split2[i]), parseInt(split2[i])]);
                     alert(split2[i]);
-                    //alert("one push done");
                 }
                 topicClicksData = new google.visualization.arrayToDataTable(Data_topicClicks);
 
