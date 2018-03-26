@@ -37,12 +37,10 @@ namespace project_fob.Controllers
 
             List<Stats> stats = meeting.Stats;
             StringBuilder sb = new StringBuilder();
-
-            //int totalAtt = 0;
+            
             int totalFob = 0;
             for (int i = 0; i < stats.Count; i++)
             {
-                //totalAtt += stats[i].Attendeescount;
                 totalFob += stats[i].Fobcount;
                 sb.Append(stats[i].Fobcount + ":");
             }

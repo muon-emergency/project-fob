@@ -64,7 +64,7 @@ namespace project_fob.Controllers
         }
         public ActionResult Leave(string message)
         {
-            var gotValue = HttpContext.Session.TryGetValue("sessionid", out var session);
+            HttpContext.Session.TryGetValue("sessionid", out var session);
             string userIdString = System.Text.Encoding.ASCII.GetString(session);
 
             //important
