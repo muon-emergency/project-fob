@@ -26,9 +26,8 @@ namespace project_fob.Controllers
 
         public string GetStats()
         { //- for in the same topic, : for different topic, ; for completely different statistic
-
-            bool gotValue = false;
-            gotValue = HttpContext.Session.TryGetValue("meetingid", out var meetingIdValue);
+            
+            HttpContext.Session.TryGetValue("meetingid", out var meetingIdValue);
 
             string session = meetingIdValue.ToString();
             string meetingIdString = System.Text.Encoding.ASCII.GetString(meetingIdValue);
@@ -45,8 +44,6 @@ namespace project_fob.Controllers
                 sb.Append(stats[i].Fobcount + ":");
             }
             sb.Append(";" + totalFob / (double)stats.Count);
-
-            //TODO use these stats (they should be in order as a list is deterministic)
 
             return sb.ToString();
 

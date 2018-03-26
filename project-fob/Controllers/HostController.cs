@@ -27,7 +27,7 @@ namespace project_fob.Controllers
 
         public ActionResult QrCode()
         {
-            var gotValue = HttpContext.Session.TryGetValue("meetingid", out var meetingIdValue);
+            HttpContext.Session.TryGetValue("meetingid", out var meetingIdValue);
             string meetingIdString = System.Text.Encoding.ASCII.GetString(meetingIdValue);
 
             string baseUrl = Request.GetDisplayUrl();
@@ -46,7 +46,7 @@ namespace project_fob.Controllers
 
         public ActionResult Finish(string message)
         {
-            var gotValue = HttpContext.Session.TryGetValue("meetingid", out var meetingIdValue);
+            HttpContext.Session.TryGetValue("meetingid", out var meetingIdValue);
             string meetingIdString = System.Text.Encoding.ASCII.GetString(meetingIdValue);
 
             Fob fob = db.Fob.Include(x => x.Meeting).ThenInclude(x => x.Stats)
@@ -89,7 +89,7 @@ namespace project_fob.Controllers
                 @ViewBag.title = message;
             }
 
-            var gotValue = HttpContext.Session.TryGetValue("meetingid", out var meetingIdValue);
+            HttpContext.Session.TryGetValue("meetingid", out var meetingIdValue);
             Fob fob = Fob.getFob(Encoding.ASCII.GetString(meetingIdValue), db);
 
             if (fob == null)
@@ -104,7 +104,7 @@ namespace project_fob.Controllers
         public void Reset(string message)
         {
             //We need to add the already existing information to the stats model. NAO!!!
-            var gotValue = HttpContext.Session.TryGetValue("meetingid", out var meetingIdValue);
+            HttpContext.Session.TryGetValue("meetingid", out var meetingIdValue);
 
             string meetingIdString = System.Text.Encoding.ASCII.GetString(meetingIdValue);
 

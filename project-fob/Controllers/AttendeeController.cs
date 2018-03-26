@@ -26,13 +26,13 @@ namespace project_fob.Controllers
 
         public void Fob(string value)
         {
-            var gotValue = HttpContext.Session.TryGetValue("meetingid", out var meetingIdValue);
+            HttpContext.Session.TryGetValue("meetingid", out var meetingIdValue);
 
             string meetingString = System.Text.Encoding.ASCII.GetString(meetingIdValue);
 
             Fob fob = db.Fob.Include(x => x.Meeting).ThenInclude(x => x.Stats).Include(x => x.Fobbed).ThenInclude(x => x.User).Single(f => f.Meeting.MeetingId == meetingString);
 
-            gotValue = HttpContext.Session.TryGetValue("sessionid", out var session);
+            HttpContext.Session.TryGetValue("sessionid", out var session);
 
             string userIdString = System.Text.Encoding.ASCII.GetString(session);
             Attendee att = db.Attendee.Include(at => at.User).Include(at => at.Meeting).Single(at => at.User.UserId.Equals(userIdString) && at.Meeting.MeetingId.Equals(meetingString));
