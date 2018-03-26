@@ -29,7 +29,13 @@ namespace project_fob.Controllers
         {
             var gotValue = HttpContext.Session.TryGetValue("meetingid", out var meetingIdValue);
             string meetingIdString = System.Text.Encoding.ASCII.GetString(meetingIdValue);
+            
+            @ViewBag.url = CreateUrl(meetingIdString);
+            return View("~/Views/Home/QRCode.cshtml");
+        }
 
+        public string CreateUrl(string meetingIdString)
+        {
             string baseUrl = Request.GetDisplayUrl();
             string[] split = baseUrl.Split('/');
             StringBuilder sb = new StringBuilder();
@@ -40,8 +46,8 @@ namespace project_fob.Controllers
             }
             Meeting meet = db.Meeting.Single(x => x.MeetingId.Equals(meetingIdString));
 
-            @ViewBag.url = sb.ToString() + "/Home/meetingPageUser?meetingId=" + meetingIdString + "&password=" + meet.RoomPassword;
-            return View("~/Views/Home/QRCode.cshtml");
+
+            return sb.ToString() + "/Home/meetingPageUser?meetingId=" + meetingIdString + "&password=" + meet.RoomPassword;
         }
 
         public ActionResult Finish(string message)
