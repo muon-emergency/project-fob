@@ -91,17 +91,15 @@ namespace project_fob.Controllers
 
         public ActionResult MeetingPageUser(string meetingId, string password)
         {
-            if (password == null)
-            {
-                password = "";
-            }
+            password = password ?? "";
+
             meetingId = meetingId.ToUpper();
             Meeting meet = db.Meeting.SingleOrDefault(m => m.MeetingId == meetingId);
 
             if (meet != null && meetingId.Equals(meet.MeetingId))
             {
                 //host
-                if (password.Equals(meet.HostPassword.ToString()))
+                if (password.Equals(meet.HostPassword))
                 {
 
                     User user = RetrieveUser();
