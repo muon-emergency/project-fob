@@ -98,7 +98,7 @@ namespace project_fob.Controllers
             }
 
             //First number are the total users, the second number is the voted users.
-            return fob.Meeting.GetAttendeeCount() + "," + fob.FobCount;
+            return fob.FobCount.ToString();
         }
 
         public void Reset(string message)
