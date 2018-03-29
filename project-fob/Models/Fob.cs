@@ -19,10 +19,6 @@ namespace project_fob.Models
 
         public List<User> Fobbed { get; set; } = new List<User>();
         
-
-        public int FobCount { get { return Fobbed.Count; } set { } }
-
-
         public Fob() { }
         public Fob(Meeting meeting)
         {
@@ -33,7 +29,7 @@ namespace project_fob.Models
 
         public static Fob getFob(string meetingid, ApplicationDbContext db)
         {
-            return db.Fob.Include(x => x.Meeting).SingleOrDefault(f => f.Meeting.MeetingId == meetingid);
+            return db.Fob.Include(x => x.Meeting).Include(x=> x.Fobbed).SingleOrDefault(f => f.Meeting.MeetingId == meetingid);
         }
 
         public void AddFob(string id)

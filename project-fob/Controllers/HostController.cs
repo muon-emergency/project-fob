@@ -61,7 +61,7 @@ namespace project_fob.Controllers
             Fob fob = db.Fob.Include(x => x.Meeting).ThenInclude(x => x.Stats)
                             .Single(f => f.Meeting.MeetingId == meetingIdString);
 
-            fob.Meeting.Stats.Add(new Stats(0, fob.FobCount, fob.TopicStartTime, DateTime.Now));
+            fob.Meeting.Stats.Add(new Stats(0, fob.Fobbed.Count, fob.TopicStartTime, DateTime.Now));
             fob.Meeting.Active = false;
             db.SaveChanges();
 
@@ -91,7 +91,7 @@ namespace project_fob.Controllers
             }
 
             //First number are the total users, the second number is the voted users.
-            return fob.FobCount.ToString();
+            return fob.Fobbed.Count.ToString();
         }
 
         public void Reset(string message)
@@ -104,7 +104,7 @@ namespace project_fob.Controllers
             Fob fob = db.Fob.Include(x => x.Meeting).ThenInclude(x => x.Stats)
                             .Single(f => f.Meeting.MeetingId == meetingIdString);
 
-            fob.Meeting.Stats.Add(new Stats(0, fob.FobCount, fob.TopicStartTime, DateTime.Now));
+            fob.Meeting.Stats.Add(new Stats(0, fob.Fobbed.Count, fob.TopicStartTime, DateTime.Now));
             fob.RestartFobbed();
 
             db.SaveChanges();
