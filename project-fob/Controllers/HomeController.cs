@@ -134,27 +134,6 @@ namespace project_fob.Controllers
             return View("Index");
         }
 
-
-        /*public string RetrieveUserId()
-        {
-            var gotValue = HttpContext.Session.TryGetValue("sessionid", out var session);
-            if (gotValue)
-            {
-                return System.Text.Encoding.ASCII.GetString(session); ;
-            }
-            return null;
-        }*/
-
-        /*public User RetrieveUser()
-        {
-            string userId = RetrieveUserId();
-            if (userId != null)
-            {
-                return db.User.SingleOrDefault(f => f.UserId.Equals(userId));
-            }
-            return null;
-        }*/
-
         public static string GenerateId()
         {
             return GenerateIdByLength(9);

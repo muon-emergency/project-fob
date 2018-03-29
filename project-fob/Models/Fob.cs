@@ -16,7 +16,7 @@ namespace project_fob.Models
 
         public DateTime TopicStartTime { get; set; }
         public Meeting Meeting { get; set; }
-        [NotMapped]
+
         public List<string> Fobbed { get; set; } = new List<string>();
         
 

@@ -59,7 +59,6 @@ namespace project_fob.Controllers
             string meetingIdString = System.Text.Encoding.ASCII.GetString(meetingIdValue);
 
             Fob fob = db.Fob.Include(x => x.Meeting).ThenInclude(x => x.Stats)
-                            .Include(x => x.Fobbed)
                             .Single(f => f.Meeting.MeetingId == meetingIdString);
 
             fob.Meeting.Stats.Add(new Stats(0, fob.FobCount, fob.TopicStartTime, DateTime.Now));
@@ -103,7 +102,6 @@ namespace project_fob.Controllers
             string meetingIdString = System.Text.Encoding.ASCII.GetString(meetingIdValue);
 
             Fob fob = db.Fob.Include(x => x.Meeting).ThenInclude(x => x.Stats)
-                            .Include(x => x.Fobbed)
                             .Single(f => f.Meeting.MeetingId == meetingIdString);
 
             fob.Meeting.Stats.Add(new Stats(0, fob.FobCount, fob.TopicStartTime, DateTime.Now));
