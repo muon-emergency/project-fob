@@ -6,7 +6,9 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Models\Attendee.cs" />
     <Compile Remove="Models\ErrorViewModel.cs" />
+    <Compile Remove="Models\User.cs" />
   </ItemGroup>
 
   <ItemGroup>

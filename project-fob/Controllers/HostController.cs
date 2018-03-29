@@ -59,11 +59,10 @@ namespace project_fob.Controllers
             string meetingIdString = System.Text.Encoding.ASCII.GetString(meetingIdValue);
 
             Fob fob = db.Fob.Include(x => x.Meeting).ThenInclude(x => x.Stats)
-                            .Include(x => x.Meeting).ThenInclude(x => x.Attendee).ThenInclude(x => x.User)
                             .Include(x => x.Fobbed)
                             .Single(f => f.Meeting.MeetingId == meetingIdString);
 
-            fob.Meeting.Stats.Add(new Stats(fob.Meeting.GetAttendeeCount(), fob.FobCount, fob.TopicStartTime, DateTime.Now));
+            fob.Meeting.Stats.Add(new Stats(0, fob.FobCount, fob.TopicStartTime, DateTime.Now));
             fob.Meeting.Active = false;
             db.SaveChanges();
 
@@ -73,20 +72,6 @@ namespace project_fob.Controllers
         }
         public ActionResult Leave(string message)
         {
-            HttpContext.Session.TryGetValue("sessionid", out var session);
-            string userIdString = System.Text.Encoding.ASCII.GetString(session);
-
-            //important
-            Host host = db.Host
-                .Include(x => x.Meeting).ThenInclude(x => x.Host)
-                .Include(x => x.User)
-                .Single(h => h.User.UserId == userIdString);
-
-            host.Meeting.Host.Remove(host);
-            db.SaveChanges();
-
-            // do leave stuff here
-
             return View("~/Views/Home/Index.cshtml");
         }
 
@@ -118,11 +103,10 @@ namespace project_fob.Controllers
             string meetingIdString = System.Text.Encoding.ASCII.GetString(meetingIdValue);
 
             Fob fob = db.Fob.Include(x => x.Meeting).ThenInclude(x => x.Stats)
-                            .Include(x => x.Meeting).ThenInclude(x => x.Attendee).ThenInclude(x => x.User)
                             .Include(x => x.Fobbed)
                             .Single(f => f.Meeting.MeetingId == meetingIdString);
 
-            fob.Meeting.Stats.Add(new Stats(fob.Meeting.GetAttendeeCount(), fob.FobCount, fob.TopicStartTime, DateTime.Now));
+            fob.Meeting.Stats.Add(new Stats(0, fob.FobCount, fob.TopicStartTime, DateTime.Now));
             fob.RestartFobbed();
 
             db.SaveChanges();
