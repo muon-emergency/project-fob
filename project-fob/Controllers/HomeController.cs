@@ -9,6 +9,7 @@ using project_fob.Models;
 using System.Text;
 using project_fob.Data;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Http;
 
 namespace project_fob.Controllers
 {
@@ -219,6 +220,33 @@ namespace project_fob.Controllers
             const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
             return new string(Enumerable.Repeat(chars, length).Select(s => s[random.Next(s.Length)]).ToArray());
         }
+
+        public void CheckCookies()
+        {
+            string id = GetCookieID();
+            SetCookie(id);
+        }
+
+        private string GetCookieID()
+        {
+            return Request.Cookies["ID"];//(id.Length == 0|| id== null);
+        }
+
+        private void SetCookie(string id)
+        {
+            CookieOptions cookie = new CookieOptions();
+            cookie.Expires = DateTime.Now.AddYears(5);
+            if (id.Length == 0 || id == null)
+            {
+                Response.Cookies.Append("ID", GenerateId());
+            }
+            else
+            {
+                Response.Cookies.Append("ID", id);
+            }
+
+        }
+
 
     }
 }
