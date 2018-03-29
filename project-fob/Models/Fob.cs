@@ -17,7 +17,7 @@ namespace project_fob.Models
         public DateTime TopicStartTime { get; set; }
         public Meeting Meeting { get; set; }
 
-        public List<string> Fobbed { get; set; } = new List<string>();
+        public List<User> Fobbed { get; set; } = new List<User>();
         
 
         public int FobCount { get { return Fobbed.Count; } set { } }
@@ -27,7 +27,7 @@ namespace project_fob.Models
         public Fob(Meeting meeting)
         {
             Meeting = meeting;
-            Fobbed = new List<string>();
+            Fobbed = new List<User>();
             TopicStartTime = DateTime.Now;
         }
 
@@ -38,9 +38,9 @@ namespace project_fob.Models
 
         public void AddFob(string id)
         {
-            if (!Fobbed.Contains(id))
+            if (!Fobbed.Any(x => x.Equals(id)))
             {
-                Fobbed.Add(id);
+                Fobbed.Add(new User(id));
             }
         }
 

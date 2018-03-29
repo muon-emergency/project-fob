@@ -8,7 +8,6 @@
   <ItemGroup>
     <Compile Remove="Models\Attendee.cs" />
     <Compile Remove="Models\ErrorViewModel.cs" />
-    <Compile Remove="Models\User.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -28,10 +27,6 @@
     <DotNetCliToolReference Include="Microsoft.EntityFrameworkCore.Tools.DotNet" Version="2.0.1" />
     <DotNetCliToolReference Include="Microsoft.Extensions.SecretManager.Tools" Version="2.0.0" />
     <DotNetCliToolReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Tools" Version="2.0.1" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Models\" />
   </ItemGroup>
 
 </Project>
