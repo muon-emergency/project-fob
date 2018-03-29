@@ -236,7 +236,7 @@ namespace project_fob.Controllers
         {
             CookieOptions cookie = new CookieOptions();
             cookie.Expires = DateTime.Now.AddYears(5);
-            if (id.Length == 0 || id == null)
+            if (id == null || id.Length == 0)
             {
                 Response.Cookies.Append("ID", GenerateId());
             }
