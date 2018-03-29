@@ -7,9 +7,9 @@ using System.Linq;
 using System.Web;
 
 
-namespace project_fob.Models 
+namespace project_fob.Models
 {
-    public class User 
+    public class User
     {
         [Key]
         public int Id { get; set; }
@@ -38,7 +38,7 @@ namespace project_fob.Models
         {
             if (parameter.UserId.Equals(UserId))
             {
-                    return true;
+                return true;
             }
             return false;
         }

@@ -24,21 +24,19 @@ namespace project_fob.Controllers
         }
         public void Fob(string value)
         {
-            var gotvalue = HttpContext.Session.TryGetValue("meetingid", out var meetingIdValue);
+            var gotValue = HttpContext.Session.TryGetValue("meetingid", out var meetingIdValue);
 
-            string MeetingString = System.Text.Encoding.ASCII.GetString(meetingIdValue);
+            string meetingString = System.Text.Encoding.ASCII.GetString(meetingIdValue);
 
-            Fob fob = db.Fob.Include(x => x.Meeting).ThenInclude(x => x.Stats).Include(x => x.Fobbed).ThenInclude(x => x.User).Single(f => f.Meeting.MeetingId == MeetingString);
+            Fob fob = db.Fob.Include(x => x.Meeting).ThenInclude(x => x.Stats).Include(x => x.Fobbed).ThenInclude(x => x.User).Single(f => f.Meeting.MeetingId == meetingString);
 
-            gotvalue = HttpContext.Session.TryGetValue("sessionid", out var session);
+            gotValue = HttpContext.Session.TryGetValue("sessionid", out var session);
 
-            string UserIdString = System.Text.Encoding.ASCII.GetString(session);
-            Attendee att = db.Attendee.Include(at => at.User).Include(at => at.Meeting).Single(at => at.User.UserId.Equals(UserIdString) && at.Meeting.MeetingId.Equals(MeetingString));
+            string userIdString = System.Text.Encoding.ASCII.GetString(session);
+            Attendee att = db.Attendee.Include(at => at.User).Include(at => at.Meeting).Single(at => at.User.UserId.Equals(userIdString) && at.Meeting.MeetingId.Equals(meetingString));
 
             fob.AddFob(att);
             db.SaveChanges();
-
-            //return View("~/Views/Home/MeetingPageUser.cshtml");
         }
 
         public ActionResult ExitMeeting(string value)
