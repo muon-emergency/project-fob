@@ -30,7 +30,7 @@ namespace project_fob.Controllers
             {
                 string userId = GetCookieId();
 
-                Fob fob = db.Fob.Include(x => x.Meeting).ThenInclude(x => x.Stats).Single(f => f.Meeting.MeetingId == meetingString);
+                Fob fob = db.Fob.Include(x => x.Meeting).ThenInclude(x => x.Stats).Include(x=> x.Fobbed).Single(f => f.Meeting.MeetingId == meetingString);
                 
                 fob.AddFob(userId);
                 db.SaveChanges();

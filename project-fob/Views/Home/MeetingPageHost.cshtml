@@ -87,9 +87,9 @@
                 url: '@Url.Action("Reset", "Host")',
                 data: { meetingIdString : "@ViewBag.meetingid" },
 				success: function (result) {
-					//alert("successfull reset");
 					var split = result.split(',')
-					updateChart(split[0], split[1]);
+                    updateChart(split[0], split[1]);
+                    alert("successfull reset");
 				},
 				error: function () {
 					alert("Connection error");
@@ -135,7 +135,7 @@
 						]);
 						button = new google.visualization.PieChart(document.getElementById('button'));
 						button.draw(dataButton, optionsButton);
-						google.visualization.events.addListener(button, 'select', clickHandler);
+                    google.visualization.events.addListener(button, 'select', clickHandler);
 				},
 				error: function () {
 					errorCounter++;
@@ -207,7 +207,7 @@
         <div class="inner">
             @using (Html.BeginForm("finish", "Host", FormMethod.Post))
             {
-            <button class="footerButton" id="buttonExit" name="message" value="@(Model.MeetingID)">Finish</button>
+            <button class="footerButton" id="buttonExit" name="message" value="@ViewBag.meetingid">Finish</button>
     }
         </div>
     </div>

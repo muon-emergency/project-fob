@@ -74,7 +74,7 @@ namespace project_fob.Controllers
             @ViewBag.title = "Meeting Id: ";
             @ViewBag.meetingid = meet.MeetingId;
 
-            return View(new MeetingPageHostViewModel { MeetingID = meet.MeetingId });
+            return View();
         }
 
         public ActionResult MeetingPageUser(string meetingId, string password)

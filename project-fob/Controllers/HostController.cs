@@ -92,7 +92,9 @@ namespace project_fob.Controllers
 
         public void Reset(string message, string meetingIdString)
         {
+            //Fob fob = Fob.getFob(meetingIdString, db);
             Fob fob = db.Fob.Include(x => x.Meeting).ThenInclude(x => x.Stats)
+                            .Include(x=>x.Fobbed)
                             .Single(f => f.Meeting.MeetingId == meetingIdString);
 
             fob.Meeting.Stats.Add(new Stats(0, fob.Fobbed.Count, fob.TopicStartTime, DateTime.Now));

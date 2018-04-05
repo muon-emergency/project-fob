@@ -29,6 +29,10 @@ namespace project_fob.Models
             {
                 return Equals(paramater);
             }
+            if (obj is String parameter)
+            {
+                return UserId.Equals(parameter);
+            }
             return false;
         }
 
@@ -47,10 +51,5 @@ namespace project_fob.Models
             hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(UserId);
             return hashCode;
         }
-    }
-
-    public class MeetingPageHostViewModel
-    {
-        public string MeetingID { get; set; }
     }
 }
