@@ -53,7 +53,6 @@ namespace project_fob.Controllers
             }
 
             CheckCookies();
-            //HttpContext.Session.Set("sessionid", Encoding.ASCII.GetBytes(user.UserId));
 
             Host host = new Host();
             db.Host.Add(host);
@@ -66,12 +65,14 @@ namespace project_fob.Controllers
             }
 
             db.Meeting.Add(meet);
-            HttpContext.Session.Set("meetingid", Encoding.ASCII.GetBytes(meet.MeetingId));
+            SetCookie("tmp", meet.MeetingId);
+            //meetingid magic required
 
             db.Fob.Add(new Fob(meet));
             db.SaveChanges();
 
-            @ViewBag.title = "Meeting Id: " + meet.MeetingId;
+            @ViewBag.title = "Meeting Id: ";
+            @ViewBag.title2= meet.MeetingId;
             ViewBag.meetingid = meet.MeetingId;
 
             return View();
@@ -92,8 +93,7 @@ namespace project_fob.Controllers
 
                     CheckCookies();
                     string id = GetCookieID();
-                    //HttpContext.Session.Set("sessionid", Encoding.ASCII.GetBytes(user.UserId));
-                    HttpContext.Session.Set("meetingid", Encoding.ASCII.GetBytes(meet.MeetingId));
+                    //meetingid magic required
 
                     if (meet.Active)
                     {
@@ -113,9 +113,9 @@ namespace project_fob.Controllers
                     //join as attendee
                     CheckCookies();
                     string id = GetCookieID();
-                    
-                    HttpContext.Session.Set("meetingid", Encoding.ASCII.GetBytes(meet.MeetingId));
-                    
+
+                    //meetingid magic required
+
                     ViewBag.title = "Id:" + meetingId;
                     db.SaveChanges();
                     return View();
@@ -190,6 +190,14 @@ namespace project_fob.Controllers
 
         }
 
-
+        private void SetCookie(string id, string value)
+        {
+            CookieOptions cookie = new CookieOptions();
+            cookie.Expires = DateTime.Now.AddYears(5);
+            if (id != null && id.Length == 0)
+            {
+                Response.Cookies.Append(id, value);
+            }
+        }
     }
 }
