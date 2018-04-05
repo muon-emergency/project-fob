@@ -65,15 +65,14 @@ namespace project_fob.Controllers
             }
 
             db.Meeting.Add(meet);
-            SetCookie("tmp", meet.MeetingId);
+            SetCookie("tmp", meet.MeetingId); // we store it as tmp so we do not want to store this value for long term if we do not have to.
             //meetingid magic required
 
             db.Fob.Add(new Fob(meet));
             db.SaveChanges();
 
             @ViewBag.title = "Meeting Id: ";
-            @ViewBag.title2= meet.MeetingId;
-            ViewBag.meetingid = meet.MeetingId;
+            @ViewBag.meetingid = meet.MeetingId;
 
             return View();
         }

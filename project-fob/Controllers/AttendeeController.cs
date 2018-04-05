@@ -24,14 +24,11 @@ namespace project_fob.Controllers
             return View();
         }
 
-        public void Fob(string value)
+        public void Fob(string value, string meetingString)
         {
             if (HaveCookieId())
             {
                 string userId = GetCookieId();
-                HttpContext.Session.TryGetValue("meetingid", out var meetingIdValue);
-
-                string meetingString = System.Text.Encoding.ASCII.GetString(meetingIdValue);
 
                 Fob fob = db.Fob.Include(x => x.Meeting).ThenInclude(x => x.Stats).Single(f => f.Meeting.MeetingId == meetingString);
                 

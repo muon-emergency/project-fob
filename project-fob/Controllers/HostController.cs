@@ -25,25 +25,8 @@ namespace project_fob.Controllers
             return View();
         }
 
-        public ActionResult QrCode()
+        public ActionResult QrCode(string meetingIdString)
         {
-            HttpContext.Session.TryGetValue("meetingid", out var meetingIdValue);
-            string meetingIdString = System.Text.Encoding.ASCII.GetString(meetingIdValue);
-            
-            @ViewBag.url = CreateUrl(meetingIdString);
-            return View("~/Views/Home/QRCode.cshtml");
-        }
-
-        public string CreateUrl(string meetingIdString)
-        {
-            // This is really confusing so I'll explain.
-            // Baseurl doesn't work because the url can be a long string which I could not use to correctly find the required parameters to enter to the meeting.
-            // In case we are running the project on a link like : test.co.uk/project/seesharp/fob/
-            // the url request will return something like this: test.co.uk/project/seesharp/fob/index/hostpage. Because of that I have to modify the
-            // URL so it grabs the correct url (hopefully).
-            // The url editing also needed because of the controll handling it'd generate a wrong url for the user which would render the QRCode useless.
-            // Not to mention by default the host url and the QRCode url will be slightly different because of the redirecting it requires a bit editing.
-
             string currentUrl = Request.GetDisplayUrl();
             string[] split = currentUrl.Split('/');
 
@@ -61,17 +44,14 @@ namespace project_fob.Controllers
                 currentUrlLocationBase.Append(split[i]);
             }
             Meeting meet = db.Meeting.Single(x => x.MeetingId.Equals(meetingIdString));
-            
+
             //The string (url) we generate.
             @ViewBag.url = currentUrlLocationBase.ToString() + "/Home/meetingPageUser?meetingId=" + meetingIdString + "&password=" + meet.RoomPassword;
-            return sb.ToString() + "/Home/meetingPageUser?meetingId=" + meetingIdString + "&password=" + meet.RoomPassword;
+            return View("~/Views/Home/QRCode.cshtml");
         }
 
-        public ActionResult Finish(string message)
+        public ActionResult Finish(string message, string meetingIdString)
         {
-            HttpContext.Session.TryGetValue("meetingid", out var meetingIdValue);
-            string meetingIdString = System.Text.Encoding.ASCII.GetString(meetingIdValue);
-
             Fob fob = db.Fob.Include(x => x.Meeting).ThenInclude(x => x.Stats)
                             .Single(f => f.Meeting.MeetingId == meetingIdString);
 
@@ -88,7 +68,7 @@ namespace project_fob.Controllers
             return View("~/Views/Home/Index.cshtml");
         }
 
-        public string Refresh(string message)
+        public string Refresh(string message, string meetingIdString)
         {
             //update
             if (message != null && message.Length != 0)
@@ -96,8 +76,8 @@ namespace project_fob.Controllers
                 @ViewBag.title = message;
             }
 
-            HttpContext.Session.TryGetValue("meetingid", out var meetingIdValue);
-            Fob fob = Fob.getFob(Encoding.ASCII.GetString(meetingIdValue), db);
+            //meetingid magic required
+            Fob fob = Fob.getFob(meetingIdString, db);
 
             if (fob == null)
             {
@@ -108,12 +88,8 @@ namespace project_fob.Controllers
             return fob.Fobbed.Count.ToString();
         }
 
-        public void Reset(string message)
+        public void Reset(string message, string meetingIdString)
         {
-            //We need to add the already existing information to the stats model. NAO!!!
-            HttpContext.Session.TryGetValue("meetingid", out var meetingIdValue);
-
-            string meetingIdString = System.Text.Encoding.ASCII.GetString(meetingIdValue);
 
             Fob fob = db.Fob.Include(x => x.Meeting).ThenInclude(x => x.Stats)
                             .Single(f => f.Meeting.MeetingId == meetingIdString);
