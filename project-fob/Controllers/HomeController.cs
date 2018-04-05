@@ -132,9 +132,17 @@ namespace project_fob.Controllers
             return View("Index");
         }
 
+        public static string GenerateGuid()
+        {
+            Guid g;
+            g = Guid.NewGuid();
+
+            return g.ToString();
+        }
+
         public static string GenerateId()
         {
-            return GenerateIdByLength(9);
+            return GenerateGuid();
         }
 
         public static string GenerateMeetingId()
@@ -146,13 +154,6 @@ namespace project_fob.Controllers
         {
             Random random = new Random();
             const string chars = "367CDFGHJKMNPRTWX";
-            return new string(Enumerable.Repeat(chars, length).Select(s => s[random.Next(s.Length)]).ToArray());
-        }
-
-        public static string GenerateIdByLength(int length)
-        {
-            Random random = new Random();
-            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
             return new string(Enumerable.Repeat(chars, length).Select(s => s[random.Next(s.Length)]).ToArray());
         }
 
