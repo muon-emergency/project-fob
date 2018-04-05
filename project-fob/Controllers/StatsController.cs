@@ -5,6 +5,7 @@ using project_fob.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace project_fob.Controllers
@@ -25,9 +26,8 @@ namespace project_fob.Controllers
 
         public string GetStats()
         { //- for in the same topic, : for different topic, ; for completely different statistic
-
-            bool gotValue = false;
-            gotValue = HttpContext.Session.TryGetValue("meetingid", out var meetingIdValue);
+            
+            HttpContext.Session.TryGetValue("meetingid", out var meetingIdValue);
 
             string session = meetingIdValue.ToString();
             string meetingIdString = System.Text.Encoding.ASCII.GetString(meetingIdValue);
@@ -35,21 +35,17 @@ namespace project_fob.Controllers
             Meeting meeting = db.Meeting.Include(x => x.Stats).Single(m => m.MeetingId == meetingIdString);
 
             List<Stats> stats = meeting.Stats;
-            String tmp = "";
-
-            int totalAtt = 0;
+            StringBuilder sb = new StringBuilder();
+            
             int totalFob = 0;
             for (int i = 0; i < stats.Count; i++)
             {
-                totalAtt += stats[i].Attendeescount;
                 totalFob += stats[i].Fobcount;
-                tmp += stats[i].Attendeescount + "-" + stats[i].Fobcount + ":";
+                sb.Append(stats[i].Fobcount + ":");
             }
-            tmp += ";" + totalAtt / (double)stats.Count + "-" + totalFob / (double)stats.Count;
+            sb.Append(";" + totalFob / (double)stats.Count);
 
-            //TODO use these stats (they should be in order as a list is deterministic)
-
-            return tmp;
+            return sb.ToString();
 
         }
     }

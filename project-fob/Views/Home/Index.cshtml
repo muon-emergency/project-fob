@@ -2,7 +2,7 @@
 	var defaultColor = 'white';
 
 
-	function checkPassIfSame() {
+	function checkPasswordIfSame() {
 
 		var attPass = document.getElementById('attendeePassword');
 		var hostPass = document.getElementById('hostPassword');
@@ -24,9 +24,6 @@
 	}
 
     function checkId() {
-
-        checkCookie();
-		
 		var meetID = document.getElementById('meetingId');
 		if (meetID.value != "" ) { 
 			
@@ -34,16 +31,10 @@
 			
 		} else {
 			$('#enterMeetingButton').attr('disabled', 'disabled');
-			
         }
+    }
 
-        
-	}
-	/*
-	* TODO
-	* fix this 
-	*/
-	function preButt(d) {
+	function closedMenues(d) {
 		var div = document.getElementById(d);
 		
 			div.style.display = 'block';
@@ -52,12 +43,10 @@
 				document.getElementById('backE').style.display = 'block';
 			} else {
 				document.getElementById('backC').style.display = 'block';
-			}
-
-		
+        }
 	};
 
-	function back() {
+	function switchBetweenMenu() {
 		var cm = document.getElementById('CreateMeeting');
 		var em = document.getElementById('EnterMeeting');
 		var backE = document.getElementById('backE');
@@ -75,36 +64,8 @@
 			backE.style.display = 'block';
 
 		}
-
     };
-
-    function setCookie(id) {
-        alert("setid: " + id);
-        var d = new Date();
-        d.setTime(d.getTime() + (24 * 3600));
-        var expires = "expires=" + d.toUTCString();
-        document.cookie = id + "," + expires;
-    }
-
-    function getIdCookie() {
-        return document.cookie.split(',')[0];
-    }
-
-    function checkCookie() {
-        @*
-            This is commented out as it does not work at the moment
-        var id = getIdCookie();
-        if (id == null || id == "") {
-            alert("Sheep happens");
-            setCookie(hello);
-        }
-        else {
-            alert("your id is: " + id);
-        }
-            *@
-    }
-
-
+    
 </script>
 <body onload="checkId()">
 	<h1>@ViewBag.title</h1>
@@ -114,16 +75,16 @@
 		@*create meeting*@
 		<div class="centerButton">
 			<div id="PreButtons">
-				<button onclick="preButt('CreateMeeting')">Create Meeting</button>
+				<button onclick="closedMenues('CreateMeeting')">Create Meeting</button>
 				<br />
 				<br />
-				<button onclick="preButt('EnterMeeting')">Enter Meeting</button>
+				<button onclick="closedMenues('EnterMeeting')">Enter Meeting</button>
 			</div>
 		</div>
 		@using (Html.BeginForm("meetingPageHost", "Home", FormMethod.Post)) {
 			<div id="CreateMeeting">
-				<input id="attendeePassword" name="attendeePassword" onkeyup="checkPassIfSame()" placeholder="Room password" type="password" /><br />
-				<input id="hostPassword" name="hostPassword" onkeyup="checkPassIfSame()" placeholder="Host password (can't be empty)" type="password" /><br />
+				<input id="attendeePassword" name="attendeePassword" onkeyup="checkPasswordIfSame()" placeholder="Room password" type="password" /><br />
+				<input id="hostPassword" name="hostPassword" onkeyup="checkPasswordIfSame()" placeholder="Host password (can't be empty)" type="password" /><br />
 
 				<div class="centerButton">
 					<input id="createMeetingButton" type="submit"disabled value="Create Meeting" /><br />
@@ -131,8 +92,8 @@
 			</div>
 		}
 		<div class="centerButton">
-			<button id="backC"onclick="back()">Switch to Create Meeting</button>
-		    <button id="backE" onclick="back()">Switch to Enter Meeting</button>
+			<button id="backC"onclick="switchBetweenMenu()">Switch to Create Meeting</button>
+		    <button id="backE" onclick="switchBetweenMenu()">Switch to Enter Meeting</button>
 		</div>
 
 		

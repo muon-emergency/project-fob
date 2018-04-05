@@ -1,13 +1,4 @@
-﻿@{
-//ViewBag.Title = "Host meeting page";
-}
-@* new topic, current users in meeting, voted users, exit meeting
-	fix the h1 bug
-
-*@
-
-
-<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+﻿<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 <script type="text/javascript">
 
 	google.charts.load("current", { packages: ["corechart"] });
@@ -111,10 +102,7 @@
 				button.draw(dataButton, optionsButton);
 				google.visualization.events.addListener(button, 'select', clickHandler);
 			}, 50);
-
-
-
-
+            
 		}
 
 		function buttonBackToNormal() {
@@ -132,33 +120,19 @@
 			$.ajax({
 				type: "POST",
 				url: '@Url.Action("Refresh", "Host")',
-				success: function (result) {
-					var split = result.split(',') //attendees , number of people fobbed
-					if (split.length == 2) {
+                success: function (result) {
 
-						updateChart(split[0], split[1]);
-						//alert("UpdateChart");
-						var percent = (split[1] * 100) / split[0];
-						//alert("Percent");
-						if (percent > 100 || isNaN(percent)) {
-							percent = 0;
-							//  alert("in if");
-						}
-						//alert("after if");
-						var name = "Click for Next Topic " + percent + "% " + "|| "+ split[1] +"/"+split[0];
+                    updateChart(result, result);
+                    //alert("after if");
+                    var name = "Click for Next Topic, Fob count: " + result;
 						errorCounter = 0;
 						dataButton = google.visualization.arrayToDataTable([
 						['Language', 'Speakers (in millions)'],
 						[name, 100],
 						]);
-
 						button = new google.visualization.PieChart(document.getElementById('button'));
 						button.draw(dataButton, optionsButton);
 						google.visualization.events.addListener(button, 'select', clickHandler);
-						//alert("Done");
-					} else {
-						//alert(result);
-					}
 				},
 				error: function () {
 					errorCounter++;
@@ -172,54 +146,28 @@
 		}
 
 		/*When it updates, for some reason it resizes the size of the pie chart in the background*/
-		function updateChart(total, leavers) {// what is all this stuff? speakers in millions what???
+        function updateChart(total, leavers) {
+            if (leavers == 0) {
+                total = 1;
+            }
 			data = new google.visualization.arrayToDataTable([
-		   ['Language', 'Speakers (in millions)'],
-		   ['Leave', parseInt(leavers)],
-		   ['Remain', parseInt(total - leavers)]
+		   ['nothing', 'special here'],
+		   ['thisjust', parseInt(leavers)],
+		   ['thebackgroundchart', parseInt(total - leavers)]
 			]);
-
 
 			var chart = new google.visualization.PieChart(document.getElementById('piechart'));
 			chart.draw(data, options);
-
 		}
-
-	}
-
-
-	/* $(window).resize(function () {
-		 if (this.resizeTO) clearTimeout(this.resizeTO);
-		 this.resizeTO = setTimeout(function () {
-			 $(this).trigger('resizeEnd');
-		 }, 500);
-	 });*/
-
-	//redraw graph when window resize is completed
-	/*$(window).on('resizeEnd', function () {
-		drawChart(data);
-	});*/
-
-	function hello() {
-		alert("hello");
 	}
 </script>
 
 <h1>@ViewBag.Title</h1>
-<!--
-<div id="hostPageIndex">
-	<div>current users: @ViewBag.Attendees</div>
-	<div>move on #: @ViewBag.Fobbed </div>
-	<div>move on %: @ViewBag.Message </div>
-	@* timed database query*@
-	<div>next speaker buttone</div>
 
-</div>
-	-->
 <body onresize="drawCharts()">
 
 	<div id="centerOfPageForButton">
-		<div id="piechart" style="width: 100%; height: 100%;"></div> <!-- why is this here -->
+		<div id="piechart" style="width: 100%; height: 100%;"></div>
 	</div>
 	@using (Html.BeginForm("meetingPageUser", "Home", FormMethod.Post)) {
 		<div id="centerOfPageForButton">

@@ -27,7 +27,7 @@ namespace project_fob.Controllers
 
         public ActionResult QrCode()
         {
-            var gotValue = HttpContext.Session.TryGetValue("meetingid", out var meetingIdValue);
+            HttpContext.Session.TryGetValue("meetingid", out var meetingIdValue);
             string meetingIdString = System.Text.Encoding.ASCII.GetString(meetingIdValue);
             
             @ViewBag.url = CreateUrl(meetingIdString);
@@ -44,23 +44,32 @@ namespace project_fob.Controllers
             // The url editing also needed because of the controll handling it'd generate a wrong url for the user which would render the QRCode useless.
             // Not to mention by default the host url and the QRCode url will be slightly different because of the redirecting it requires a bit editing.
 
-            string baseUrl = Request.GetDisplayUrl();
-            string[] split = baseUrl.Split('/');
-            StringBuilder sb = new StringBuilder();
+            string currentUrl = Request.GetDisplayUrl();
+            string[] split = currentUrl.Split('/');
+
+            // This variable is really confusing so I'll explain.
+            // Baseurl doesn't work because the url can be a long string which I could not use to correctly find the required parameters to enter to the meeting.
+            // In case we are running the project on a link like : test.co.uk/project/seesharp/fob/
+            // the url request will return something like this: test.co.uk/project/seesharp/fob/index/hostpage. Because of that I have to modify the
+            // URL so it grabs the correct url (hopefully).
+            // The url editing also needed because of the controll handling it'd generate a wrong url for the user which would render the QRCode useless.
+
+            StringBuilder currentUrlLocationBase = new StringBuilder();
 
             for (int i = 0; i < split.Length - 2; i++)
             {
-                sb.Append(split[i]);
+                currentUrlLocationBase.Append(split[i]);
             }
             Meeting meet = db.Meeting.Single(x => x.MeetingId.Equals(meetingIdString));
-
-
+            
+            //The string (url) we generate.
+            @ViewBag.url = currentUrlLocationBase.ToString() + "/Home/meetingPageUser?meetingId=" + meetingIdString + "&password=" + meet.RoomPassword;
             return sb.ToString() + "/Home/meetingPageUser?meetingId=" + meetingIdString + "&password=" + meet.RoomPassword;
         }
 
         public ActionResult Finish(string message)
         {
-            var gotValue = HttpContext.Session.TryGetValue("meetingid", out var meetingIdValue);
+            HttpContext.Session.TryGetValue("meetingid", out var meetingIdValue);
             string meetingIdString = System.Text.Encoding.ASCII.GetString(meetingIdValue);
 
             Fob fob = db.Fob.Include(x => x.Meeting).ThenInclude(x => x.Stats)
@@ -78,7 +87,7 @@ namespace project_fob.Controllers
         }
         public ActionResult Leave(string message)
         {
-            var gotValue = HttpContext.Session.TryGetValue("sessionid", out var session);
+            HttpContext.Session.TryGetValue("sessionid", out var session);
             string userIdString = System.Text.Encoding.ASCII.GetString(session);
 
             //important
@@ -103,7 +112,7 @@ namespace project_fob.Controllers
                 @ViewBag.title = message;
             }
 
-            var gotValue = HttpContext.Session.TryGetValue("meetingid", out var meetingIdValue);
+            HttpContext.Session.TryGetValue("meetingid", out var meetingIdValue);
             Fob fob = Fob.getFob(Encoding.ASCII.GetString(meetingIdValue), db);
 
             if (fob == null)
@@ -112,13 +121,13 @@ namespace project_fob.Controllers
             }
 
             //First number are the total users, the second number is the voted users.
-            return fob.Meeting.GetAttendeeCount() + "," + fob.FobCount;
+            return fob.FobCount.ToString();
         }
 
         public void Reset(string message)
         {
             //We need to add the already existing information to the stats model. NAO!!!
-            var gotValue = HttpContext.Session.TryGetValue("meetingid", out var meetingIdValue);
+            HttpContext.Session.TryGetValue("meetingid", out var meetingIdValue);
 
             string meetingIdString = System.Text.Encoding.ASCII.GetString(meetingIdValue);
 
