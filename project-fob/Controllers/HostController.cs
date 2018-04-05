@@ -50,14 +50,16 @@ namespace project_fob.Controllers
             return View("~/Views/Home/QRCode.cshtml");
         }
 
-        public ActionResult Finish(string message, string meetingIdString)
+        public ActionResult Finish(string message)
         {
             Fob fob = db.Fob.Include(x => x.Meeting).ThenInclude(x => x.Stats)
-                            .Single(f => f.Meeting.MeetingId == meetingIdString);
+                            .Single(f => f.Meeting.MeetingId == message);
 
             fob.Meeting.Stats.Add(new Stats(0, fob.Fobbed.Count, fob.TopicStartTime, DateTime.Now));
             fob.Meeting.Active = false;
             db.SaveChanges();
+
+            @ViewBag.meetingid = message;
 
             //needs to go to the statspage and display the correct stats???
 
@@ -90,7 +92,6 @@ namespace project_fob.Controllers
 
         public void Reset(string message, string meetingIdString)
         {
-
             Fob fob = db.Fob.Include(x => x.Meeting).ThenInclude(x => x.Stats)
                             .Single(f => f.Meeting.MeetingId == meetingIdString);
 

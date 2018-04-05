@@ -1,4 +1,5 @@
-﻿<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+﻿@model project_fob.Models.MeetingPageHostViewModel
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 <script type="text/javascript">
 
 	google.charts.load("current", { packages: ["corechart"] });
@@ -57,7 +58,7 @@
 			'tooltip': { trigger: 'none' },
 			slices: {
 				0: { color: '#EE311F' },//chart colour
-				1: { color: 'transparent' }  //Change the color to w\e you like 
+				1: { color: 'transparent' }  //Change the color to w\e you like
 			},
 
 			backgroundColor: 'transparent',
@@ -83,7 +84,8 @@
 
 			$.ajax({ //Needs to check if the database is running/ can connect. If not should dc from room or tell the user
 				type: "POST",
-				url: '@Url.Action("Reset", "Host")',
+                url: '@Url.Action("Reset", "Host")',
+                data: { meetingIdString : "@ViewBag.meetingid" },
 				success: function (result) {
 					//alert("successfull reset");
 					var split = result.split(',')
@@ -102,7 +104,7 @@
 				button.draw(dataButton, optionsButton);
 				google.visualization.events.addListener(button, 'select', clickHandler);
 			}, 50);
-            
+
 		}
 
 		function buttonBackToNormal() {
@@ -119,7 +121,8 @@
 			setTimeout(runUpdate, 1000);
 			$.ajax({
 				type: "POST",
-				url: '@Url.Action("Refresh", "Host")',
+                url: '@Url.Action("Refresh", "Host")',
+                data: { meetingIdString : "@ViewBag.meetingid" },
                 success: function (result) {
 
                     updateChart(result, result);
@@ -203,8 +206,8 @@
         </div>
         <div class="inner">
             @using (Html.BeginForm("finish", "Host", FormMethod.Post))
-        {
-            <button class="footerButton" id="buttonExit" name="message" value="Finished meeting">Finish</button>
+            {
+            <button class="footerButton" id="buttonExit" name="message" value="@(Model.MeetingID)">Finish</button>
     }
         </div>
     </div>

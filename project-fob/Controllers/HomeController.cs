@@ -74,7 +74,7 @@ namespace project_fob.Controllers
             @ViewBag.title = "Meeting Id: ";
             @ViewBag.meetingid = meet.MeetingId;
 
-            return View();
+            return View(new MeetingPageHostViewModel { MeetingID = meet.MeetingId });
         }
 
         public ActionResult MeetingPageUser(string meetingId, string password)
@@ -115,7 +115,8 @@ namespace project_fob.Controllers
 
                     //meetingid magic required
 
-                    ViewBag.title = "Id:" + meetingId;
+                    ViewBag.title = "Id: ";
+                    ViewBag.meetingid = meetingId;
                     db.SaveChanges();
                     return View();
                 }

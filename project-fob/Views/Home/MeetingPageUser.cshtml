@@ -57,10 +57,11 @@
             google.visualization.events.addListener(button, 'select', clickHandler);
 
             //Fobbing
-            
+
                 $.ajax({
                     type: "POST",
                     url: '@Url.Action("Fob", "Attendee")',
+                    data: { meetingString: "@ViewBag.meetingId"},
                     success: function (result) {
                         var split = result.split(',')
                         updateChart(split[0], split[1]);
@@ -76,7 +77,7 @@
                 button.draw(dataButton, optionsButton);
                 google.visualization.events.addListener(button, 'select', clickHandler);
             }, 50);
-            
+
         }
 
         if (!isItDrawing) {
@@ -117,7 +118,7 @@
 
 </script>
 
-<h1>@ViewBag.title</h1>
+<h1>@ViewBag.title @ViewBag.meetingid</h1>
 
 <body onresize="drawCharts()">
 

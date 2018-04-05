@@ -48,4 +48,9 @@ namespace project_fob.Models
             return hashCode;
         }
     }
+
+    public class MeetingPageHostViewModel
+    {
+        public string MeetingID { get; set; }
+    }
 }
