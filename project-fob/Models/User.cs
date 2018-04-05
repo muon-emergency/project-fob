@@ -14,7 +14,7 @@ namespace project_fob.Models
         [Key]
         public int Id { get; set; }
 
-        [StringLength(9)]
+        [StringLength(32)]
         public string UserId { get; set; }
 
         public User() { }

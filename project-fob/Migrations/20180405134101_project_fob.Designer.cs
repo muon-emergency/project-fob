@@ -11,7 +11,7 @@ using System;
 namespace projectfob.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20180329150958_project_fob")]
+    [Migration("20180405134101_project_fob")]
     partial class project_fob
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -116,7 +116,7 @@ namespace projectfob.Migrations
                     b.Property<int?>("FobId");
 
                     b.Property<string>("UserId")
-                        .HasMaxLength(9);
+                        .HasMaxLength(32);
 
                     b.HasKey("Id");
 

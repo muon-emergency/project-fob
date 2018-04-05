@@ -137,7 +137,7 @@ namespace project_fob.Controllers
             Guid g;
             g = Guid.NewGuid();
 
-            return g.ToString();
+            return g.ToString("N");
         }
 
         public static string GenerateId()
