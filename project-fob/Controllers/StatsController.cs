@@ -26,11 +26,7 @@ namespace project_fob.Controllers
 
         public string GetStats(string meetingIdString)
         { //- for in the same topic, : for different topic, ; for completely different statistic
-
-            //meetingid magic required
-
-            string session = meetingIdValue.ToString();
-
+            
             Meeting meeting = db.Meeting.Include(x => x.Stats).Single(m => m.MeetingId == meetingIdString);
 
             List<Stats> stats = meeting.Stats;
