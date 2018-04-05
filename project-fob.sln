@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.27130.2036
+VisualStudioVersion = 15.0.27130.2026
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "project-fob", "project-fob\project-fob.csproj", "{E82C852A-6FC3-4A64-99D2-26FCFFFE68CF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "unit-tests", "unit-tests\unit-tests.csproj", "{A2A68388-56FC-41E7-A470-A29EA89187F0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{E82C852A-6FC3-4A64-99D2-26FCFFFE68CF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E82C852A-6FC3-4A64-99D2-26FCFFFE68CF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E82C852A-6FC3-4A64-99D2-26FCFFFE68CF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A2A68388-56FC-41E7-A470-A29EA89187F0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A2A68388-56FC-41E7-A470-A29EA89187F0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A2A68388-56FC-41E7-A470-A29EA89187F0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A2A68388-56FC-41E7-A470-A29EA89187F0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

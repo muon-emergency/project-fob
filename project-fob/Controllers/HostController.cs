@@ -29,6 +29,20 @@ namespace project_fob.Controllers
         {
             HttpContext.Session.TryGetValue("meetingid", out var meetingIdValue);
             string meetingIdString = System.Text.Encoding.ASCII.GetString(meetingIdValue);
+            
+            @ViewBag.url = CreateUrl(meetingIdString);
+            return View("~/Views/Home/QRCode.cshtml");
+        }
+
+        public string CreateUrl(string meetingIdString)
+        {
+            // This is really confusing so I'll explain.
+            // Baseurl doesn't work because the url can be a long string which I could not use to correctly find the required parameters to enter to the meeting.
+            // In case we are running the project on a link like : test.co.uk/project/seesharp/fob/
+            // the url request will return something like this: test.co.uk/project/seesharp/fob/index/hostpage. Because of that I have to modify the
+            // URL so it grabs the correct url (hopefully).
+            // The url editing also needed because of the controll handling it'd generate a wrong url for the user which would render the QRCode useless.
+            // Not to mention by default the host url and the QRCode url will be slightly different because of the redirecting it requires a bit editing.
 
             string currentUrl = Request.GetDisplayUrl();
             string[] split = currentUrl.Split('/');
@@ -47,10 +61,10 @@ namespace project_fob.Controllers
                 currentUrlLocationBase.Append(split[i]);
             }
             Meeting meet = db.Meeting.Single(x => x.MeetingId.Equals(meetingIdString));
-
+            
             //The string (url) we generate.
             @ViewBag.url = currentUrlLocationBase.ToString() + "/Home/meetingPageUser?meetingId=" + meetingIdString + "&password=" + meet.RoomPassword;
-            return View("~/Views/Home/QRCode.cshtml");
+            return sb.ToString() + "/Home/meetingPageUser?meetingId=" + meetingIdString + "&password=" + meet.RoomPassword;
         }
 
         public ActionResult Finish(string message)
