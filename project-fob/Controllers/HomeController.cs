@@ -158,10 +158,11 @@ namespace project_fob.Controllers
             return new string(Enumerable.Repeat(chars, length).Select(s => s[random.Next(s.Length)]).ToArray());
         }
 
-        public void CheckCookies()
+        public ActionResult CheckCookies()
         {
             string id = GetCookieID();
             SetCookie(id);
+            return Ok();
         }
 
         public string GetID()

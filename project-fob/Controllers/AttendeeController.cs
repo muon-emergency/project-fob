@@ -24,7 +24,7 @@ namespace project_fob.Controllers
             return View();
         }
 
-        public void Fob(string value, string meetingString)
+        public ActionResult Fob(string value, string meetingString)
         {
             if (HaveCookieId())
             {
@@ -34,11 +34,11 @@ namespace project_fob.Controllers
                 
                 fob.AddFob(userId);
                 db.SaveChanges();
-
+                return Ok();
             }
             else
             {
-                Index();
+                return RedirectToAction("Index");
             }
         }
 

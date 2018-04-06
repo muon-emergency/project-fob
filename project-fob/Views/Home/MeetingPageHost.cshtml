@@ -66,8 +66,8 @@
 
 
         <div class="inner">
-            <a href="@Url.Action("QrCode","Host")" target="_blank">
-                <button class="footerButton" id="buttonQRGen" name="message" value="@ViewBag.meetingid">QR Code</button>
+            <a href="@Url.Action("QrCode","Host",new { meetingIdString = @ViewBag.meetingid })" target="_blank">
+                <button class="footerButton" id="buttonQRGen" name="message">QR Code</button>
             </a>
         </div>
 
