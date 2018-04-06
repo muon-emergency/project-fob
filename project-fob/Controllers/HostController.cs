@@ -90,7 +90,7 @@ namespace project_fob.Controllers
             return fob.Fobbed.Count.ToString();
         }
 
-        public void Reset(string message, string meetingIdString)
+        public void Reset(string meetingIdString)
         {
             //Fob fob = Fob.getFob(meetingIdString, db);
             Fob fob = db.Fob.Include(x => x.Meeting).ThenInclude(x => x.Stats)

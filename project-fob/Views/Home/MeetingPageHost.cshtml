@@ -54,7 +54,7 @@
 
         @using (Html.BeginForm("meetingPageUser", "Home", FormMethod.Post))
         {
-            <button class="buttonhost" onclick="clickHandler()">Next Topic</button>
+            <button class="buttonhost" onclick="clickHandler()" value="@ViewBag.meetingid">Next Topic</button>
         }
     </div>
 
@@ -67,7 +67,7 @@
 
         <div class="inner">
             <a href="@Url.Action("QrCode","Host")" target="_blank">
-                <button class="footerButton" id="buttonQRGen" name="message" value="Meeting left">QR Code</button>
+                <button class="footerButton" id="buttonQRGen" name="message" value="@ViewBag.meetingid">QR Code</button>
             </a>
         </div>
 
