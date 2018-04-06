@@ -16,14 +16,12 @@ namespace project_fob.Models
 
         [StringLength(9)]
         public string UserId { get; set; }
-        public virtual DateTime Lastcheckin { get; set; }
 
         public User() { }
 
         public User(string id)
         {
             UserId = id;
-            Lastcheckin = DateTime.Now;
         }
         public override bool Equals(object obj)
         {

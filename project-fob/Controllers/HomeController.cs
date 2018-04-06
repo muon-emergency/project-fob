@@ -9,6 +9,7 @@ using project_fob.Models;
 using System.Text;
 using project_fob.Data;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Http;
 
 namespace project_fob.Controllers
 {
@@ -51,21 +52,10 @@ namespace project_fob.Controllers
                 return View("index");
             }
 
-            User user = RetrieveUser();
+            CheckCookies();
+            //HttpContext.Session.Set("sessionid", Encoding.ASCII.GetBytes(user.UserId));
 
-            if (user == null)
-            {
-                user = new User(GenerateId());
-                while (db.User.Any(m => m.UserId.Equals(user.UserId)))
-                {
-                    user.UserId = GenerateId();
-                }
-                db.User.Add(user);
-            }
-
-            HttpContext.Session.Set("sessionid", Encoding.ASCII.GetBytes(user.UserId));
-
-            Host host = new Host(user);
+            Host host = new Host();
             db.Host.Add(host);
 
             Meeting meet = new Meeting(GenerateMeetingId(), host, attendeePassword, hostPassword);
@@ -100,23 +90,14 @@ namespace project_fob.Controllers
                 if (password.Equals(meet.HostPassword))
                 {
 
-                    User user = RetrieveUser();
-
-                    if (user == null)
-                    {
-                        user = new User(GenerateId());
-                        while (db.User.Any(m => m.UserId.Equals(user.UserId)))
-                        {
-                            user.UserId = GenerateId();
-                        }
-                        db.User.Add(user);
-                    }
-                    HttpContext.Session.Set("sessionid", Encoding.ASCII.GetBytes(user.UserId));
+                    CheckCookies();
+                    string id = GetCookieID();
+                    //HttpContext.Session.Set("sessionid", Encoding.ASCII.GetBytes(user.UserId));
                     HttpContext.Session.Set("meetingid", Encoding.ASCII.GetBytes(meet.MeetingId));
 
                     if (meet.Active)
                     {
-                        Host host = new Host(user, meet);
+                        Host host = new Host(id, meet);
                         db.Host.Add(host);
 
                         db.SaveChanges();
@@ -130,33 +111,11 @@ namespace project_fob.Controllers
                 else if (password == meet.RoomPassword && meet.Active)
                 {
                     //join as attendee
-
-                    User user = RetrieveUser();
-                    if (user == null)
-                    {
-                        user = new User(GenerateId());
-                        while (db.User.Any(m => m.UserId.Equals(user.UserId)))
-                        {
-                            user.UserId = GenerateId();
-                        }
-
-
-                        HttpContext.Session.Set("sessionid", Encoding.ASCII.GetBytes(user.UserId));
-                        HttpContext.Session.Set("meetingid", Encoding.ASCII.GetBytes(meet.MeetingId));
-
-                        db.User.Add(user);
-                    }
-                    Attendee att = new Attendee(user, meet);
-
-                    Attendee foundAttendee = db.Attendee.Include(x => x.Meeting).Include(x => x.User).SingleOrDefault(f => f.Meeting.MeetingId.Equals(meet.MeetingId) && f.User.UserId.Equals(user.UserId));
-
-                    //if attendee is not in then we add him.
-                    if (foundAttendee == null)
-                    {
-                        db.Attendee.Add(att);
-                        meet.AddAttendee(att);
-                        Fob fob = db.Fob.Single(f => f.Meeting == db.Meeting.FirstOrDefault(m => m.MeetingId.Equals(meetingId) && m.Active));
-                    }
+                    CheckCookies();
+                    string id = GetCookieID();
+                    
+                    HttpContext.Session.Set("meetingid", Encoding.ASCII.GetBytes(meet.MeetingId));
+                    
                     ViewBag.title = "Id:" + meetingId;
                     db.SaveChanges();
                     return View();
@@ -171,27 +130,6 @@ namespace project_fob.Controllers
             ViewBag.title = "Meeting Does Not Exist. Please Try Again";
 
             return View("Index");
-        }
-
-
-        public string RetrieveUserId()
-        {
-            var gotValue = HttpContext.Session.TryGetValue("sessionid", out var session);
-            if (gotValue)
-            {
-                return System.Text.Encoding.ASCII.GetString(session); ;
-            }
-            return null;
-        }
-
-        public User RetrieveUser()
-        {
-            string userId = RetrieveUserId();
-            if (userId != null)
-            {
-                return db.User.SingleOrDefault(f => f.UserId.Equals(userId));
-            }
-            return null;
         }
 
         public static string GenerateId()
@@ -217,6 +155,40 @@ namespace project_fob.Controllers
             const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
             return new string(Enumerable.Repeat(chars, length).Select(s => s[random.Next(s.Length)]).ToArray());
         }
+
+        public void CheckCookies()
+        {
+            string id = GetCookieID();
+            SetCookie(id);
+        }
+
+        public string GetID()
+        {
+            string id = GetCookieID();
+            SetCookie(id);
+            return id;
+        }
+
+        private string GetCookieID()
+        {
+            return Request.Cookies["ID"];
+        }
+
+        private void SetCookie(string id)
+        {
+            CookieOptions cookie = new CookieOptions();
+            cookie.Expires = DateTime.Now.AddYears(5);
+            if (id == null || id.Length == 0)
+            {
+                Response.Cookies.Append("ID", GenerateId());
+            }
+            else
+            {
+                Response.Cookies.Append("ID", id);
+            }
+
+        }
+
 
     }
 }

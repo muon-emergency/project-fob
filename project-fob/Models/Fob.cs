@@ -3,6 +3,7 @@ using project_fob.Data;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 
 
@@ -15,41 +16,27 @@ namespace project_fob.Models
 
         public DateTime TopicStartTime { get; set; }
         public Meeting Meeting { get; set; }
-        public List<Attendee> Fobbed { get; set; } = new List<Attendee>();
 
-        //This variable and code is mainly here because of past values are bein loaded into the project.
-        //They must be removed in the future
-        public int AttendeeCount
-        {
-            get
-            {
-                if (Meeting != null)
-                { return -1; }
-                else { return -11; }
-            }
-            set { }
-        }
-        public int FobCount { get { return Fobbed.Count; } set { } }
-
-
+        public List<User> Fobbed { get; set; } = new List<User>();
+        
         public Fob() { }
         public Fob(Meeting meeting)
         {
             Meeting = meeting;
-            Fobbed = new List<Attendee>();
+            Fobbed = new List<User>();
             TopicStartTime = DateTime.Now;
         }
 
         public static Fob getFob(string meetingid, ApplicationDbContext db)
         {
-            return db.Fob.Include(x => x.Meeting).ThenInclude(x => x.Attendee).ThenInclude(x => x.User).SingleOrDefault(f => f.Meeting.MeetingId == meetingid);
+            return db.Fob.Include(x => x.Meeting).Include(x=> x.Fobbed).SingleOrDefault(f => f.Meeting.MeetingId == meetingid);
         }
 
-        public void AddFob(Attendee attendee)
+        public void AddFob(string id)
         {
-            if (!Fobbed.Contains(attendee))
+            if (!Fobbed.Any(x => x.Equals(id)))
             {
-                Fobbed.Add(attendee);
+                Fobbed.Add(new User(id));
             }
         }
 

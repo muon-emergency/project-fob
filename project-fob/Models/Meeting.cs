@@ -20,7 +20,6 @@ namespace project_fob.Models
 
         public List<Stats> Stats { get; set; }
         public List<Host> Host { get; set; }
-        public List<Attendee> Attendee { get; set; }
 
         public Meeting() { }
 
@@ -32,17 +31,6 @@ namespace project_fob.Models
             HostPassword = hostPassword;
             Host = new List<Host>() { host };
             Stats = new List<Stats>();
-            Attendee = new List<Attendee>();
-        }
-
-        public void AddAttendee(Attendee attendee)
-        {
-            Attendee.Add(attendee);
-        }
-
-        public int GetAttendeeCount()
-        {
-            return Attendee.Count;
         }
     }
 }
