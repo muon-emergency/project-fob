@@ -246,18 +246,16 @@ footer{
 }
 
 .buttonhost {
-    position: absolute;
-    left: 50%;
-    -webkit-transform: translateX(-50%);
-    transform: translateX(-50%);
-    width: auto;
-
+    margin-top: 35%;
+    margin-left: auto;
+    margin-right: auto;
+    width: 40%;
+    height: 40%;
     top: 40%;
     display: inline-block;
     padding: 5% 5%;
     font-size: 24px;
     cursor: pointer;
-    text-align: center;
     text-decoration: none;
     outline: none;
     color: #fff;
@@ -268,13 +266,10 @@ footer{
 }
 
     .buttonhost:hover {
-        width: auto;
         background-color: #aa0000;
     }
 
     .buttonhost:active {
-        width: auto;
         background-color: #3e8e41;
         box-shadow: 0 5px #666;
-        transform: translateY(4px);
     }

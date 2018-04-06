@@ -70,12 +70,12 @@ namespace project_fob.Controllers
             return View("~/Views/Home/Index.cshtml");
         }
 
-        public string Refresh(string message, string meetingIdString)
+        public ActionResult Refresh(string message, string meetingIdString)
         {
             //update
             if (message != null && message.Length != 0)
             {
-                @ViewBag.title = message;
+                ViewBag.title = message;
             }
 
             //meetingid magic required
@@ -87,7 +87,7 @@ namespace project_fob.Controllers
             }
 
             //First number are the total users, the second number is the voted users.
-            return fob.Fobbed.Count.ToString();
+            return Content(fob.Fobbed.Count.ToString());
         }
 
         public void Reset(string meetingIdString)

@@ -1,8 +1,8 @@
 ﻿<script type="text/javascript">
 
-		var counter = 0;
-		function clickHandler(e) {
-
+    var isItDrawing = false;
+    var counter = 0;
+    function reset() {
 			$.ajax({ //Needs to check if the database is running/ can connect. If not should dc from room or tell the user
 				type: "POST",
                 url: '@Url.Action("Reset", "Host")',
@@ -16,49 +16,49 @@
 					alert("Connection error");
 				}
 			});
-
 		}
+    
+        	var errorCounter = 0;
+    function runUpdate() { // host controller, refresh
+			        setTimeout(runUpdate, 1000);
+			        $.ajax({
+				        type: "POST",
+                        url: '@Url.Action("Refresh", "Host")',
+                        data: { meetingIdString : "@ViewBag.meetingid" },
+                        success: function (result) {
+                            //alert("hey");
+                            updateChart(result, result);
+                            //alert("after if");
+                            var name = "Click for Next Topic, Fob count: " + result;
+				        },
+                        error: function () {
+					        errorCounter++;
+					        if (errorCounter >= 30) {
+						        //alert("Connection error. Returning to home page")
+						        errorCounter = 0;
+						        window.location = "index";
+					        }
+				        }
+			        });
+    }
 
-		var errorCounter = 0;
-		function runUpdate() { // host controller, refresh
-			setTimeout(runUpdate, 1000);
-			$.ajax({
-				type: "POST",
-                url: '@Url.Action("Refresh", "Host")',
-                data: { meetingIdString : "@ViewBag.meetingid" },
-                success: function (result) {
+    function hey() {
+        alert("hello there");
+        alert("General Kenobi");
+    }
+    
+    window.addEventListener('load', function () {
+        runUpdate();
+    })
 
-                    updateChart(result, result);
-                    //alert("after if");
-                    var name = "Click for Next Topic, Fob count: " + result;
-				},
-				error: function () {
-					errorCounter++;
-					if (errorCounter >= 30) {
-						alert("Connection error. Returning to home page")
-						errorCounter = 0;
-						window.location = "index";
-					}
-				}
-			});
-		}
-
-		/*When it updates, for some reason it resizes the size of the pie chart in the background*/
-	}
 </script>
 
 <h1>@ViewBag.Title @ViewBag.meetingid</h1>
 
-<body>
-    <div class="wrapper">
 
-        @using (Html.BeginForm("meetingPageUser", "Home", FormMethod.Post))
-        {
-            <button class="buttonhost" onclick="clickHandler()" value="@ViewBag.meetingid">Next Topic</button>
-        }
-    </div>
-
-</body>
+<div class="wrapper">
+    <button class="buttonhost" onclick="load()" onload="load()">Next Topic</button>
+</div>
 
 
 <footer>
