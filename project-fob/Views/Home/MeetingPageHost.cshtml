@@ -1,5 +1,5 @@
 ﻿<script type="text/javascript">
-    
+
 		var counter = 0;
 		function clickHandler(e) {
 
@@ -18,7 +18,7 @@
 			});
 
 		}
-        
+
 		var errorCounter = 0;
 		function runUpdate() { // host controller, refresh
 			setTimeout(runUpdate, 1000);
@@ -31,14 +31,6 @@
                     updateChart(result, result);
                     //alert("after if");
                     var name = "Click for Next Topic, Fob count: " + result;
-						errorCounter = 0;
-						dataButton = google.visualization.arrayToDataTable([
-						['Language', 'Speakers (in millions)'],
-						[name, 100],
-						]);
-						button = new google.visualization.PieChart(document.getElementById('button'));
-						button.draw(dataButton, optionsButton);
-                    google.visualization.events.addListener(button, 'select', clickHandler);
 				},
 				error: function () {
 					errorCounter++;
@@ -59,16 +51,12 @@
 
 <body>
     <div class="wrapper">
-        <button class="buttonhost" onclick="clickHandler()">Next Topic</button>
-        </div>
+
         @using (Html.BeginForm("meetingPageUser", "Home", FormMethod.Post))
         {
-            <div id="centerOfPageForButton">
-
-                <div id="button" style="width: 100%; height: 100%;"></div>
-
-            </div>
+            <button class="buttonhost" onclick="clickHandler()">Next Topic</button>
         }
+    </div>
 
 </body>
 
@@ -90,15 +78,15 @@
 
         <div class="inner">
             @using (Html.BeginForm("leave", "Host", FormMethod.Post))
-        {
-            <button class="footerButton" id="buttonLeave" name="message" value="Meeting left">Leave</button>
-    }
+            {
+                <button class="footerButton" id="buttonLeave" name="message" value="Meeting left">Leave</button>
+            }
         </div>
         <div class="inner">
             @using (Html.BeginForm("finish", "Host", FormMethod.Post))
             {
-            <button class="footerButton" id="buttonExit" name="message" value="@ViewBag.meetingid">Finish</button>
-    }
+                <button class="footerButton" id="buttonExit" name="message" value="@ViewBag.meetingid">Finish</button>
+            }
         </div>
     </div>
 </footer>

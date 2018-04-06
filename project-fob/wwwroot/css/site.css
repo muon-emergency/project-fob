@@ -241,11 +241,20 @@ footer{
 	width:45%;
 }
 
+.wrapper {
+    text-align: center;
+}
+
 .buttonhost {
     position: absolute;
-    top: 50%;
+    left: 50%;
+    -webkit-transform: translateX(-50%);
+    transform: translateX(-50%);
+    width: auto;
+
+    top: 40%;
     display: inline-block;
-    padding: 15px 25px;
+    padding: 5% 5%;
     font-size: 24px;
     cursor: pointer;
     text-align: center;
@@ -259,10 +268,12 @@ footer{
 }
 
     .buttonhost:hover {
+        width: auto;
         background-color: #aa0000;
     }
 
     .buttonhost:active {
+        width: auto;
         background-color: #3e8e41;
         box-shadow: 0 5px #666;
         transform: translateY(4px);

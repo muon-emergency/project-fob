@@ -80,6 +80,7 @@ namespace project_fob.Controllers
         public ActionResult MeetingPageUser(string meetingId, string password)
         {
             password = password ?? "";
+			meetingId = meetingId ?? "";
 
             meetingId = meetingId.ToUpper();
             Meeting meet = db.Meeting.SingleOrDefault(m => m.MeetingId == meetingId);
