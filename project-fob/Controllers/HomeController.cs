@@ -65,8 +65,6 @@ namespace project_fob.Controllers
             }
 
             db.Meeting.Add(meet);
-            SetCookie("tmp", meet.MeetingId); // we store it as tmp so we do not want to store this value for long term if we do not have to.
-            //meetingid magic required
 
             db.Fob.Add(new Fob(meet));
             db.SaveChanges();
@@ -93,7 +91,6 @@ namespace project_fob.Controllers
 
                     CheckCookies();
                     string id = GetCookieID();
-                    //meetingid magic required
 
                     if (meet.Active)
                     {
@@ -113,8 +110,6 @@ namespace project_fob.Controllers
                     //join as attendee
                     CheckCookies();
                     string id = GetCookieID();
-
-                    //meetingid magic required
 
                     ViewBag.title = "Id: ";
                     ViewBag.meetingid = meetingId;
