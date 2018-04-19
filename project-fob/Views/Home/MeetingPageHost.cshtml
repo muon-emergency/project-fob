@@ -7,10 +7,8 @@
 				type: "POST",
                 url: '@Url.Action("Reset", "Host")',
                 data: { meetingIdString : "@ViewBag.meetingid" },
-				success: function (result) {
-					var split = result.split(',')
-                    updateChart(split[0], split[1]);
-                    //alert("successfull reset");
+                success: function (result) {
+
 				},
 				error: function () {
 					alert("Connection error");
