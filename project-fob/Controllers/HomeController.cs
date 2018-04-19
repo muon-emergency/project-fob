@@ -130,27 +130,7 @@ namespace project_fob.Controllers
 
         public static string GenerateGuid()
         {
-            Guid g;
-            g = Guid.NewGuid();
-
-            return g.ToString("N");
-        }
-
-        public static string GenerateId()
-        {
-            return GenerateGuid();
-        }
-
-        public static string GenerateMeetingId()
-        {
-            return GenerateUnambiguousMeetingIdByLength(6);
-        }
-
-        public static string GenerateUnambiguousMeetingIdByLength(int length)
-        {
-            Random random = new Random();
-            const string chars = "367CDFGHJKMNPRTWX";
-            return new string(Enumerable.Repeat(chars, length).Select(s => s[random.Next(s.Length)]).ToArray());
+            return Guid.NewGuid().ToString("N");
         }
 
         public ActionResult UpdateCookies()
@@ -165,6 +145,23 @@ namespace project_fob.Controllers
             string id = GetUserIDFromCookie();
             SetCookie(id);
             return id;
+        }
+
+        private static string GenerateId()
+        {
+            return GenerateGuid();
+        }
+
+        private static string GenerateMeetingId()
+        {
+            return GenerateUnambiguousMeetingIdByLength(6);
+        }
+
+        private static string GenerateUnambiguousMeetingIdByLength(int length)
+        {
+            Random random = new Random();
+            const string chars = "367CDFGHJKMNPRTWX";
+            return new string(Enumerable.Repeat(chars, length).Select(s => s[random.Next(s.Length)]).ToArray());
         }
 
         private string GetUserIDFromCookie()
