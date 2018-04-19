@@ -29,7 +29,7 @@ namespace project_fob.Controllers
         {
             Meeting meet = db.Meeting.Single(x => x.MeetingId.Equals(meetingIdString));
 
-            return QrCodeUrlBuilder.BuildUrl(meetingIdString, Request.GetDisplayUrl(), meet.RoomPassword);
+            return Content(QrCodeUrlBuilder.BuildUrl(meetingIdString, Request.GetDisplayUrl(), meet.RoomPassword));
         }
         
         public ActionResult Finish(string message)
