@@ -24,7 +24,7 @@ namespace project_fob.Controllers
 
         public IActionResult Index()
         {
-            @ViewBag.title = "Project-fob:";
+            ViewBag.title = "Project-fob:";
 
             return View();
         }
@@ -69,8 +69,8 @@ namespace project_fob.Controllers
             db.Fob.Add(new Fob(meet));
             db.SaveChanges();
 
-            @ViewBag.title = "Meeting Id: ";
-            @ViewBag.meetingid = meet.MeetingId;
+            ViewBag.title = "Meeting Id: ";
+            ViewBag.meetingid = meet.MeetingId;
 
             return View();
         }

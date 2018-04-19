@@ -46,7 +46,7 @@ namespace project_fob.Controllers
             Meeting meet = db.Meeting.Single(x => x.MeetingId.Equals(meetingIdString));
 
             //The string (url) we generate.
-            @ViewBag.url = currentUrlLocationBase.ToString() + "/Home/meetingPageUser?meetingId=" + meetingIdString + "&password=" + meet.RoomPassword;
+            ViewBag.url = currentUrlLocationBase.ToString() + "/Home/meetingPageUser?meetingId=" + meetingIdString + "&password=" + meet.RoomPassword;
             return View("~/Views/Home/QRCode.cshtml");
         }
 
@@ -59,7 +59,7 @@ namespace project_fob.Controllers
             fob.Meeting.Active = false;
             db.SaveChanges();
 
-            @ViewBag.meetingid = message;
+            ViewBag.meetingid = message;
 
             //needs to go to the statspage and display the correct stats???
 
