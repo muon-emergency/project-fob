@@ -52,7 +52,7 @@ namespace project_fob.Controllers
                 return View("index");
             }
 
-            CheckCookies();
+            UpdateCookies();
 
             Host host = new Host();
             db.Host.Add(host);
@@ -89,8 +89,8 @@ namespace project_fob.Controllers
                 if (password.Equals(meet.HostPassword))
                 {
 
-                    CheckCookies();
-                    string id = GetCookieID();
+                    UpdateCookies();
+                    string id = GetUserIDFromCookie();
 
                     if (meet.Active)
                     {
@@ -108,8 +108,8 @@ namespace project_fob.Controllers
                 else if (password == meet.RoomPassword && meet.Active)
                 {
                     //join as attendee
-                    CheckCookies();
-                    string id = GetCookieID();
+                    UpdateCookies();
+                    string id = GetUserIDFromCookie();
 
                     ViewBag.title = "Id: ";
                     ViewBag.meetingid = meetingId;
@@ -153,21 +153,21 @@ namespace project_fob.Controllers
             return new string(Enumerable.Repeat(chars, length).Select(s => s[random.Next(s.Length)]).ToArray());
         }
 
-        public ActionResult CheckCookies()
+        public ActionResult UpdateCookies()
         {
-            string id = GetCookieID();
+            string id = GetUserIDFromCookie();
             SetCookie(id);
             return Ok();
         }
 
-        public string GetID()
+        public string GetUserID()
         {
-            string id = GetCookieID();
+            string id = GetUserIDFromCookie();
             SetCookie(id);
             return id;
         }
 
-        private string GetCookieID()
+        private string GetUserIDFromCookie()
         {
             return Request.Cookies["ID"];
         }
