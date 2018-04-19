@@ -15,6 +15,7 @@
         $.ajax({
             type: "POST",
             url: '@Url.Action("getStats", "Stats")',
+            data: { meetingIdString : "@ViewBag.meetingid"},
             success: function (result) {
 
                 var topicClicksOptions = {
@@ -63,7 +64,7 @@
 
 
                 var Data_averageClickAverageUsers = [['Average attendee', 'Average fobbed']];
-                
+
                 Data_averageClickAverageUsers.push(["Don't exist anymore", parseFloat(split[1])]);
 
                 Data_averageClickAverageUsers.push(["Average fobbed", parseFloat(split[1])]);
@@ -74,13 +75,13 @@
 
 
                 var averageClickAverageUsersChart = new google.charts.Bar(document.getElementById('averageClickAverageUsers'));
-                
+
                 averageClickAverageUsersChart.draw(averageClickAverageUsersData, averageClickAverageUsersOptions);
 
 
             }
         });
-        
+
         var averageClickAverageUsersChart = new google.charts.Bar(document.getElementById('averageClickAverageUsers'));
         averageClickAverageUsersChart.draw(averageClickAverageUsersData, averageClickAverageUsersOptions);
 

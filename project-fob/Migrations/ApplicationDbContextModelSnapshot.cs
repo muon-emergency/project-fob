@@ -115,7 +115,7 @@ namespace projectfob.Migrations
                     b.Property<int?>("FobId");
 
                     b.Property<string>("UserId")
-                        .HasMaxLength(9);
+                        .HasMaxLength(32);
 
                     b.HasKey("Id");
 

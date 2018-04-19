@@ -24,7 +24,7 @@ namespace project_fob.Controllers
 
         public IActionResult Index()
         {
-            @ViewBag.title = "Project-fob:";
+            ViewBag.title = "Project-fob:";
 
             return View();
         }
@@ -52,8 +52,7 @@ namespace project_fob.Controllers
                 return View("index");
             }
 
-            CheckCookies();
-            //HttpContext.Session.Set("sessionid", Encoding.ASCII.GetBytes(user.UserId));
+            UpdateCookies();
 
             Host host = new Host();
             db.Host.Add(host);
@@ -66,12 +65,11 @@ namespace project_fob.Controllers
             }
 
             db.Meeting.Add(meet);
-            HttpContext.Session.Set("meetingid", Encoding.ASCII.GetBytes(meet.MeetingId));
 
             db.Fob.Add(new Fob(meet));
             db.SaveChanges();
 
-            @ViewBag.title = "Meeting Id: " + meet.MeetingId;
+            ViewBag.title = "Meeting Id: ";
             ViewBag.meetingid = meet.MeetingId;
 
             return View();
@@ -80,6 +78,7 @@ namespace project_fob.Controllers
         public ActionResult MeetingPageUser(string meetingId, string password)
         {
             password = password ?? "";
+			meetingId = meetingId ?? "";
 
             meetingId = meetingId.ToUpper();
             Meeting meet = db.Meeting.SingleOrDefault(m => m.MeetingId == meetingId);
@@ -90,10 +89,8 @@ namespace project_fob.Controllers
                 if (password.Equals(meet.HostPassword))
                 {
 
-                    CheckCookies();
-                    string id = GetCookieID();
-                    //HttpContext.Session.Set("sessionid", Encoding.ASCII.GetBytes(user.UserId));
-                    HttpContext.Session.Set("meetingid", Encoding.ASCII.GetBytes(meet.MeetingId));
+                    UpdateCookies();
+                    string id = GetUserIDFromCookie();
 
                     if (meet.Active)
                     {
@@ -111,12 +108,11 @@ namespace project_fob.Controllers
                 else if (password == meet.RoomPassword && meet.Active)
                 {
                     //join as attendee
-                    CheckCookies();
-                    string id = GetCookieID();
-                    
-                    HttpContext.Session.Set("meetingid", Encoding.ASCII.GetBytes(meet.MeetingId));
-                    
-                    ViewBag.title = "Id:" + meetingId;
+                    UpdateCookies();
+                    string id = GetUserIDFromCookie();
+
+                    ViewBag.title = "Id: ";
+                    ViewBag.meetingid = meetingId;
                     db.SaveChanges();
                     return View();
                 }
@@ -132,44 +128,39 @@ namespace project_fob.Controllers
             return View("Index");
         }
 
-        public static string GenerateId()
+
+        public ActionResult UpdateCookies()
         {
-            return GenerateIdByLength(9);
+            string id = GetUserIDFromCookie();
+            SetCookie(id);
+            return Ok();
         }
 
-        public static string GenerateMeetingId()
+        public string GetUserID()
+        {
+            string id = GetUserIDFromCookie();
+            SetCookie(id);
+            return id;
+        }
+
+        private static string GenerateId()
+        {
+            return Guid.NewGuid().ToString("N");
+        }
+
+        private static string GenerateMeetingId()
         {
             return GenerateUnambiguousMeetingIdByLength(6);
         }
 
-        public static string GenerateUnambiguousMeetingIdByLength(int length)
+        private static string GenerateUnambiguousMeetingIdByLength(int length)
         {
             Random random = new Random();
             const string chars = "367CDFGHJKMNPRTWX";
             return new string(Enumerable.Repeat(chars, length).Select(s => s[random.Next(s.Length)]).ToArray());
         }
 
-        public static string GenerateIdByLength(int length)
-        {
-            Random random = new Random();
-            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-            return new string(Enumerable.Repeat(chars, length).Select(s => s[random.Next(s.Length)]).ToArray());
-        }
-
-        public void CheckCookies()
-        {
-            string id = GetCookieID();
-            SetCookie(id);
-        }
-
-        public string GetID()
-        {
-            string id = GetCookieID();
-            SetCookie(id);
-            return id;
-        }
-
-        private string GetCookieID()
+        private string GetUserIDFromCookie()
         {
             return Request.Cookies["ID"];
         }
@@ -189,6 +180,14 @@ namespace project_fob.Controllers
 
         }
 
-
+        private void SetCookie(string id, string value)
+        {
+            CookieOptions cookie = new CookieOptions();
+            cookie.Expires = DateTime.Now.AddYears(5);
+            if (id != null && id.Length == 0)
+            {
+                Response.Cookies.Append(id, value);
+            }
+        }
     }
 }

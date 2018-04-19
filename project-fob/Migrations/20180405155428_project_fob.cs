@@ -94,7 +94,7 @@ namespace projectfob.Migrations
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     FobId = table.Column<int>(nullable: true),
-                    UserId = table.Column<string>(maxLength: 9, nullable: true)
+                    UserId = table.Column<string>(maxLength: 32, nullable: true)
                 },
                 constraints: table =>
                 {
