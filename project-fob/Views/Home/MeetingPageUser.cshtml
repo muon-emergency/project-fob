@@ -40,7 +40,7 @@
     function drawCharts() {
 
         var dataButton = google.visualization.arrayToDataTable([
-          ['Language', 'Speakers (in millions)'],
+          ['-', '-'],
           ["Click me to Request Next Topic", 100],
         ]);
 
@@ -89,10 +89,7 @@
                 type: "POST",
                 url: '@Url.Action("ImStillHere", "Attendee")',
                 success: function (result) {
-                    var tmp = result + "";
-                    if (tmp.length != 0) {
-                        alert(result);
-                    }
+                    //Refresh method which can be used for checking connection errors.
                     errorCounter = 0;
 
                 },
@@ -111,7 +108,7 @@
 
     //redraw graph when window resize is completed
     $(window).on('resizeEnd', function () {
-        drawChart(data);
+        runUpdate();
     });
 
 </script>
