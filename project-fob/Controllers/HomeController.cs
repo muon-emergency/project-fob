@@ -128,10 +128,6 @@ namespace project_fob.Controllers
             return View("Index");
         }
 
-        public static string GenerateGuid()
-        {
-            return Guid.NewGuid().ToString("N");
-        }
 
         public ActionResult UpdateCookies()
         {
@@ -149,7 +145,7 @@ namespace project_fob.Controllers
 
         private static string GenerateId()
         {
-            return GenerateGuid();
+            return Guid.NewGuid().ToString("N");
         }
 
         private static string GenerateMeetingId()
