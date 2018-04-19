@@ -78,7 +78,6 @@ namespace project_fob.Controllers
                 ViewBag.title = message;
             }
 
-            //meetingid magic required
             Fob fob = Fob.getFob(meetingIdString, db);
 
             if (fob == null)
@@ -92,7 +91,6 @@ namespace project_fob.Controllers
 
         public void Reset(string meetingIdString)
         {
-            //Fob fob = Fob.getFob(meetingIdString, db);
             Fob fob = db.Fob.Include(x => x.Meeting).ThenInclude(x => x.Stats)
                             .Include(x=>x.Fobbed)
                             .Single(f => f.Meeting.MeetingId == meetingIdString);
