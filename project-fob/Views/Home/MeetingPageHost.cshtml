@@ -24,9 +24,12 @@
                         data: { meetingIdString : "@ViewBag.meetingid" },
                         success: function (result) {
                             //alert("hey");
-                            updateChart(result, result);
-                            //alert("after if");
-                            var name = "Click for Next Topic, Fob count: " + result;
+                            //This still need fixed
+                            //updateChart(result, result);
+
+                            var label = document.getElementById('fobcount');
+                            label.textContent = result;
+                            
 				        },
                         error: function () {
 					        errorCounter++;
@@ -54,7 +57,13 @@
 
 
 <div class="wrapper">
-    <button class="buttonhost" onclick="load()" onload="load()">Next Topic</button>
+    <button class="buttonhost" onclick="reset()" onload="load()">Next Topic</button>
+    <br />
+    <br />
+    <p>
+        # of fobs:
+        <label id="fobcount"> *</label>
+    </p>
 </div>
 
 
