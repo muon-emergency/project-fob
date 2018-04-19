@@ -40,15 +40,9 @@ namespace project_fob.Controllers
             //The password will require different way to send it because atm it is visible
 
             attendeePassword = attendeePassword ?? "";
-
-            if (hostPassword == null || hostPassword.Length == 0)
+            if (!CheckPasswordsAreCorrectForHosting(attendeePassword,hostPassword))
             {
-                ViewBag.title = "Error: no host password";
-                return View("index");
-            }
-            if (hostPassword.Equals(attendeePassword))
-            {
-                ViewBag.title = "Error: same passwords";
+                ViewBag.title = "Error: Password error";
                 return View("index");
             }
 
@@ -180,6 +174,20 @@ namespace project_fob.Controllers
 
         }
 
+        public static bool CheckPasswordsAreCorrectForHosting(string attendeePassword, string hostPassword)
+        {
+            attendeePassword = attendeePassword ?? "";
+            if (hostPassword == null || hostPassword.Length == 0)
+            {
+                return false;
+            }
+            if (hostPassword.Equals(attendeePassword))
+            {
+                return false;
+            }
+            return true;
+        }
+
         private void SetCookie(string id, string value)
         {
             CookieOptions cookie = new CookieOptions();
@@ -189,5 +197,7 @@ namespace project_fob.Controllers
                 Response.Cookies.Append(id, value);
             }
         }
+
+
     }
 }
