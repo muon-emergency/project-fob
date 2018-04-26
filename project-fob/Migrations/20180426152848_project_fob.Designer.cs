@@ -11,7 +11,7 @@ using System;
 namespace projectfob.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20180405155428_project_fob")]
+    [Migration("20180426152848_project_fob")]
     partial class project_fob
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -29,6 +29,8 @@ namespace projectfob.Migrations
                     b.Property<int?>("MeetingId");
 
                     b.Property<DateTime>("TopicStartTime");
+
+                    b.Property<int>("TopicValue");
 
                     b.HasKey("Id");
 

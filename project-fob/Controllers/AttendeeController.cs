@@ -65,9 +65,21 @@ namespace project_fob.Controllers
             return View("~/Views/Home/Index.cshtml");
         }
 
-        public string ImStillHere()
+        public ActionResult ImStillHere(string value, string meetingString)
         {
-            return "";
+            if (HaveCookieId())
+            {
+                string userId = GetCookieId();
+
+                Fob fob = db.Fob.Include(x => x.Meeting).ThenInclude(x => x.Stats).Include(x => x.Fobbed).Single(f => f.Meeting.MeetingId == meetingString);
+                int topic = fob.TopicValue;
+
+                return Content(topic+"");
+            }
+            else
+            {
+                return RedirectToAction("Index");
+            }
         }
     }
 }

@@ -4,6 +4,7 @@
     google.charts.load("current", { packages: ["corechart"] });
     google.charts.setOnLoadCallback(drawCharts);
     var isItDrawing = false;
+    var topicNumber = 0;
 
     var clickedButton = {
         'chartArea': { 'width': '90%', 'height': '90%' },
@@ -82,13 +83,21 @@
             runUpdate();
             isItDrawing = true;
         }
+        
+
         var errorCounter = 0;
         function runUpdate() {
-            setTimeout(runUpdate, 10000); //Run update every 10 second
+            setTimeout(runUpdate, 5000); //Run update every 5 second
             $.ajax({
                 type: "POST",
                 url: '@Url.Action("ImStillHere", "Attendee")',
+                data: { meetingString: "@ViewBag.meetingId"},
                 success: function (result) {
+                    var returnedvalue = parseInt(result);
+                    if (topicNumber != returnedvalue) {
+                        alert("Topic changed to #" + returnedvalue);
+
+                    }
                     //Refresh method which can be used for checking connection errors.
                     errorCounter = 0;
 

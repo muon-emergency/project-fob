@@ -32,7 +32,8 @@ namespace projectfob.Migrations
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     MeetingId = table.Column<int>(nullable: true),
-                    TopicStartTime = table.Column<DateTime>(nullable: false)
+                    TopicStartTime = table.Column<DateTime>(nullable: false),
+                    TopicValue = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {

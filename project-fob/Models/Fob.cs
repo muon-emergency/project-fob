@@ -14,6 +14,8 @@ namespace project_fob.Models
         [Key]
         public int Id { get; set; }
 
+        public int TopicValue { get; set; }
+
         public DateTime TopicStartTime { get; set; }
         public Meeting Meeting { get; set; }
 
@@ -25,6 +27,7 @@ namespace project_fob.Models
             Meeting = meeting;
             Fobbed = new List<User>();
             TopicStartTime = DateTime.Now;
+            TopicValue = 0;
         }
 
         public static Fob getFob(string meetingid, ApplicationDbContext db)
@@ -43,6 +46,7 @@ namespace project_fob.Models
         public void RestartFobbed()
         {
             Fobbed.Clear();
+            TopicValue++;
         }
     }
 }
