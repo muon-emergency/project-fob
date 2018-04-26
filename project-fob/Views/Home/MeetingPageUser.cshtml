@@ -64,7 +64,7 @@
                     url: '@Url.Action("Fob", "Attendee")',
                     data: { meetingString: "@ViewBag.meetingId"},
                     success: function (result) {
-                        
+
                     },
                     error: function(){
                         alert("Connection error");
@@ -83,7 +83,7 @@
             runUpdate();
             isItDrawing = true;
         }
-        
+
 
         var errorCounter = 0;
         function runUpdate() {
@@ -95,9 +95,14 @@
                 success: function (result) {
                     var returnedvalue = parseInt(result);
                     if (topicNumber != returnedvalue) {
-                        alert("Topic changed to #" + returnedvalue);
-                        topicNumber = returnedvalue;
+                        if (returnedvalue != -1) {
+                            alert("Topic changed to #" + returnedvalue);
+                            topicNumber = returnedvalue;
+                        } else {
+                            alert("Meeting closed.");
+                            window.location = "index";
 
+                        }
                     }
                     //Refresh method which can be used for checking connection errors.
                     errorCounter = 0;
@@ -138,7 +143,7 @@
 
 
 <footer>
-    
+
     @using (Html.BeginForm("ExitMeeting", "Attendee", FormMethod.Post))
     {
         <button class="footerButton" name="value" value=@ViewBag.user>Exit meeting</button>

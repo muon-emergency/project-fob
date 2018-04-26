@@ -73,6 +73,10 @@ namespace project_fob.Controllers
 
                 Fob fob = db.Fob.Include(x => x.Meeting).ThenInclude(x => x.Stats).Include(x => x.Fobbed).Single(f => f.Meeting.MeetingId == meetingString);
                 int topic = fob.TopicValue;
+                if (!fob.Meeting.Active)
+                {
+                    topic = -1;
+                }
 
                 return Content(topic+"");
             }
