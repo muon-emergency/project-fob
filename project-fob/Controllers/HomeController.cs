@@ -58,7 +58,7 @@ namespace project_fob.Controllers
             db.Host.Add(host);
 
             Meeting meet = new Meeting(GenerateMeetingId(), host, attendeePassword, hostPassword);
-            
+
             while (db.Meeting.Any(m => m.MeetingId.Equals(meet.MeetingId.ToString())))
             {
                 meet.MeetingId = GenerateMeetingId();
@@ -78,7 +78,7 @@ namespace project_fob.Controllers
         public ActionResult MeetingPageUser(string meetingId, string password)
         {
             password = password ?? "";
-			meetingId = meetingId ?? "";
+            meetingId = meetingId ?? "";
 
             meetingId = meetingId.ToUpper();
             Meeting meet = db.Meeting.SingleOrDefault(m => m.MeetingId == meetingId);
@@ -96,6 +96,9 @@ namespace project_fob.Controllers
                     {
                         Host host = new Host(id, meet);
                         db.Host.Add(host);
+
+                        ViewBag.title = "Meeting Id: ";
+                        ViewBag.meetingid = meet.MeetingId;
 
                         db.SaveChanges();
                         return View("MeetingPageHost");
