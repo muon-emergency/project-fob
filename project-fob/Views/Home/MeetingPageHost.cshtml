@@ -1,183 +1,61 @@
-﻿<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-<script type="text/javascript">
-
-	google.charts.load("current", { packages: ["corechart"] });
-	google.charts.setOnLoadCallback(drawCharts);
-	var isItDrawing = false;
-
-	var clickedButton = {
-		'chartArea': { 'width': '90%', 'height': '90%' },
-		'legend': { 'position': 'none' },
-		"pieSliceText": 'label',
-		'tooltip': { trigger: 'none' },
-		slices: {
-			0: { color: '#CE5A57' }
-		},
-
-		backgroundColor: 'transparent'
-
-	};
-
-	//The button chart
-	var optionsButton = {
-		'chartArea': { 'width': '90%', 'height': '90%' },
-		'legend': { 'position': 'none' },
-		"pieSliceText": 'label',
-		'tooltip': { trigger: 'none' },
-		slices: {
-			0: {
-				color: '#C23629'
-			}
-		},//button colour
-
-		backgroundColor: 'transparent',
-		pieSliceTextStyle: { color: 'black' },
-		pieSliceBorderColor: 'black'
-	};
-
-
-	function drawCharts() {
-		var data = google.visualization.arrayToDataTable([
-		  ['Fobers', 'amount'],
-		  ['Leave', 0],
-		  ['Remain', 0]
-
-		]);
-
-		var dataButton = google.visualization.arrayToDataTable([
-		  ['Language', 'Speakers (in millions)'],
-		  ['Click for Next topic', 100],
-		]);
-
-
-		var options = {
-			'chartArea': { 'width': '100%', 'height': '100%' },
-			'legend': { 'position': 'none' },
-			"pieSliceText": 'none',
-			'tooltip': { trigger: 'none' },
-			slices: {
-				0: { color: '#EE311F' },//chart colour
-				1: { color: 'transparent' }  //Change the color to w\e you like 
-			},
-
-			backgroundColor: 'transparent',
-			pieSliceTextStyle: {
-				color: 'black'
-			}
-
-		};
-
-
-
-		var chart = new google.visualization.PieChart(document.getElementById('piechart'));
-		chart.draw(data, options);
-		var button = new google.visualization.PieChart(document.getElementById('button'));
-		button.draw(dataButton, optionsButton);
-
-		google.visualization.events.addListener(button, 'select', clickHandler);
-
-
-		/*Colour the button piechart when click happens. Delay for a few milliseconds and change the color back.*/
-		var counter = 0;
-		function clickHandler(e) {
-
+﻿<script type="text/javascript">
+    
+    var counter = 0;
+    function reset() {
 			$.ajax({ //Needs to check if the database is running/ can connect. If not should dc from room or tell the user
 				type: "POST",
-				url: '@Url.Action("Reset", "Host")',
-				success: function (result) {
-					//alert("successfull reset");
-					var split = result.split(',')
-					updateChart(split[0], split[1]);
+                url: '@Url.Action("Reset", "Host")',
+                data: { meetingIdString : "@ViewBag.meetingid" },
+                success: function (result) {
+
 				},
 				error: function () {
 					alert("Connection error");
 				}
 			});
-
-			button = new google.visualization.PieChart(document.getElementById('button'));
-			button.draw(dataButton, clickedButton);
-			google.visualization.events.addListener(button, 'select', clickHandler);
-			setTimeout(function () {
-				button = new google.visualization.PieChart(document.getElementById('button'));
-				button.draw(dataButton, optionsButton);
-				google.visualization.events.addListener(button, 'select', clickHandler);
-			}, 50);
-            
 		}
+    
+        	var errorCounter = 0;
+    function runUpdate() { // host controller, refresh
+			        setTimeout(runUpdate, 1000);
+			        $.ajax({
+				        type: "POST",
+                        url: '@Url.Action("Refresh", "Host")',
+                        data: { meetingIdString : "@ViewBag.meetingid" },
+                        success: function (result) {
+                            //alert("hey");
+                            updateChart(result, result);
+                            //alert("after if");
+                            var name = "Click for Next Topic, Fob count: " + result;
+				        },
+                        error: function () {
+					        errorCounter++;
+					        if (errorCounter >= 30) {
+						        //alert("Connection error. Returning to home page")
+						        errorCounter = 0;
+						        window.location = "index";
+					        }
+				        }
+			        });
+    }
 
-		function buttonBackToNormal() {
-			var button = new google.visualization.PieChart(document.getElementById('button'));
-			button.draw(dataButton, optionsButton);
-		}
+    function hey() {
+        alert("hello there");
+        alert("General Kenobi");
+    }
+    
+    window.addEventListener('load', function () {
+        runUpdate();
+    })
 
-		if (!isItDrawing) {
-			runUpdate();
-			isItDrawing = true;
-		}
-		var errorCounter = 0;
-		function runUpdate() { // host controller, refresh
-			setTimeout(runUpdate, 1000);
-			$.ajax({
-				type: "POST",
-				url: '@Url.Action("Refresh", "Host")',
-                success: function (result) {
-
-                    updateChart(result, result);
-                    //alert("after if");
-                    var name = "Click for Next Topic, Fob count: " + result;
-						errorCounter = 0;
-						dataButton = google.visualization.arrayToDataTable([
-						['Language', 'Speakers (in millions)'],
-						[name, 100],
-						]);
-						button = new google.visualization.PieChart(document.getElementById('button'));
-						button.draw(dataButton, optionsButton);
-						google.visualization.events.addListener(button, 'select', clickHandler);
-				},
-				error: function () {
-					errorCounter++;
-					if (errorCounter >= 30) {
-						alert("Connection error. Returning to home page")
-						errorCounter = 0;
-						window.location = "index";
-					}
-				}
-			});
-		}
-
-		/*When it updates, for some reason it resizes the size of the pie chart in the background*/
-        function updateChart(total, leavers) {
-            if (leavers == 0) {
-                total = 1;
-            }
-			data = new google.visualization.arrayToDataTable([
-		   ['nothing', 'special here'],
-		   ['thisjust', parseInt(leavers)],
-		   ['thebackgroundchart', parseInt(total - leavers)]
-			]);
-
-			var chart = new google.visualization.PieChart(document.getElementById('piechart'));
-			chart.draw(data, options);
-		}
-	}
 </script>
 
-<h1>@ViewBag.Title</h1>
+<h1>@ViewBag.Title @ViewBag.meetingid</h1>
 
-<body onresize="drawCharts()">
 
-	<div id="centerOfPageForButton">
-		<div id="piechart" style="width: 100%; height: 100%;"></div>
-	</div>
-	@using (Html.BeginForm("meetingPageUser", "Home", FormMethod.Post)) {
-		<div id="centerOfPageForButton">
-
-			<div id="button" style="width: 100%; height: 100%;"></div>
-
-		</div>
-	}
-
-</body>
+<div class="wrapper">
+    <button class="buttonhost" onclick="load()" onload="load()">Next Topic</button>
+</div>
 
 
 <footer>
@@ -185,8 +63,8 @@
 
 
         <div class="inner">
-            <a href="@Url.Action("QrCode","Host")" target="_blank">
-                <button class="footerButton" id="buttonQRGen" name="message" value="Meeting left">QR Code</button>
+            <a href="@Url.Action("QrCode","Host",new { meetingIdString = @ViewBag.meetingid })" target="_blank">
+                <button class="footerButton" id="buttonQRGen" name="message">QR Code</button>
             </a>
         </div>
 
@@ -197,15 +75,15 @@
 
         <div class="inner">
             @using (Html.BeginForm("leave", "Host", FormMethod.Post))
-        {
-            <button class="footerButton" id="buttonLeave" name="message" value="Meeting left">Leave</button>
-    }
+            {
+                <button class="footerButton" id="buttonLeave" name="message" value="Meeting left">Leave</button>
+            }
         </div>
         <div class="inner">
             @using (Html.BeginForm("finish", "Host", FormMethod.Post))
-        {
-            <button class="footerButton" id="buttonExit" name="message" value="Finished meeting">Finish</button>
-    }
+            {
+                <button class="footerButton" id="buttonExit" name="message" value="@ViewBag.meetingid">Finish</button>
+            }
         </div>
     </div>
 </footer>

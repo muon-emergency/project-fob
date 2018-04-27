@@ -14,7 +14,7 @@ namespace project_fob.Models
         [Key]
         public int Id { get; set; }
 
-        [StringLength(9)]
+        [StringLength(32)]
         public string UserId { get; set; }
 
         public User() { }
@@ -28,6 +28,10 @@ namespace project_fob.Models
             if (obj is User paramater)
             {
                 return Equals(paramater);
+            }
+            if (obj is String parameter)
+            {
+                return UserId.Equals(parameter);
             }
             return false;
         }

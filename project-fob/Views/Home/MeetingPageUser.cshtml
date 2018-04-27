@@ -40,7 +40,7 @@
     function drawCharts() {
 
         var dataButton = google.visualization.arrayToDataTable([
-          ['Language', 'Speakers (in millions)'],
+          ['-', '-'],
           ["Click me to Request Next Topic", 100],
         ]);
 
@@ -57,14 +57,13 @@
             google.visualization.events.addListener(button, 'select', clickHandler);
 
             //Fobbing
-            
+
                 $.ajax({
                     type: "POST",
                     url: '@Url.Action("Fob", "Attendee")',
+                    data: { meetingString: "@ViewBag.meetingId"},
                     success: function (result) {
-                        var split = result.split(',')
-                        updateChart(split[0], split[1]);
-                        //window.locationre = result.url;
+                        
                     },
                     error: function(){
                         alert("Connection error");
@@ -76,7 +75,7 @@
                 button.draw(dataButton, optionsButton);
                 google.visualization.events.addListener(button, 'select', clickHandler);
             }, 50);
-            
+
         }
 
         if (!isItDrawing) {
@@ -90,10 +89,7 @@
                 type: "POST",
                 url: '@Url.Action("ImStillHere", "Attendee")',
                 success: function (result) {
-                    var tmp = result + "";
-                    if (tmp.length != 0) {
-                        alert(result);
-                    }
+                    //Refresh method which can be used for checking connection errors.
                     errorCounter = 0;
 
                 },
@@ -112,12 +108,12 @@
 
     //redraw graph when window resize is completed
     $(window).on('resizeEnd', function () {
-        drawChart(data);
+        runUpdate();
     });
 
 </script>
 
-<h1>@ViewBag.title</h1>
+<h1>@ViewBag.title @ViewBag.meetingid</h1>
 
 <body onresize="drawCharts()">
 
