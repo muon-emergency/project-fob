@@ -33,7 +33,6 @@ namespace project_fob.Controllers
                 Meeting meeting = db.Meeting.Include(x=> x.Fobbed).Single(f => f.MeetingId == meetingString);
 
                 MeetingWrapper.UserPressedFob(meeting, id, db);
-                //meeting.UserPressedFob(id, db);
 
                 db.SaveChanges();
                 return Ok();
