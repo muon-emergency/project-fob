@@ -32,7 +32,7 @@ namespace project_fob.Models
 
         public static Topic getFob(string meetingid, ApplicationDbContext db)
         {
-            return db.Fob.Include(x => x.Meeting).Include(x=> x.Fobbed).SingleOrDefault(f => f.Meeting.MeetingId == meetingid);
+            return db.Topic.Include(x => x.Meeting).Include(x=> x.Fobbed).SingleOrDefault(f => f.Meeting.MeetingId == meetingid);
         }
 
         public void AddFob(string id, ApplicationDbContext db)
@@ -42,7 +42,8 @@ namespace project_fob.Models
             if (itsGuid && !Fobbed.Any(x => x.Equals(id)))
             {
                 //Fobbed.Add(id);
-                User.GetOrCreateUser(result, db);
+                User user = User.GetOrCreateUser(result, db);
+                Fobbed.Add(user);
             }
         }
 

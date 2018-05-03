@@ -34,7 +34,7 @@ namespace project_fob.Controllers
         
         public ActionResult Finish(string message)
         {
-            Topic fob = db.Fob.Include(x => x.Meeting).ThenInclude(x => x.Stats)
+            Topic fob = db.Topic.Include(x => x.Meeting).ThenInclude(x => x.Stats)
                             .Single(f => f.Meeting.MeetingId == message);
 
             fob.Meeting.Stats.Add(new Stats(0, fob.Fobbed.Count, fob.TopicStartTime, DateTime.Now));
@@ -73,7 +73,7 @@ namespace project_fob.Controllers
 
         public ActionResult Reset(string meetingIdString)
         {
-            Topic fob = db.Fob.Include(x => x.Meeting).ThenInclude(x => x.Stats)
+            Topic fob = db.Topic.Include(x => x.Meeting).ThenInclude(x => x.Stats)
                             .Include(x=>x.Fobbed)
                             .Single(f => f.Meeting.MeetingId == meetingIdString);
 

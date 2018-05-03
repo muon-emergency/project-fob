@@ -25,8 +25,12 @@ namespace project_fob.Models
 
         static public User GetOrCreateUser(Guid id, ApplicationDbContext db)
         {
-            //User user = db.Fob.Include(x => x.User);
-            return null;
+            User user = db.User.SingleOrDefault(x=>x.Id.Equals(id));
+            if (user == null)
+            {
+                user = new User(id);
+            }
+            return user;
         }
 
         public override bool Equals(object obj)
