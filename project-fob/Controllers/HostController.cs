@@ -71,7 +71,7 @@ namespace project_fob.Controllers
             return Content(fob.Fobbed.Count.ToString());
         }
 
-        public void Reset(string meetingIdString)
+        public ActionResult Reset(string meetingIdString)
         {
             Fob fob = db.Fob.Include(x => x.Meeting).ThenInclude(x => x.Stats)
                             .Include(x=>x.Fobbed)
@@ -81,6 +81,7 @@ namespace project_fob.Controllers
             fob.RestartFobbed();
 
             db.SaveChanges();
+            return Ok();
         }
     }
 }

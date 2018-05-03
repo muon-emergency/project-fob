@@ -4,6 +4,7 @@
     google.charts.load("current", { packages: ["corechart"] });
     google.charts.setOnLoadCallback(drawCharts);
     var isItDrawing = false;
+    var topicNumber = 0;
 
     var clickedButton = {
         'chartArea': { 'width': '90%', 'height': '90%' },
@@ -63,7 +64,7 @@
                     url: '@Url.Action("Fob", "Attendee")',
                     data: { meetingString: "@ViewBag.meetingId"},
                     success: function (result) {
-                        
+
                     },
                     error: function(){
                         alert("Connection error");
@@ -82,13 +83,27 @@
             runUpdate();
             isItDrawing = true;
         }
+
+
         var errorCounter = 0;
         function runUpdate() {
-            setTimeout(runUpdate, 10000); //Run update every 10 second
+            setTimeout(runUpdate, 5000); //Run update every 5 second
             $.ajax({
                 type: "POST",
                 url: '@Url.Action("ImStillHere", "Attendee")',
+                data: { meetingString: "@ViewBag.meetingId"},
                 success: function (result) {
+                    var returnedvalue = parseInt(result);
+                    if (topicNumber != returnedvalue) {
+                        if (returnedvalue != -1) {
+                            //Here we can put some kind of an alert in case we want to warn the user that the topic changed
+                            topicNumber = returnedvalue;
+                        } else {
+                            alert("Meeting closed.");
+                            window.location = "index";
+
+                        }
+                    }
                     //Refresh method which can be used for checking connection errors.
                     errorCounter = 0;
 
@@ -128,7 +143,7 @@
 
 
 <footer>
-    
+
     @using (Html.BeginForm("ExitMeeting", "Attendee", FormMethod.Post))
     {
         <button class="footerButton" name="value" value=@ViewBag.user>Exit meeting</button>

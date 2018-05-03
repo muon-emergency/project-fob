@@ -29,6 +29,8 @@ namespace projectfob.Migrations
 
                     b.Property<DateTime>("TopicStartTime");
 
+                    b.Property<int>("TopicValue");
+
                     b.HasKey("Id");
 
                     b.HasIndex("MeetingId");
