@@ -11,7 +11,7 @@ namespace project_fob.Models
         [Key]
         public int Id { get; set; }
 
-        [StringLength(9)]
+        [StringLength(6)]
         public string MeetingId { get; set; }
         [Required]
         public bool Active { get; set; }
