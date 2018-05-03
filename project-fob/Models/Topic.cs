@@ -41,7 +41,6 @@ namespace project_fob.Models
             bool itsGuid= Guid.TryParse(id, out result);
             if (itsGuid && !Fobbed.Any(x => x.Equals(id)))
             {
-                //Fobbed.Add(id);
                 User user = User.GetOrCreateUser(result, db);
                 Fobbed.Add(user);
             }
