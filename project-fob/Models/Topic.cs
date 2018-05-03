@@ -35,11 +35,14 @@ namespace project_fob.Models
             return db.Fob.Include(x => x.Meeting).Include(x=> x.Fobbed).SingleOrDefault(f => f.Meeting.MeetingId == meetingid);
         }
 
-        public void AddFob(string id)
+        public void AddFob(string id, ApplicationDbContext db)
         {
-            if (!Fobbed.Any(x => x.Equals(id)))
+            Guid result;
+            bool itsGuid= Guid.TryParse(id, out result);
+            if (itsGuid && !Fobbed.Any(x => x.Equals(id)))
             {
-                Fobbed.Add(new User(id));
+                //Fobbed.Add(id);
+                User.GetOrCreateUser(result, db);
             }
         }
 

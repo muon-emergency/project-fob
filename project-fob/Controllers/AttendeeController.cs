@@ -32,7 +32,7 @@ namespace project_fob.Controllers
 
                 Topic fob = db.Fob.Include(x => x.Meeting).ThenInclude(x => x.Stats).Include(x=> x.Fobbed).Single(f => f.Meeting.MeetingId == meetingString);
                 
-                fob.AddFob(userId);
+                fob.AddFob(userId,db);
                 db.SaveChanges();
                 return Ok();
             }

@@ -1,4 +1,6 @@
-﻿using project_fob.Controllers;
+﻿using Microsoft.EntityFrameworkCore;
+using project_fob.Controllers;
+using project_fob.Data;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -12,17 +14,21 @@ namespace project_fob.Models
     public class User
     {
         [Key]
-        public int Id { get; set; }
-
-        [StringLength(32)]
-        public string UserId { get; set; }
+        public Guid Id { get; set; }
 
         public User() { }
 
-        public User(string id)
+        public User(Guid id)
         {
-            UserId = id;
+            Id = id;
         }
+
+        static public User GetOrCreateUser(Guid id, ApplicationDbContext db)
+        {
+            //User user = db.Fob.Include(x => x.User);
+            return null;
+        }
+
         public override bool Equals(object obj)
         {
             if (obj is User paramater)
@@ -31,25 +37,27 @@ namespace project_fob.Models
             }
             if (obj is String parameter)
             {
-                return UserId.Equals(parameter);
+                Guid result;
+                Guid.TryParse(parameter, out result);
+                return Equals(result);
             }
             return false;
         }
 
-        private bool Equals(User parameter)
-        {
-            if (parameter.UserId.Equals(UserId))
-            {
-                return true;
-            }
-            return false;
-        }
+        //private bool Equals(User parameter)
+        //{
+        //    if (parameter.Equals(Id))
+        //    {
+        //        return true;
+        //    }
+        //    return false;
+        //}
 
-        public override int GetHashCode()
-        {
-            var hashCode = -1403531409;
-            hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(UserId);
-            return hashCode;
-        }
+        //public override int GetHashCode()
+        //{
+        //    var hashCode = -1403531409;
+        //    hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(UserId);
+        //    return hashCode;
+        //}
     }
 }
