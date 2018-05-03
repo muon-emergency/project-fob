@@ -26,30 +26,33 @@ namespace project_fob.Controllers
 
         public ActionResult Fob(string value, string meetingString)
         {
-            if (HaveCookieId())
+            if (HaveCookieId(out var id))
             {
                 string userId = GetCookieId();
 
-                Topic fob = db.Topic.Include(x => x.Meeting).ThenInclude(x => x.Stats).Include(x=> x.Fobbed).Single(f => f.Meeting.MeetingId == meetingString);
-                
-                fob.AddFob(userId,db);
+                Meeting meeting = db.Meeting.Include(x=> x.Fobbed).Single(f => f.MeetingId == meetingString);
+
+                MeetingWrapper.UserPressedFob(meeting, id, db);
+                //meeting.UserPressedFob(id, db);
+
                 db.SaveChanges();
                 return Ok();
             }
             else
             {
-                return RedirectToAction("Index");
+                return RedirectToAction("Index", "Home");
             }
         }
 
-        private bool HaveCookieId()
+        private bool HaveCookieId(out Guid id)
         {
-            string id = Request.Cookies["ID"];
-            if (id == null || id.Length == 0)
+            string strignId = Request.Cookies["ID"];
+            if (strignId == null || strignId.Length == 0)
             {
                 return false;
             }
-            return true;
+
+            return Guid.TryParse(strignId, out id);
         }
 
         private string GetCookieId()
@@ -58,8 +61,6 @@ namespace project_fob.Controllers
             return Request.Cookies["ID"];
         }
 
-
-
         public ActionResult ExitMeeting(string value)
         {
             return View("~/Views/Home/Index.cshtml");
@@ -67,13 +68,11 @@ namespace project_fob.Controllers
 
         public ActionResult ImStillHere(string value, string meetingString)
         {
-            if (HaveCookieId())
+            if (HaveCookieId(out var userId))
             {
-                string userId = GetCookieId();
-
-                Topic fob = db.Topic.Include(x => x.Meeting).ThenInclude(x => x.Stats).Include(x => x.Fobbed).Single(f => f.Meeting.MeetingId == meetingString);
-                int topic = fob.TopicValue;
-                if (!fob.Meeting.Active)
+                Meeting meeting = db.Meeting.Include(x => x.Fobbed).Single(f => f.MeetingId == meetingString);
+                int topic = meeting.TopicCounter;
+                if (!meeting.Active)
                 {
                     topic = -1;
                 }
