@@ -25,7 +25,7 @@ namespace project_fob.Models
 
         static public User GetOrCreateUser(Guid id, ApplicationDbContext db)
         {
-            User user = db.User.SingleOrDefault(x=>x.Id.Equals(id));
+            User user = db.User.SingleOrDefault(x => x.Id.Equals(id));
             if (user == null)
             {
                 user = new User(id);
@@ -35,17 +35,22 @@ namespace project_fob.Models
 
         public override bool Equals(object obj)
         {
-            if (obj is User paramater)
-            {
-                return Equals(paramater);
-            }
             if (obj is String parameter)
             {
                 Guid result;
                 Guid.TryParse(parameter, out result);
-                return Equals(result);
+                
+                return Id.Equals(result);
             }
-            return false;
+            else
+            {
+                 return base.Equals(obj);
+            }
+        }
+
+        public override int GetHashCode()
+        {
+            return 2108858624 + EqualityComparer<Guid>.Default.GetHashCode(Id);
         }
 
         //private bool Equals(User parameter)

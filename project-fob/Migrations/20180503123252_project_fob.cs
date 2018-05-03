@@ -26,27 +26,6 @@ namespace projectfob.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Fob",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    MeetingId = table.Column<int>(nullable: true),
-                    TopicStartTime = table.Column<DateTime>(nullable: false),
-                    TopicValue = table.Column<int>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Fob", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Fob_Meeting_MeetingId",
-                        column: x => x.MeetingId,
-                        principalTable: "Meeting",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Host",
                 columns: table => new
                 {
@@ -89,19 +68,22 @@ namespace projectfob.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "User",
+                name: "Topic",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(nullable: false),
-                    TopicId = table.Column<int>(nullable: true)
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    MeetingId = table.Column<int>(nullable: true),
+                    TopicStartTime = table.Column<DateTime>(nullable: false),
+                    TopicValue = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_User", x => x.Id);
+                    table.PrimaryKey("PK_Topic", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_User_Fob_TopicId",
-                        column: x => x.TopicId,
-                        principalTable: "Fob",
+                        name: "FK_Topic_Meeting_MeetingId",
+                        column: x => x.MeetingId,
+                        principalTable: "Meeting",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -126,10 +108,23 @@ namespace projectfob.Migrations
                         onDelete: ReferentialAction.Restrict);
                 });
 
-            migrationBuilder.CreateIndex(
-                name: "IX_Fob_MeetingId",
-                table: "Fob",
-                column: "MeetingId");
+            migrationBuilder.CreateTable(
+                name: "User",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false),
+                    TopicId = table.Column<int>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_User", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_User_Topic_TopicId",
+                        column: x => x.TopicId,
+                        principalTable: "Topic",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Host_MeetingId",
@@ -145,6 +140,11 @@ namespace projectfob.Migrations
                 name: "IX_StatsClick_StatsId",
                 table: "StatsClick",
                 column: "StatsId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Topic_MeetingId",
+                table: "Topic",
+                column: "MeetingId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_User_TopicId",
@@ -167,7 +167,7 @@ namespace projectfob.Migrations
                 name: "Stats");
 
             migrationBuilder.DropTable(
-                name: "Fob");
+                name: "Topic");
 
             migrationBuilder.DropTable(
                 name: "Meeting");

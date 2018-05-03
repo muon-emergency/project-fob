@@ -11,7 +11,7 @@ using System;
 namespace projectfob.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20180503122050_project_fob")]
+    [Migration("20180503123252_project_fob")]
     partial class project_fob
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -107,7 +107,7 @@ namespace projectfob.Migrations
 
                     b.HasIndex("MeetingId");
 
-                    b.ToTable("Fob");
+                    b.ToTable("Topic");
                 });
 
             modelBuilder.Entity("project_fob.Models.User", b =>

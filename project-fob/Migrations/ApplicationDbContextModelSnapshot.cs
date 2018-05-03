@@ -106,7 +106,7 @@ namespace projectfob.Migrations
 
                     b.HasIndex("MeetingId");
 
-                    b.ToTable("Fob");
+                    b.ToTable("Topic");
                 });
 
             modelBuilder.Entity("project_fob.Models.User", b =>
