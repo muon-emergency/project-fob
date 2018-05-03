@@ -1,5 +1,5 @@
 ﻿<script type="text/javascript">
-    
+
     var counter = 0;
     function reset() {
 			$.ajax({ //Needs to check if the database is running/ can connect. If not should dc from room or tell the user
@@ -14,7 +14,7 @@
 				}
 			});
 		}
-    
+
         	var errorCounter = 0;
     function runUpdate() { // host controller, refresh
 			        setTimeout(runUpdate, 1000);
@@ -23,9 +23,16 @@
                         url: '@Url.Action("Refresh", "Host")',
                         data: { meetingIdString : "@ViewBag.meetingid" },
                         success: function (result) {
-                            var label = document.getElementById('fobcount');
-                            label.textContent = result;
-                            
+
+                            var res = result.toString();
+                            var split = res.split(';')
+                            var foblabel = document.getElementById('fobcount');
+                            foblabel.textContent = split[0];
+
+                            var topiclabel = document.getElementById('topiccount');
+                            topiclabel.textContent = split[1];
+
+
 				        },
                         error: function () {
 					        errorCounter++;
@@ -42,7 +49,7 @@
         alert("hello there");
         alert("General Kenobi");
     }
-    
+
     window.addEventListener('load', function () {
         runUpdate();
     })
@@ -53,13 +60,19 @@
 
 
 <div class="wrapper">
-    <button class="buttonhost" onclick="reset()" onload="load()">Next Topic</button>
-    <br />
-    <br />
-    <p style="font-size:24px">
-        # of fobs:
-        <label id="fobcount"> *</label>
-    </p>
+    <div class="hostwrapper">
+        <p style="font-size:16px">
+            Topic #:
+            <label id="topiccount"> *</label>
+        </p>
+        <button class="buttonhost" onclick="reset()" onload="load()">Next Topic</button>
+        <br />
+        <br />
+        <p style="font-size:24px">
+            # of fobs:
+            <label id="fobcount"> *</label>
+        </p>
+    </div>
 </div>
 
 

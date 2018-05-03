@@ -245,8 +245,12 @@ footer{
     text-align: center;
 }
 
+.hostwrapper{
+	margin-top: 10%;
+}
+
 .buttonhost {
-    margin-top: 35%;
+	margin-top: 15%;
     margin-left: auto;
     margin-right: auto;
     width: 40%;

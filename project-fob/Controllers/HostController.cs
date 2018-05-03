@@ -68,7 +68,7 @@ namespace project_fob.Controllers
             }
 
             //First number are the total users, the second number is the voted users.
-            return Content(meeting.Fobbed.Count.ToString());
+            return Content(meeting.Fobbed.Count.ToString()+";"+meeting.TopicCounter);
         }
 
         public ActionResult Reset(string meetingIdString)
