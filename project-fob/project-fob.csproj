@@ -7,7 +7,6 @@
 
   <ItemGroup>
     <Compile Remove="Models\Attendee.cs" />
-    <Compile Remove="Models\ErrorViewModel.cs" />
   </ItemGroup>
 
   <ItemGroup>
