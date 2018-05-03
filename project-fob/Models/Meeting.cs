@@ -1,4 +1,5 @@
 ﻿using project_fob.Controllers;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -19,18 +20,34 @@ namespace project_fob.Models
         public string HostPassword { get; set; }
 
         public List<Stats> Stats { get; set; }
-        public List<Host> Host { get; set; }
+
+
+
+        public int TopicCounter { get; set; }
+
+        public List<User> Fobbed { get; set; } = new List<User>();
+
 
         public Meeting() { }
 
-        public Meeting(string meetingid, Host host, string attendeePassword, string hostPassword)
+        public Meeting(string meetingid, string attendeePassword, string hostPassword)
         {
             Active = true;
             MeetingId = meetingid;
             RoomPassword = attendeePassword;
             HostPassword = hostPassword;
-            Host = new List<Host>() { host };
             Stats = new List<Stats>();
+        }
+
+        internal void UserPressedFob(Guid id, Data.ApplicationDbContext db)
+        {
+            Fobbed.Add(db.User.Find(id) ?? new User { Id = id });
+        }
+
+        public void RestartFobbed()
+        {
+            Fobbed.Clear();
+            TopicCounter++;
         }
     }
 }
