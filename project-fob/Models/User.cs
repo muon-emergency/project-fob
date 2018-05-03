@@ -15,58 +15,5 @@ namespace project_fob.Models
     {
         [Key]
         public Guid Id { get; set; }
-
-        public User() { }
-
-        public User(Guid id)
-        {
-            Id = id;
-        }
-
-        static public User GetOrCreateUser(Guid id, ApplicationDbContext db)
-        {
-            User user = db.User.SingleOrDefault(x => x.Id.Equals(id));
-            if (user == null)
-            {
-                user = new User(id);
-            }
-            return user;
-        }
-
-        public override bool Equals(object obj)
-        {
-            if (obj is String parameter)
-            {
-                Guid result;
-                Guid.TryParse(parameter, out result);
-                
-                return Id.Equals(result);
-            }
-            else
-            {
-                 return base.Equals(obj);
-            }
-        }
-
-        public override int GetHashCode()
-        {
-            return 2108858624 + EqualityComparer<Guid>.Default.GetHashCode(Id);
-        }
-
-        //private bool Equals(User parameter)
-        //{
-        //    if (parameter.Equals(Id))
-        //    {
-        //        return true;
-        //    }
-        //    return false;
-        //}
-
-        //public override int GetHashCode()
-        //{
-        //    var hashCode = -1403531409;
-        //    hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(UserId);
-        //    return hashCode;
-        //}
     }
 }
