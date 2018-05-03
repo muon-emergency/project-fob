@@ -48,10 +48,8 @@ namespace project_fob.Controllers
 
             UpdateCookies();
 
-            Host host = new Host();
-            db.Host.Add(host);
 
-            Meeting meet = new Meeting(GenerateMeetingId(), host, attendeePassword, hostPassword);
+            Meeting meet = MeetingWrapper.CreateMeeting(GenerateMeetingId(), attendeePassword, hostPassword,db);
 
             while (db.Meeting.Any(m => m.MeetingId.Equals(meet.MeetingId.ToString())))
             {
@@ -59,8 +57,6 @@ namespace project_fob.Controllers
             }
 
             db.Meeting.Add(meet);
-
-            db.Fob.Add(new Fob(meet));
             db.SaveChanges();
 
             ViewBag.title = "Meeting Id: ";
@@ -82,15 +78,11 @@ namespace project_fob.Controllers
                 //host
                 if (password.Equals(meet.HostPassword))
                 {
-
                     UpdateCookies();
-                    string id = GetUserIDFromCookie();
+                    var id = Guid.Parse(GetUserIDFromCookie());
 
                     if (meet.Active)
                     {
-                        Host host = new Host(id, meet);
-                        db.Host.Add(host);
-
                         ViewBag.title = "Meeting Id: ";
                         ViewBag.meetingid = meet.MeetingId;
 

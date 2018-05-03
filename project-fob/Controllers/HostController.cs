@@ -31,14 +31,14 @@ namespace project_fob.Controllers
 
             return Content(QrCodeUrlBuilder.BuildUrl(meetingIdString, Request.GetDisplayUrl(), meet.RoomPassword));
         }
-        
+
         public ActionResult Finish(string message)
         {
-            Fob fob = db.Fob.Include(x => x.Meeting).ThenInclude(x => x.Stats)
-                            .Single(f => f.Meeting.MeetingId == message);
+            Meeting meeting = db.Meeting.Include(x => x.Stats)
+                            .Single(f => f.MeetingId == message);
 
-            fob.Meeting.Stats.Add(new Stats(0, fob.Fobbed.Count, fob.TopicStartTime, DateTime.Now));
-            fob.Meeting.Active = false;
+            meeting.Stats.Add(new Stats { Attendeescount = 0, Fobcount = meeting.Fobbed.Count });
+            meeting.Active = false;
             db.SaveChanges();
 
             ViewBag.meetingid = message;
@@ -60,25 +60,25 @@ namespace project_fob.Controllers
                 ViewBag.title = message;
             }
 
-            Fob fob = Fob.getFob(meetingIdString, db);
+            Meeting meeting = db.Meeting.Include(x => x.Fobbed).SingleOrDefault(f => f.MeetingId == meetingIdString);
 
-            if (fob == null)
+            if (meeting == null)
             {
                 throw new ArgumentNullException();
             }
 
             //First number are the total users, the second number is the voted users.
-            return Content(fob.Fobbed.Count.ToString());
+            return Content(meeting.Fobbed.Count.ToString());
         }
 
         public ActionResult Reset(string meetingIdString)
         {
-            Fob fob = db.Fob.Include(x => x.Meeting).ThenInclude(x => x.Stats)
-                            .Include(x=>x.Fobbed)
-                            .Single(f => f.Meeting.MeetingId == meetingIdString);
+            Meeting meeting = db.Meeting.Include(x => x.Stats)
+                            .Include(x => x.Fobbed)
+                            .Single(f => f.MeetingId == meetingIdString);
 
-            fob.Meeting.Stats.Add(new Stats(0, fob.Fobbed.Count, fob.TopicStartTime, DateTime.Now));
-            fob.RestartFobbed();
+            meeting.Stats.Add(new Stats { Attendeescount = 0, Fobcount = meeting.Fobbed.Count });
+            MeetingWrapper.RestartFobbed(meeting);
 
             db.SaveChanges();
             return Ok();

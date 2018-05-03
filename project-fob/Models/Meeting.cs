@@ -1,4 +1,6 @@
 ﻿using project_fob.Controllers;
+using project_fob.Data;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -11,7 +13,7 @@ namespace project_fob.Models
         [Key]
         public int Id { get; set; }
 
-        [StringLength(9)]
+        [StringLength(6)]
         public string MeetingId { get; set; }
         [Required]
         public bool Active { get; set; }
@@ -19,18 +21,9 @@ namespace project_fob.Models
         public string HostPassword { get; set; }
 
         public List<Stats> Stats { get; set; }
-        public List<Host> Host { get; set; }
 
-        public Meeting() { }
+        public int TopicCounter { get; set; }
 
-        public Meeting(string meetingid, Host host, string attendeePassword, string hostPassword)
-        {
-            Active = true;
-            MeetingId = meetingid;
-            RoomPassword = attendeePassword;
-            HostPassword = hostPassword;
-            Host = new List<Host>() { host };
-            Stats = new List<Stats>();
-        }
+        public List<User> Fobbed { get; set; } = new List<User>();
     }
 }

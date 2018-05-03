@@ -20,38 +20,6 @@ namespace projectfob.Migrations
                 .HasAnnotation("ProductVersion", "2.0.1-rtm-125")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("project_fob.Models.Fob", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<int?>("MeetingId");
-
-                    b.Property<DateTime>("TopicStartTime");
-
-                    b.Property<int>("TopicValue");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("MeetingId");
-
-                    b.ToTable("Fob");
-                });
-
-            modelBuilder.Entity("project_fob.Models.Host", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<int?>("MeetingId");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("MeetingId");
-
-                    b.ToTable("Host");
-                });
-
             modelBuilder.Entity("project_fob.Models.Meeting", b =>
                 {
                     b.Property<int>("Id")
@@ -62,9 +30,11 @@ namespace projectfob.Migrations
                     b.Property<string>("HostPassword");
 
                     b.Property<string>("MeetingId")
-                        .HasMaxLength(9);
+                        .HasMaxLength(6);
 
                     b.Property<string>("RoomPassword");
+
+                    b.Property<int>("TopicCounter");
 
                     b.HasKey("Id");
 
@@ -81,10 +51,6 @@ namespace projectfob.Migrations
                     b.Property<int>("Fobcount");
 
                     b.Property<int?>("MeetingId");
-
-                    b.Property<DateTime>("TopicStartTime");
-
-                    b.Property<DateTime>("TopicStopTime");
 
                     b.HasKey("Id");
 
@@ -111,33 +77,16 @@ namespace projectfob.Migrations
 
             modelBuilder.Entity("project_fob.Models.User", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<int?>("FobId");
-
-                    b.Property<string>("UserId")
-                        .HasMaxLength(32);
+                    b.Property<int?>("MeetingId");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("FobId");
+                    b.HasIndex("MeetingId");
 
                     b.ToTable("User");
-                });
-
-            modelBuilder.Entity("project_fob.Models.Fob", b =>
-                {
-                    b.HasOne("project_fob.Models.Meeting", "Meeting")
-                        .WithMany()
-                        .HasForeignKey("MeetingId");
-                });
-
-            modelBuilder.Entity("project_fob.Models.Host", b =>
-                {
-                    b.HasOne("project_fob.Models.Meeting", "Meeting")
-                        .WithMany("Host")
-                        .HasForeignKey("MeetingId");
                 });
 
             modelBuilder.Entity("project_fob.Models.Stats", b =>
@@ -156,9 +105,9 @@ namespace projectfob.Migrations
 
             modelBuilder.Entity("project_fob.Models.User", b =>
                 {
-                    b.HasOne("project_fob.Models.Fob")
+                    b.HasOne("project_fob.Models.Meeting")
                         .WithMany("Fobbed")
-                        .HasForeignKey("FobId");
+                        .HasForeignKey("MeetingId");
                 });
 #pragma warning restore 612, 618
         }

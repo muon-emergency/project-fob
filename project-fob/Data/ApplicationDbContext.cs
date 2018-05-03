@@ -25,8 +25,7 @@ namespace project_fob.Data
             // Add your customizations after calling base.OnModelCreating(builder);
         }
         
-        public DbSet<Host> Host { get; set; }
         public DbSet<Meeting> Meeting { get; set; }
-        public DbSet<Fob> Fob { get; set; }
+        public DbSet<User> User { get; set; }
     }
 }
