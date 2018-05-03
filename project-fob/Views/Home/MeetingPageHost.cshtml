@@ -23,10 +23,6 @@
                         url: '@Url.Action("Refresh", "Host")',
                         data: { meetingIdString : "@ViewBag.meetingid" },
                         success: function (result) {
-                            //alert("hey");
-                            //This still need fixed
-                            //updateChart(result, result);
-
                             var label = document.getElementById('fobcount');
                             label.textContent = result;
                             
