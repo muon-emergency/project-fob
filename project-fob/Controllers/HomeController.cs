@@ -60,7 +60,7 @@ namespace project_fob.Controllers
 
             db.Meeting.Add(meet);
 
-            db.Fob.Add(new Fob(meet));
+            db.Fob.Add(new Topic(meet));
             db.SaveChanges();
 
             ViewBag.title = "Meeting Id: ";

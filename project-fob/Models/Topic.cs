@@ -9,7 +9,7 @@ using System.Linq;
 
 namespace project_fob.Models
 {
-    public class Fob
+    public class Topic
     {
         [Key]
         public int Id { get; set; }
@@ -21,8 +21,8 @@ namespace project_fob.Models
 
         public List<User> Fobbed { get; set; } = new List<User>();
         
-        public Fob() { }
-        public Fob(Meeting meeting)
+        public Topic() { }
+        public Topic(Meeting meeting)
         {
             Meeting = meeting;
             Fobbed = new List<User>();
@@ -30,7 +30,7 @@ namespace project_fob.Models
             TopicValue = 0;
         }
 
-        public static Fob getFob(string meetingid, ApplicationDbContext db)
+        public static Topic getFob(string meetingid, ApplicationDbContext db)
         {
             return db.Fob.Include(x => x.Meeting).Include(x=> x.Fobbed).SingleOrDefault(f => f.Meeting.MeetingId == meetingid);
         }

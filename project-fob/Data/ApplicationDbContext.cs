@@ -27,6 +27,6 @@ namespace project_fob.Data
         
         public DbSet<Host> Host { get; set; }
         public DbSet<Meeting> Meeting { get; set; }
-        public DbSet<Fob> Fob { get; set; }
+        public DbSet<Topic> Fob { get; set; }
     }
 }
