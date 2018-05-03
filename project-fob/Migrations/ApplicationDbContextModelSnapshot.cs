@@ -44,7 +44,7 @@ namespace projectfob.Migrations
                     b.Property<string>("HostPassword");
 
                     b.Property<string>("MeetingId")
-                        .HasMaxLength(9);
+                        .HasMaxLength(6);
 
                     b.Property<string>("RoomPassword");
 

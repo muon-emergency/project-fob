@@ -17,7 +17,7 @@ namespace projectfob.Migrations
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     Active = table.Column<bool>(nullable: false),
                     HostPassword = table.Column<string>(nullable: true),
-                    MeetingId = table.Column<string>(maxLength: 9, nullable: true),
+                    MeetingId = table.Column<string>(maxLength: 6, nullable: true),
                     RoomPassword = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
