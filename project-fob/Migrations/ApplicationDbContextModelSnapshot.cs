@@ -59,22 +59,6 @@ namespace projectfob.Migrations
                     b.ToTable("Stats");
                 });
 
-            modelBuilder.Entity("project_fob.Models.StatsClick", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<DateTime>("ClickTime");
-
-                    b.Property<int?>("StatsId");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("StatsId");
-
-                    b.ToTable("StatsClick");
-                });
-
             modelBuilder.Entity("project_fob.Models.User", b =>
                 {
                     b.Property<Guid>("Id")
@@ -94,13 +78,6 @@ namespace projectfob.Migrations
                     b.HasOne("project_fob.Models.Meeting")
                         .WithMany("Stats")
                         .HasForeignKey("MeetingId");
-                });
-
-            modelBuilder.Entity("project_fob.Models.StatsClick", b =>
-                {
-                    b.HasOne("project_fob.Models.Stats")
-                        .WithMany("Clicks")
-                        .HasForeignKey("StatsId");
                 });
 
             modelBuilder.Entity("project_fob.Models.User", b =>

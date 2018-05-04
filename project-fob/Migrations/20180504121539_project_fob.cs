@@ -65,35 +65,10 @@ namespace projectfob.Migrations
                         onDelete: ReferentialAction.Restrict);
                 });
 
-            migrationBuilder.CreateTable(
-                name: "StatsClick",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    ClickTime = table.Column<DateTime>(nullable: false),
-                    StatsId = table.Column<int>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_StatsClick", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_StatsClick_Stats_StatsId",
-                        column: x => x.StatsId,
-                        principalTable: "Stats",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
             migrationBuilder.CreateIndex(
                 name: "IX_Stats_MeetingId",
                 table: "Stats",
                 column: "MeetingId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_StatsClick_StatsId",
-                table: "StatsClick",
-                column: "StatsId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_User_MeetingId",
@@ -104,13 +79,10 @@ namespace projectfob.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "StatsClick");
+                name: "Stats");
 
             migrationBuilder.DropTable(
                 name: "User");
-
-            migrationBuilder.DropTable(
-                name: "Stats");
 
             migrationBuilder.DropTable(
                 name: "Meeting");
