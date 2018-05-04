@@ -24,15 +24,19 @@
                         data: { meetingIdString : "@ViewBag.meetingid" },
                         success: function (result) {
 
-                            var res = result.toString();
-                            var split = res.split(';')
-                            var foblabel = document.getElementById('fobcount');
-                            foblabel.textContent = split[0];
+                            if (result == "-1") {
+                                var res = result.toString();
+                                var split = res.split(';')
 
-                            var topiclabel = document.getElementById('topiccount');
-                            topiclabel.textContent = split[1];
+                                    var foblabel = document.getElementById('fobcount');
+                                    foblabel.textContent = split[0];
 
-
+                                    var topiclabel = document.getElementById('topiccount');
+                                    topiclabel.textContent = split[1];
+                                }
+                                else {
+                                    alert("Meeting closed");
+                                }
 				        },
                         error: function () {
 					        errorCounter++;
