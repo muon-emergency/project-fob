@@ -51,10 +51,10 @@ namespace project_fob.Controllers
 
             Meeting meet = MeetingWrapper.CreateMeeting(GenerateMeetingId(), attendeePassword, hostPassword,db);
 
-            while (db.Meeting.Any(m => m.MeetingId.Equals(meet.MeetingId.ToString())))
+            /*while (db.Meeting.Any(m => m.MeetingId.Equals(meet.MeetingId.ToString())))
             {
                 meet.MeetingId = GenerateMeetingId();
-            }
+            }*/
 
             db.Meeting.Add(meet);
             db.SaveChanges();
