@@ -25,17 +25,17 @@
                         success: function (result) {
 
                             if (result == "-1") {
+                                alert("Meeting closed");
+                                }
+                                else {
                                 var res = result.toString();
                                 var split = res.split(';')
 
-                                    var foblabel = document.getElementById('fobcount');
-                                    foblabel.textContent = split[0];
+                                var foblabel = document.getElementById('fobcount');
+                                foblabel.textContent = split[0];
 
-                                    var topiclabel = document.getElementById('topiccount');
-                                    topiclabel.textContent = split[1];
-                                }
-                                else {
-                                    alert("Meeting closed");
+                                var topiclabel = document.getElementById('topiccount');
+                                topiclabel.textContent = split[1];
                                 }
 				        },
                         error: function () {
