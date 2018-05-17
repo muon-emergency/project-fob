@@ -26,38 +26,25 @@ namespace project_fob.Controllers
 
         public ActionResult Fob(string value, string meetingString)
         {
-            if (HaveCookieId(out var id))
+            if (CookieHandler.HaveCookieId(out var id, this))
             {
-                string userId = GetCookieId();
+                Meeting meeting = db.Meeting.Include(x => x.Fobbed).Single(f => f.MeetingId == meetingString);
+                if (meeting.Active)
+                {
+                    MeetingHandler.UserPressedFob(meeting, id, db);
 
-                Meeting meeting = db.Meeting.Include(x=> x.Fobbed).Single(f => f.MeetingId == meetingString);
-
-                MeetingWrapper.UserPressedFob(meeting, id, db);
-
-                db.SaveChanges();
-                return Ok();
+                    db.SaveChanges();
+                    return Ok();
+                }
+                else
+                {
+                    return Content("closed");
+                }
             }
             else
             {
                 return RedirectToAction("Index", "Home");
             }
-        }
-
-        private bool HaveCookieId(out Guid id)
-        {
-            string strignId = Request.Cookies["ID"];
-            if (strignId == null || strignId.Length == 0)
-            {
-                return false;
-            }
-
-            return Guid.TryParse(strignId, out id);
-        }
-
-        private string GetCookieId()
-        {
-            //This method does not check if the cookie is correct or not. Please use HaveCookieId
-            return Request.Cookies["ID"];
         }
 
         public ActionResult ExitMeeting(string value)
@@ -67,16 +54,16 @@ namespace project_fob.Controllers
 
         public ActionResult ImStillHere(string value, string meetingString)
         {
-            if (HaveCookieId(out var userId))
+            if (CookieHandler.HaveCookieId(out var userId, this))
             {
-                Meeting meeting = db.Meeting.Include(x => x.Fobbed).Single(f => f.MeetingId == meetingString);
+                Meeting meeting = MeetingHandler.GetMeetingWithFobbed(meetingString, db);
                 int topic = meeting.TopicCounter;
                 if (!meeting.Active)
                 {
                     topic = -1;
                 }
 
-                return Content(topic+"");
+                return Content(topic + "");
             }
             else
             {
