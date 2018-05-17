@@ -34,11 +34,16 @@ namespace project_fob.Controllers
 
         public ActionResult Finish(string message)
         {
-            Meeting meeting = MeetingHandler.GetMeetingWithStats(message, db);
+            Meeting meeting = db.Meeting.Include(x => x.Stats)
+                            .Single(f => f.MeetingId == message);
 
-            MeetingHandler.FinishMeeting(meeting,db);
+            meeting.Stats.Add(new Stats { Attendeescount = 0, Fobcount = meeting.Fobbed.Count });
+            meeting.Active = false;
+            db.SaveChanges();
 
             ViewBag.meetingid = message;
+
+            //needs to go to the statspage and display the correct stats???
 
             return View("~/Views/Home/StatScreen.cshtml");
         }
@@ -55,12 +60,11 @@ namespace project_fob.Controllers
                 ViewBag.title = message;
             }
 
-            Meeting meeting = MeetingHandler.GetMeetingWithFobbed(meetingIdString, db);
+            Meeting meeting = db.Meeting.Include(x => x.Fobbed).SingleOrDefault(f => f.MeetingId == meetingIdString);
 
             if (meeting == null)
             {
-                ViewBag.title = "Error";
-                return RedirectToAction("Index");
+                throw new ArgumentNullException();
             }
 
             //First number are the total users, the second number is the voted users.
@@ -81,7 +85,7 @@ namespace project_fob.Controllers
                             .Single(f => f.MeetingId == meetingIdString);
 
             meeting.Stats.Add(new Stats { Attendeescount = 0, Fobcount = meeting.Fobbed.Count });
-            MeetingHandler.RestartFobbed(meeting);
+            MeetingWrapper.RestartFobbed(meeting);
 
             db.SaveChanges();
             return Ok();

@@ -37,16 +37,24 @@ namespace project_fob.Controllers
         //Create Meeting
         public ActionResult MeetingPageHost(string attendeePassword, string hostPassword)
         {
+            //The password will require different way to send it because atm it is visible
+
             attendeePassword = attendeePassword ?? "";
-            if (!CheckPasswordsAreCorrectForHosting(attendeePassword, hostPassword))
+            if (!CheckPasswordsAreCorrectForHosting(attendeePassword,hostPassword))
             {
                 ViewBag.title = "Error: Password error";
                 return View("index");
             }
 
-            CookieHandler.CreateOrUpdateCookies(this);
+            UpdateCookies();
 
-            Meeting meet = MeetingHandler.CreateMeetingWithUniqueId(IDGenerators.GenerateMeetingId(), attendeePassword, hostPassword, db);
+
+            Meeting meet = MeetingWrapper.CreateMeeting(GenerateMeetingId(), attendeePassword, hostPassword,db);
+
+            while (db.Meeting.Any(m => m.MeetingId.Equals(meet.MeetingId.ToString())))
+            {
+                meet.MeetingId = GenerateMeetingId();
+            }
 
             db.Meeting.Add(meet);
             db.SaveChanges();
@@ -61,21 +69,41 @@ namespace project_fob.Controllers
         {
             password = password ?? "";
             meetingId = meetingId ?? "";
+
             meetingId = meetingId.ToUpper();
-            //Meeting meet = db.Meeting.SingleOrDefault(m => m.MeetingId == meetingId);
-            Meeting meet = MeetingHandler.GetMeeting(meetingId, db);
+            Meeting meet = db.Meeting.SingleOrDefault(m => m.MeetingId == meetingId);
 
             if (meet != null && meetingId.Equals(meet.MeetingId))
             {
                 //host
                 if (password.Equals(meet.HostPassword))
                 {
-                    return JoinAsHost(meet);
+                    UpdateCookies();
+                    var id = Guid.Parse(GetUserIDFromCookie());
+
+                    if (meet.Active)
+                    {
+                        ViewBag.title = "Meeting Id: ";
+                        ViewBag.meetingid = meet.MeetingId;
+
+                        db.SaveChanges();
+                        return View("MeetingPageHost");
+                    }
+                    else
+                    {
+                        return View("~/Views/Home/StatScreen.cshtml");
+                    }
                 }
                 else if (password == meet.RoomPassword && meet.Active)
                 {
                     //join as attendee
-                    return JoinAsAttendee(meetingId);
+                    UpdateCookies();
+                    string id = GetUserIDFromCookie();
+
+                    ViewBag.title = "Id: ";
+                    ViewBag.meetingid = meetingId;
+                    db.SaveChanges();
+                    return View();
                 }
                 else
                 {
@@ -89,32 +117,56 @@ namespace project_fob.Controllers
             return View("Index");
         }
 
-        private ActionResult JoinAsHost(Meeting meet)
+
+        public ActionResult UpdateCookies()
         {
-            CookieHandler.ManageAndReturnCookie(this);
+            string id = GetUserIDFromCookie();
+            SetCookie(id);
+            return Ok();
+        }
 
-            if (meet.Active)
+        public string GetUserID()
+        {
+            string id = GetUserIDFromCookie();
+            SetCookie(id);
+            return id;
+        }
+
+        private static string GenerateId()
+        {
+            return Guid.NewGuid().ToString("N");
+        }
+
+        private static string GenerateMeetingId()
+        {
+            return GenerateUnambiguousMeetingIdByLength(6);
+        }
+
+        private static string GenerateUnambiguousMeetingIdByLength(int length)
+        {
+            Random random = new Random();
+            const string chars = "367CDFGHJKMNPRTWX";
+            return new string(Enumerable.Repeat(chars, length).Select(s => s[random.Next(s.Length)]).ToArray());
+        }
+
+        private string GetUserIDFromCookie()
+        {
+            return Request.Cookies["ID"];
+        }
+
+        private void SetCookie(string id)
+        {
+            CookieOptions cookie = new CookieOptions();
+            cookie.Expires = DateTime.Now.AddYears(5);
+            if (id == null || id.Length == 0)
             {
-                ViewBag.title = "Meeting Id: ";
-                ViewBag.meetingid = meet.MeetingId;
-
-                db.SaveChanges();
-                return View("MeetingPageHost");
+                Response.Cookies.Append("ID", GenerateId());
             }
             else
             {
-                return View("~/Views/Home/StatScreen.cshtml");
+                Response.Cookies.Append("ID", id);
             }
-        }
 
-        private ActionResult JoinAsAttendee(string meetingId)
-        {
-            CookieHandler.ManageAndReturnCookie(this);
-
-            ViewBag.title = "Id: ";
-            ViewBag.meetingid = meetingId;
-            db.SaveChanges();
-            return View();
         }
 
         public static bool CheckPasswordsAreCorrectForHosting(string attendeePassword, string hostPassword)
@@ -130,5 +182,17 @@ namespace project_fob.Controllers
             }
             return true;
         }
+
+        private void SetCookie(string id, string value)
+        {
+            CookieOptions cookie = new CookieOptions();
+            cookie.Expires = DateTime.Now.AddYears(5);
+            if (id != null && id.Length == 0)
+            {
+                Response.Cookies.Append(id, value);
+            }
+        }
+
+
     }
 }
