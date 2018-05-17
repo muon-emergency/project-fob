@@ -24,8 +24,9 @@
                         data: { meetingIdString : "@ViewBag.meetingid" },
                         success: function (result) {
 
-                            if (result == "-1") {
+                            if (result == "closed") {
                                 alert("Meeting closed");
+                                window.location = "index";
                                 }
                                 else {
                                 var res = result.toString();
