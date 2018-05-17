@@ -81,17 +81,17 @@
 		</div>
 		@using (Html.BeginForm("meetingPageHost", "Home", FormMethod.Post)) {
 			<div id="CreateMeeting">
-				<input id="attendeePassword" name="attendeePassword" onkeyup="checkPasswordIfSame()" placeholder="Room password" type="password" /><br />
-				<input id="hostPassword" name="hostPassword" onkeyup="checkPasswordIfSame()" placeholder="Host password (can't be empty)" type="password" /><br />
+				<input id="attendeePassword" class="widest" name="attendeePassword" onkeyup="checkPasswordIfSame()" placeholder="Room password" type="password" /><br />
+				<input id="hostPassword" class=" widest" name="hostPassword" onkeyup="checkPasswordIfSame()" placeholder="Host password (can't be empty)" type="password" /><br />
 
 				<div class="centerButton">
-					<input id="createMeetingButton" type="submit"disabled value="Create Meeting" /><br />
+					<input id="createMeetingButton" class="wide" type="submit"disabled value="Create Meeting" /><br />
 				</div>
 			</div>
 		}
 		<div class="centerButton">
-			<button id="backC"onclick="switchBetweenMenu()">Switch to Create Meeting</button>
-		    <button id="backE" onclick="switchBetweenMenu()">Switch to Enter Meeting</button>
+			<button id="backC" class="greyish" onclick="switchBetweenMenu()">Switch to Create Meeting</button>
+		    <button id="backE" class="greyish" onclick="switchBetweenMenu()">Switch to Enter Meeting</button>
 		</div>
 
 		
@@ -99,12 +99,12 @@
 		
 			@using (Html.BeginForm("meetingPageUser", "Home", FormMethod.Post)) {
 				<div id="EnterMeeting">
-					<input id="meetingId" name="meetingId" onkeyup="checkId()" placeholder="Meeting id" type="text" /><br />
-					<input id="meetingPassword" name="password" placeholder="Room OR Host Password (Can be empty)" type="password" /><br />
+					<input id="meetingId" class="widest" name="meetingId" onkeyup="checkId()" placeholder="Meeting id" type="text" /><br />
+					<input id="meetingPassword" class="widest" name="password" placeholder="Room OR Host Password (Can be empty)" type="password" /><br />
 
 
 					<div class="centerButton">
-						<input id="enterMeetingButton" type="submit" disabled value="Enter Meeting" />
+						<input id="enterMeetingButton" class="wide" type="submit" disabled value="Enter Meeting" />
 					</div>
 				</div>
 			}
