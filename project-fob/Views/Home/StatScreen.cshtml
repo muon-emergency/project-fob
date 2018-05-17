@@ -46,42 +46,11 @@
 
                 //End of First topic
 
-                //Second topic
-
-                var averageClickAverageUsersOptions = {
-                    'chartArea': { 'width': '100%', 'height': '100%' },
-                    'legend': { 'position': 'none' },
-                    "pieSliceText": 'none',
-                    'tooltip': { trigger: 'none' },
-                    slices: {
-                        0: { color: 'red' },
-                        1: { color: 'transparent' }  //Change the color to w\e you like to
-                    },
-
-                    backgroundColor: 'transparent'
-
-                };
-
-
-                var Data_averageClickAverageUsers = [['Average fobbed']];
-
-                Data_averageClickAverageUsers.push(["Average fobbed", parseFloat(split[1])]);
-
-
-
-                var averageClickAverageUsersData = new google.visualization.arrayToDataTable(Data_averageClickAverageUsers);
-
-
-                var averageClickAverageUsersChart = new google.charts.Bar(document.getElementById('averageClickAverageUsers'));
-
-                averageClickAverageUsersChart.draw(averageClickAverageUsersData, averageClickAverageUsersOptions);
+               
 
 
             }
         });
-
-        var averageClickAverageUsersChart = new google.charts.Bar(document.getElementById('averageClickAverageUsers'));
-        averageClickAverageUsersChart.draw(averageClickAverageUsersData, averageClickAverageUsersOptions);
 
     };
 
