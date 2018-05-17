@@ -64,10 +64,26 @@
                     url: '@Url.Action("Fob", "Attendee")',
                     data: { meetingString: "@ViewBag.meetingId"},
                     success: function (result) {
+                        var msg = document.getElementById("message");
+                        if (msg.classList.contains("redbackground")) {
+                            msg.classList.remove("redbackground");
+                        }
+                        msg.classList.add("greenbackground");
+                        $("#message").fadeIn(1);
+                        $("#message").fadeOut(3000);
+                        msg.textContent = "Fobbed";
 
                     },
                     error: function(){
-                        alert("Connection error");
+                        //alert("Connection error");
+                        var msg = document.getElementById("message");
+                        if (msg.classList.contains("greenbackground")) {
+                            msg.classList.remove("greenbackground");
+                        }
+                        msg.classList.add("redbackground");
+                        $("#message").fadeIn(1);
+                        $("#message").fadeOut(3000);
+                        msg.textContent = "Error";
                     }
                 });
 
@@ -119,7 +135,17 @@
                 }
             });
         }
+
+        
     }
+
+    window.onload = function runLoad() {
+        var msg = document.getElementById("message");
+        msg.classList.remove("hidden");
+        $("#message").fadeOut(1);
+    }
+
+    
 
     //redraw graph when window resize is completed
     $(window).on('resizeEnd', function () {
@@ -131,7 +157,7 @@
 <h1>@ViewBag.title @ViewBag.meetingid</h1>
 
 <body onresize="drawCharts()">
-
+    <p id="message" class="center hidden">msg</p> 
 
     <div id="centerOfPageForButton">
 

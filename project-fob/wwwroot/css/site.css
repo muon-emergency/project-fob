@@ -57,6 +57,22 @@ footer{
 
 }
 
+p.center {
+    text-align: center;
+}
+
+p.greenbackground {
+    background-color: #00ff00;
+}
+
+p.redbackground {
+    background-color: #ff0000;
+}
+
+p.hidden {
+    display: none;
+}
+
 
 
 
