@@ -9,9 +9,9 @@ body {
     background-color: rgb(220, 220, 220);
 }
 
-    body.bodyClass {
-        overflow-y: scroll;
-    }
+.bodyClass {
+    overflow-y: scroll;
+}
 
 /* Set padding to keep content from hitting the edges */
 /*.body-content {*/
@@ -55,19 +55,19 @@ footer {
     display: inline-block;
 }
 
-p.center {
+.center {
     text-align: center;
 }
 
-p.greenbackground {
+.greenbackground {
     background-color: #00ff00;
 }
 
-p.redbackground {
+.redbackground {
     background-color: #ff0000;
 }
 
-p.hidden {
+.hidden {
     display: none;
 }
 
@@ -91,11 +91,11 @@ p.hidden {
         margin-bottom: 0.1em;
     }
 
-button.greyish {
+.greyish {
     background-color: #AAAAAA;
 }
 
-input.widest {
+.widest {
     width: 100%;
 }
 
