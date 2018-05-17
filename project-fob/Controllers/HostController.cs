@@ -29,7 +29,9 @@ namespace project_fob.Controllers
         {
             Meeting meet = db.Meeting.Single(x => x.MeetingId.Equals(meetingIdString));
 
-            return Content(QrCodeUrlBuilder.BuildUrl(meetingIdString, Request.GetDisplayUrl(), meet.RoomPassword));
+            string url = QrCodeUrlBuilder.BuildUrl(meetingIdString, Request.GetDisplayUrl(), meet.RoomPassword);
+            @ViewBag.url = url;
+            return View("~/Views/Home/QRCode.cshtml");
         }
 
         public ActionResult Finish(string message)
