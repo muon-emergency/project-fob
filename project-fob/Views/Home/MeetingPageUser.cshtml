@@ -1,44 +1,7 @@
 ﻿<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 <script type="text/javascript">
 
-    var errorCounter = 0;
-        function runUpdate() {
-            setTimeout(runUpdate, 5000); //Run update every 5 second
-            $.ajax({
-                type: "POST",
-                url: '@Url.Action("ImStillHere", "Attendee")',
-                data: { meetingString: "@ViewBag.meetingId"},
-                success: function (result) {
-                    var returnedvalue = parseInt(result);
-                    if (topicNumber != returnedvalue) {
-                        if (returnedvalue != -1) {
-                            //Here we can put some kind of an alert in case we want to warn the user that the topic changed
-                            topicNumber = returnedvalue;
-                        } else {
-                            meetingClosed();
-
-                        }
-                    }
-                    //Refresh method which can be used for checking connection errors.
-                    errorCounter = 0;
-
-                },
-                error: function () {
-                    errorCounter++;
-                    if (errorCounter >= 3) {
-                        alert("Connection error. Returning to home page");
-                        errorCounter = 0;
-                        window.location = "index";
-                    }
-                    //alert("Sheep happens");
-                }
-            });
-    }
-
-    function meetingClosed() {
-        alert("Meeting closed.");
-        window.location = "index";
-    }
+   
 
     google.charts.load("current", { packages: ["corechart"] });
     google.charts.setOnLoadCallback(drawCharts);
@@ -77,6 +40,43 @@
 
     };
 
+     var errorCounter = 0;
+        function runUpdate() {
+            setTimeout(runUpdate, 5000); //Run update every 5 second
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("ImStillHere", "Attendee")',
+                data: { meetingString: "@ViewBag.meetingId"},
+                success: function (result) {
+                    var returnedvalue = parseInt(result);
+                    if (topicNumber != returnedvalue) {
+                        if (returnedvalue != -1) {
+                            //Here we can put some kind of an alert in case we want to warn the user that the topic changed
+                            topicNumber = returnedvalue;
+                        } else {
+                            meetingClosed();
+
+                        }
+                    }
+                    //Refresh method which can be used for checking connection errors.
+                    errorCounter = 0;
+
+                },
+                error: function () {
+                    errorCounter++;
+                    if (errorCounter >= 3) {
+                        alert("Connection error. Returning to home page");
+                        errorCounter = 0;
+                        window.location = "index";
+                    }
+                    //alert("Sheep happens");
+                }
+            });
+    }
+
+    function meetingClosed() {
+        window.location = "index";
+    }
 
     function drawCharts() {
 
