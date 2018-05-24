@@ -6,7 +6,7 @@ namespace unit_tests
     public partial class CookieHandlerTests
     {
         [Fact]
-        public void dfsdf()
+        public void TestCookieCreating()
         {
             var testCookies = new MockCookies();
 
