@@ -12,6 +12,15 @@ namespace project_fob.Controllers
     {
         private static Meeting CreateMeeting(string meetingId, string attendeePassword, string hostPassword, ApplicationDbContext db)
         {
+            if (meetingId==null||meetingId.Length==0)
+            {
+                IDGenerators.GenerateMeetingId();
+            }
+            if(hostPassword == null || hostPassword.Length == 0)
+            {
+                hostPassword = "imasmartdummy";
+            }
+            attendeePassword = attendeePassword ?? "";
             Meeting meeting = new Meeting { MeetingId = meetingId, RoomPassword = attendeePassword, HostPassword = hostPassword, Active = true };
             db.Meeting.Add(meeting);
             return meeting;
