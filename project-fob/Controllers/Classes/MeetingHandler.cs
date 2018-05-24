@@ -12,6 +12,7 @@ namespace project_fob.Controllers
     {
         private static Meeting CreateMeeting(string meetingId, string attendeePassword, string hostPassword, ApplicationDbContext db)
         {
+            attendeePassword = attendeePassword ?? "";
             if (meetingId==null||meetingId.Length==0)
             {
                 IDGenerators.GenerateMeetingId();
