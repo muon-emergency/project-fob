@@ -45,6 +45,19 @@ namespace unit_tests
         [InlineData("asd", "hey", "holly")]
         [InlineData("proly", "", "aa")]
         [InlineData("peep", "krub", "puddle")]
+        public void CreateMeeting2(string meetingId, string attendeePassword, string hostPassword)
+        {
+            Meeting meeting = MeetingHandler.CreateMeetingWithUniqueId(meetingId, attendeePassword, hostPassword, dbFixture.DbContext);
+
+            meeting.RoomPassword.Should().Be(attendeePassword);
+            meeting.HostPassword.Should().Be(hostPassword);
+            meeting.MeetingId.Should().Be(meetingId);
+        }
+
+        [Theory]
+        [InlineData("asd", "hey", "holly")]
+        [InlineData("proly", "", "aa")]
+        [InlineData("peep", "krub", "puddle")]
         public void CreateMeeting(string meetingId, string attendeePassword, string hostPassword)
         {
             Meeting meeting = MeetingHandler.CreateMeetingWithUniqueId(meetingId, attendeePassword, hostPassword, dbFixture.DbContext);
@@ -78,6 +91,23 @@ namespace unit_tests
 
             Meeting meeting2 = MeetingHandler.CreateMeetingWithUniqueId(meetingId, attendeePassword, hostPassword, dbFixture.DbContext);
             meeting2.MeetingId.Equals(meeting.MeetingId).Should().Be(false);
+        }
+
+        [Theory]
+        [InlineData(2)]
+        [InlineData(5)]
+        [InlineData(15)]
+        [InlineData(3)]
+        [InlineData(1)]
+        [InlineData(0)]
+        public void CheckFobbingUsers(int fobbers)
+        {
+            Meeting meeting = MeetingHandler.CreateMeetingWithUniqueId(IDGenerators.GenerateMeetingId(), "", "test", dbFixture.DbContext);
+            for (int i = 0; i < fobbers; i++)
+            {
+                MeetingHandler.UserPressedFob(meeting, IDGenerators.GenerateGuid(), dbFixture.DbContext);
+            }
+            meeting.Fobbed.Count.Should().Be(fobbers);
         }
 
 

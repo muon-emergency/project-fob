@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Text;
 using FluentAssertions;
 using project_fob.Controllers;
@@ -7,7 +6,7 @@ using Xunit;
 
 namespace unit_tests
 {
-    public class HomeControllerTest
+    public partial class HomeControllerTest
     {
         [Theory]
         [InlineData("hey", "hey", false)]
