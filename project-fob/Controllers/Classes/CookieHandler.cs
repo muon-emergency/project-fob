@@ -64,6 +64,16 @@ namespace project_fob.Controllers
             }
         }
 
+        private static void SetCookieDateExpired(string id, string value, ControllerBase cbase)
+        {
+            CookieOptions cookie = new CookieOptions();
+            cookie.Expires = DateTime.Now.AddYears(-1);
+            if (id != null && id.Length == 0)
+            {
+                cbase.Response.Cookies.Append(id, value);
+            }
+        }
+
         //There are methods which can do similar but I saved this one as this is a special one :)
         public static bool HaveCookieId(out Guid id, ControllerBase cbase)
         {
