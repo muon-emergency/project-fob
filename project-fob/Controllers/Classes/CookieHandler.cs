@@ -3,81 +3,79 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 
 namespace project_fob.Controllers
 {
     public static class CookieHandler
     {
-        public static Guid ManageAndReturnCookie(ControllerBase cbase)
+        public static Guid ManageAndReturnCookie(ICookies cookies)
         {
-            string id = GetUserIDFromCookie(cbase);
-            id = SetCookie(id, cbase);
+            string id = GetUserIDFromCookie(cookies);
+            id = SetCookie(id, cookies);
             return Guid.Parse(id);
         }
 
-        public static ActionResult CreateOrUpdateCookies(ControllerBase cbase)
+        public static void CreateOrUpdateCookies(ICookies cookies)
         {
-            string id = GetUserIDFromCookie(cbase);
-            SetCookie(id,cbase);
-            return cbase.Ok();
+            string id = GetUserIDFromCookie(cookies);
+            SetCookie(id,cookies);
         }
 
-        private static string GetUserID(ControllerBase cbase)
+        private static string GetUserID(ICookies cookies)
         {
-            string id = GetUserIDFromCookie(cbase);
-            SetCookie(id, cbase);
+            string id = GetUserIDFromCookie(cookies);
+            SetCookie(id, cookies);
             return id;
         }
 
 
-        private static string GetUserIDFromCookie(ControllerBase cbase)
+        private static string GetUserIDFromCookie(ICookies cookies)
         {
-            return cbase.Request.Cookies["ID"];
+            return cookies.Request["ID"];
         }
 
-        private static string SetCookie(string id, ControllerBase cbase)
+        private static string SetCookie(string id, ICookies cookies)
         {
             CookieOptions cookie = new CookieOptions();
             cookie.Expires = DateTime.Now.AddYears(5);
             if (id == null || id.Length == 0)
             {
                 string newId = IDGenerators.GenerateId();
-                cbase.Response.Cookies.Append("ID", newId);
+                cookies.Response.Append("ID", newId);
                 return newId;
             }
             else
             {
-                cbase.Response.Cookies.Append("ID", id);
+                cookies.Response.Append("ID", id);
                 return id;
             }
 
         }
 
-        private static void SetCookie(string id, string value, ControllerBase cbase)
+        private static void SetCookie(string id, string value, ICookies cookies)
         {
             CookieOptions cookie = new CookieOptions();
             cookie.Expires = DateTime.Now.AddYears(5);
             if (id != null && id.Length == 0)
             {
-                cbase.Response.Cookies.Append(id, value);
+                cookies.Response.Append(id, value);
             }
         }
 
-        private static void SetCookieDateExpired(string id, string value, ControllerBase cbase)
+        private static void SetCookieDateExpired(string id, string value, ICookies cookies)
         {
             CookieOptions cookie = new CookieOptions();
             cookie.Expires = DateTime.Now.AddYears(-1);
             if (id != null && id.Length == 0)
             {
-                cbase.Response.Cookies.Append(id, value);
+                cookies.Response.Append(id, value);
             }
         }
 
         //There are methods which can do similar but I saved this one as this is a special one :)
-        public static bool HaveCookieId(out Guid id, ControllerBase cbase)
+        public static bool HaveCookieId(out Guid id, ICookies cookies)
         {
-            string strignId = cbase.Request.Cookies["ID"];
+            string strignId = cookies.Request["ID"];
             if (strignId == null || strignId.Length == 0)
             {
                 return false;
