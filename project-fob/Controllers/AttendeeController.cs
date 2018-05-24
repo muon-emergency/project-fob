@@ -26,7 +26,7 @@ namespace project_fob.Controllers
 
         public ActionResult Fob(string value, string meetingString)
         {
-            if (CookieHandler.HaveCookieId(out var id, this))
+            if (CookieHandler.HaveCookieId(out var id, new RealCookies(this)))
             {
                 Meeting meeting = db.Meeting.Include(x => x.Fobbed).Single(f => f.MeetingId == meetingString);
                 if (meeting.Active)
@@ -54,7 +54,7 @@ namespace project_fob.Controllers
 
         public ActionResult ImStillHere(string value, string meetingString)
         {
-            if (CookieHandler.HaveCookieId(out var userId, this))
+            if (CookieHandler.HaveCookieId(out var userId, new RealCookies(this)))
             {
                 Meeting meeting = MeetingHandler.GetMeetingWithFobbed(meetingString, db);
                 int topic = meeting.TopicCounter;

@@ -44,7 +44,7 @@ namespace project_fob.Controllers
                 return View("index");
             }
 
-            CookieHandler.CreateOrUpdateCookies(this);
+            CookieHandler.CreateOrUpdateCookies(new RealCookies(this));
 
             Meeting meet = MeetingHandler.CreateMeetingWithUniqueId(IDGenerators.GenerateMeetingId(), attendeePassword, hostPassword, db);
 
@@ -91,7 +91,7 @@ namespace project_fob.Controllers
 
         private ActionResult JoinAsHost(Meeting meet)
         {
-            CookieHandler.ManageAndReturnCookie(this);
+            CookieHandler.ManageAndReturnCookie(new RealCookies(this));
 
             if (meet.Active)
             {
@@ -109,7 +109,7 @@ namespace project_fob.Controllers
 
         private ActionResult JoinAsAttendee(string meetingId)
         {
-            CookieHandler.ManageAndReturnCookie(this);
+            CookieHandler.ManageAndReturnCookie(new RealCookies(this));
 
             ViewBag.title = "Id: ";
             ViewBag.meetingid = meetingId;
