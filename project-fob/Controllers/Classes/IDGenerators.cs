@@ -12,6 +12,11 @@ namespace project_fob.Controllers
             return Guid.NewGuid().ToString("N");
         }
 
+        public static Guid GenerateGuid()
+        {
+            return Guid.NewGuid();
+        }
+
         public static string GenerateMeetingId()
         {
             return GenerateUnambiguousMeetingIdByLength(6);
