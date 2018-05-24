@@ -47,6 +47,15 @@ namespace project_fob
                 app.UseExceptionHandler("/Home/Error");
             }
 
+            //app.Use(async (context, next) => 
+            //{
+            //    context.Request.ToString();
+
+            //    await next();
+
+            //    context.Response.Body.ToString();
+            //});
+
             app.UseStaticFiles();
 
             app.UseSession();
